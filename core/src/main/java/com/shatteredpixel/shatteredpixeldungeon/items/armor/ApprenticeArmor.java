@@ -38,7 +38,7 @@ public class ApprenticeArmor extends ClassArmor {
 	@Override
 	public void doSpecial() {
 
-		charge -= 90;
+		charge -= 35;
 		updateQuickslot();
 
 		StableElemental.spawnAround(curUser.pos);
@@ -49,8 +49,7 @@ public class ApprenticeArmor extends ClassArmor {
 		curUser.busy();
 
 		curUser.sprite.emitter().start( ElmoParticle.FACTORY, 0.025f, 20 );
-		Sample.INSTANCE.play( Assets.Sounds.BURNING );
-		Sample.INSTANCE.play( Assets.Sounds.BURNING );
-		Sample.INSTANCE.play( Assets.Sounds.BURNING );
+		Sample.INSTANCE.play( Assets.Sounds.ZAP );
+
 	}
 }
