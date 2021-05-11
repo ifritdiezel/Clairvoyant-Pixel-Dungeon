@@ -1,5 +1,6 @@
 # Built application files
 *.apk
+*CvPD*.jar
 
 # Files for the Dalvik VM
 *.dex
@@ -18,3 +19,4 @@ local.properties
 #intellij project files
 *.iml
 *.idea
+/core/src/main/java/com/shatteredpixel/shatteredpixeldungeon/items/journal/
