@@ -214,7 +214,7 @@ public class Item implements Bundlable {
 			for (Item item:items) {
 				if (isSimilar( item )) {
 					item.merge( this );
-					item.updateQuickslot();
+					updateQuickslot();
 					return true;
 				}
 			}
@@ -392,7 +392,7 @@ public class Item implements Bundlable {
 		if (Dungeon.hero != null && Dungeon.hero.isAlive()){
 			Catalog.setSeen(getClass());
 			if (!isIdentified()) {
-				Talent.onItemIdentified(Dungeon.hero, this);
+				Talent.onItemIdentified(Dungeon.hero);
 				levelKnown = true;
 				cursedKnown = true;
 				if ((Dungeon.hero.className().equals("apprentice") && this.cursed)&&Dungeon.hero.lvl <= 15 ){
@@ -573,30 +573,24 @@ public class Item implements Bundlable {
 					reset(user.sprite,
 							enemy.sprite,
 							this,
-							new Callback() {
-						@Override
-						public void call() {
-							curUser = user;
-							Item i = Item.this.detach(user.belongings.backpack);
-							if (i != null) i.onThrow(cell);
-							user.spendAndNext(delay);
+							() -> {
+								curUser = user;
+								Item i = Item.this.detach(user.belongings.backpack);
+								if (i != null) i.onThrow(cell);
+								user.spendAndNext(delay);
 
-						}
-					});
+							});
 		} else {
 			((MissileSprite) user.sprite.parent.recycle(MissileSprite.class)).
 					reset(user.sprite,
 							cell,
 							this,
-							new Callback() {
-						@Override
-						public void call() {
-							curUser = user;
-							Item i = Item.this.detach(user.belongings.backpack);
-							if (i != null) i.onThrow(cell);
-							user.spendAndNext(delay);
-						}
-					});
+							() -> {
+								curUser = user;
+								Item i = Item.this.detach(user.belongings.backpack);
+								if (i != null) i.onThrow(cell);
+								user.spendAndNext(delay);
+							});
 		}
 	}
 	

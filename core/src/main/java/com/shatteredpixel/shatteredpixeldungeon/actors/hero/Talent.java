@@ -342,7 +342,7 @@ public enum Talent {
 	}
 
 	//note that IDing can happen in alchemy scene, so be careful with VFX here
-	public static void onItemIdentified( Hero hero, Item item ){
+	public static void onItemIdentified(Hero hero){
 		if (hero.hasTalent(PHILOSOPHILE)){
 			Buff.prolong(hero, Motivation.class, 5f + hero.pointsInTalent(PHILOSOPHILE)*hero.pointsInTalent(PHILOSOPHILE)*5);
 

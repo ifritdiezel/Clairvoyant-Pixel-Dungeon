@@ -57,8 +57,8 @@ public enum HeroClass {
 	ROGUE( "rogue", HeroSubClass.ASSASSIN, HeroSubClass.FREERUNNER ),
 	HUNTRESS( "huntress", HeroSubClass.SNIPER, HeroSubClass.WARDEN );
 
-	private String title;
-	private HeroSubClass[] subClasses;
+	private final String title;
+	private final HeroSubClass[] subClasses;
 
 	HeroClass( String title, HeroSubClass...subClasses ) {
 		this.title = title;
