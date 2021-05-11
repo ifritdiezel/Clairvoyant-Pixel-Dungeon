@@ -61,10 +61,10 @@ public class WndJournal extends WndTabbed {
 	
 	private static final int ITEM_HEIGHT	= 18;
 	
-	private GuideTab guideTab;
-	private AlchemyTab alchemyTab;
-	private NotesTab notesTab;
-	private CatalogTab catalogTab;
+	private final GuideTab guideTab;
+	private final AlchemyTab alchemyTab;
+	private final NotesTab notesTab;
+	private final CatalogTab catalogTab;
 	
 	public static int last_index = 0;
 	
@@ -203,7 +203,7 @@ public class WndJournal extends WndTabbed {
 	private static class GuideTab extends Component {
 		
 		private ScrollPane list;
-		private ArrayList<GuideItem> pages = new ArrayList<>();
+		private final ArrayList<GuideItem> pages = new ArrayList<>();
 		
 		@Override
 		protected void createChildren() {
@@ -261,8 +261,8 @@ public class WndJournal extends WndTabbed {
 		
 		private static class GuideItem extends ListItem {
 			
-			private boolean found = false;
-			private String page;
+			private final boolean found;
+			private final String page;
 			
 			public GuideItem( String page ){
 				super( iconForPage(page), Messages.titleCase(Document.ADVENTURERS_GUIDE.pageTitle(page)));
@@ -335,7 +335,7 @@ public class WndJournal extends WndTabbed {
 		private RenderedTextBlock body;
 		
 		private ScrollPane list;
-		private ArrayList<QuickRecipe> recipes = new ArrayList<>();
+		private final ArrayList<QuickRecipe> recipes = new ArrayList<>();
 		
 		@Override
 		protected void createChildren() {
@@ -586,11 +586,11 @@ public class WndJournal extends WndTabbed {
 		private static final int POTION_IDX = 5;
 		private static final int SCROLL_IDX = 6;
 		
-		private static final int spriteIndexes[] = {1, 2, 4, 5, 6, 9, 11};
+		private static final int[] spriteIndexes = {1, 2, 4, 5, 6, 9, 11};
 		
 		private ScrollPane list;
 		
-		private ArrayList<CatalogItem> items = new ArrayList<>();
+		private final ArrayList<CatalogItem> items = new ArrayList<>();
 		
 		@Override
 		protected void createChildren() {
@@ -686,13 +686,13 @@ public class WndJournal extends WndTabbed {
 				@Override
 				public int compare(Class<? extends Item> a, Class<? extends Item> b) {
 					int result = 0;
-					
+
 					//specifically known items appear first, then seen items, then unknown items.
 					if (known.get(a) && Catalog.isSeen(a)) result -= 2;
 					if (known.get(b) && Catalog.isSeen(b)) result += 2;
 					if (Catalog.isSeen(a))                 result --;
 					if (Catalog.isSeen(b))                 result ++;
-					
+
 					return result;
 				}
 			});
@@ -713,8 +713,8 @@ public class WndJournal extends WndTabbed {
 		
 		private static class CatalogItem extends ListItem {
 			
-			private Item item;
-			private boolean seen;
+			private final Item item;
+			private final boolean seen;
 			
 			public CatalogItem(Item item, boolean IDed, boolean seen ) {
 				super( new ItemSprite(item), Messages.titleCase(item.trueName()));
