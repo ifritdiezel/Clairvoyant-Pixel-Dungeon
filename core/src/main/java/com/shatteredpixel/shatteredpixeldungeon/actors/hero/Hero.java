@@ -155,7 +155,7 @@ public class Hero extends Char {
 	public HeroSubClass subClass = HeroSubClass.NONE;
 	public ArrayList<LinkedHashMap<Talent, Integer>> talents = new ArrayList<>();
 	
-	private int attackSkill = 80;
+	private int attackSkill = 10;
 	private int defenseSkill = 5;
 
 	public boolean ready = false;
@@ -517,9 +517,7 @@ public class Hero extends Char {
 	public boolean canSurpriseAttack(){
 		if (belongings.weapon == null || !(belongings.weapon instanceof Weapon))    return true;
 		if (STR() < ((Weapon)belongings.weapon).STRReq())                           return false;
-		if (belongings.weapon instanceof Flail)                                     return false;
-
-		return true;
+		return !(belongings.weapon instanceof Flail);
 	}
 
 	public boolean canAttack(Char enemy){

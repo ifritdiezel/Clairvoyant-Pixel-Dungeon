@@ -88,6 +88,9 @@ public class SpellHand extends TargetedSpell {
 		{
 			image = ItemSpriteSheet.SPELL_HAND;
 			usesTargeting = true;
+			unique = true;
+			bones = false;
+
 		}
 
 		@Override

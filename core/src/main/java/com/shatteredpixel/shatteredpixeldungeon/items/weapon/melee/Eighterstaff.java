@@ -33,6 +33,8 @@ public class Eighterstaff extends MeleeWeapon {
 		hitSoundPitch = 1f;
 
 		tier = 1;
+		unique = true;
+		bones = false;
 	}
 
 	@Override

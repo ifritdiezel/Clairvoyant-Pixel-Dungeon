@@ -531,22 +531,16 @@ public abstract class Wand extends Item {
 						CursedWand.cursedZap(curWand,
 								curUser,
 								new Ballistica(curUser.pos, target, Ballistica.MAGIC_BOLT),
-								new Callback() {
-									@Override
-									public void call() {
-										curWand.wandUsed();
-									}
-								});
+								curWand::wandUsed);
 					} else {
-						curWand.fx(shot, new Callback() {
-							public void call() {
-								curWand.onZap(shot);
-								curWand.wandUsed();
-								if (curUser.subClass==HeroSubClass.CHANNELLER && Random.Int(4)==0){
-										new Bomb().explode(curUser.pos);
-								}
+						curWand.fx(shot, () -> {
+							curWand.onZap(shot);
+							curWand.wandUsed();
+							if (curUser.subClass==HeroSubClass.CHANNELLER && Random.Int(5)==0 && curWand.curCharges > 4){
+									new Bomb().explode(curUser.pos);
 
 							}
+
 						});
 					}
 					curWand.cursedKnown = true;
@@ -563,8 +557,7 @@ public abstract class Wand extends Item {
 	};
 	
 	public class Charger extends Buff {
-		
-		private final float BASE_CHARGE_DELAY = 10f- (Dungeon.hero.subClass==HeroSubClass.CHANNELLER ? 1 : 0);
+
 		private static final float SCALING_CHARGE_ADDITION = 40f;
 		private static final float NORMAL_SCALE_FACTOR = 0.875f;
 
@@ -603,6 +596,7 @@ public abstract class Wand extends Item {
 			int missingCharges = maxCharges - curCharges;
 			missingCharges = Math.max(0, missingCharges);
 
+			float BASE_CHARGE_DELAY = 10f;
 			float turnsToCharge = (float) (BASE_CHARGE_DELAY
 					+ (SCALING_CHARGE_ADDITION * Math.pow(scalingFactor, missingCharges)));
 
