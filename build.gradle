@@ -14,8 +14,8 @@ allprojects {
         appName = 'Clairvoyant Pixel Dungeon'
         appPackageName = 'com.clairvoyantpd.clairvoyantpixeldungeon'
 
-        appVersionCode = 1001
-        appVersionName = 'CvPD-Alpha'
+        appVersionCode = 1002
+        appVersionName = 'CvPD-Alpha-2'
 
         appJavaCompatibility = JavaVersion.VERSION_1_8
 
