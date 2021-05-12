@@ -38,6 +38,9 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.LeafParticle;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SmokeParticle;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.WindParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -47,6 +50,7 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.particles.Emitter;
+import com.watabou.noosa.particles.PixelParticle;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
@@ -106,7 +110,7 @@ public class SpellHand extends TargetedSpell {
 					e.burst(Speck.factory(Speck.HEALING), 3);
 					target.HP += Random.Int(5)+1;
 				} else {
-					switch (Random.Int(6-hero.pointsInTalent(Talent.ARCANE_STABILIZATION))) {
+					switch (Random.Int(4-hero.pointsInTalent(Talent.ARCANE_STABILIZATION))) {
 						case 0:
 							target.damage(Random.NormalIntRange(0, 2+hero.lvl/2), this);
 							break;
@@ -134,7 +138,7 @@ public class SpellHand extends TargetedSpell {
 				int terr = Dungeon.level.map[cell];
 				switch (Random.Int(9)-hero.pointsInTalent(Talent.ARCANE_STABILIZATION)) {
 					case 0: default:
-						Splash.at(cell, 0xFFFFFF, 5);
+						CellEmitter.get( cell ).burst(ShadowParticle.MISSILE, 6 );
 						break;
 					case 1:
 						if (terr == Terrain.HIGH_GRASS) {
