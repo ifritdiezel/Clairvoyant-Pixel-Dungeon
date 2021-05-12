@@ -25,6 +25,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
 import com.shatteredpixel.shatteredpixeldungeon.items.ArmorKit;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.TomeOfMastery;
@@ -131,7 +132,6 @@ public enum HeroClass {
 		Dungeon.quickslot.setSlot(0, spellhand);
 		(hero.belongings.weapon = new Eighterstaff()).identify();
 		new PotionOfExperience().identify();
-
 
 		/*new Food().quantity(10).collect();
 		new ArmorKit().collect();

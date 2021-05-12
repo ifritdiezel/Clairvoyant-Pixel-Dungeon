@@ -399,12 +399,11 @@ public abstract class Mob extends Char {
 
 						//shorten for a closer one
 						if (Dungeon.level.adjacent(target, pos)) {
-							path.add(target);
-						//extend the path for a further target
+							//extend the path for a further target
 						} else {
 							path.add(last);
-							path.add(target);
 						}
+						path.add(target);
 
 					} else {
 						//if the new target is simply 1 earlier in the path shorten the path
