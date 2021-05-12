@@ -25,12 +25,15 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.items.ArmorKit;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.TomeOfMastery;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.ScrollHolder;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.Pasty;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfInvisibility;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLiquidFlame;
@@ -38,8 +41,10 @@ import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfMindVision
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.SpellHand;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLightning;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
@@ -132,29 +137,14 @@ public enum HeroClass {
 		new ArmorKit().collect();
 		new ScrollOfLullaby().quantity(1).collect();
 		new TomeOfMastery().collect();
-		new ArcaneCatalyst().quantity(5).collect();
+
 		new Pasty().quantity(30).collect();
 		new ScrollOfIdentify().quantity(30).collect();
 		new WandOfMagicMissile().collect();
-		new PotionOfHealing().identify();
-		new ChargrilledMeat().collect();
-		new Alchemize().collect();
-		new Recycle().collect();
 		new WandOfLightning().collect();
-		new Bomb().quantity(5).collect();
-		new ScrollOfRage().identify();
-		Dirk dirk;
-		dirk = new Dirk();
-		dirk.enchant(Weapon.Enchantment.randomCurse()).collect();
-		new Dirk().collect();
-		new Dirk().collect();
-		new Dirk().collect();
-		new Dirk().collect();
-		new Dirk().collect();
-		new Dirk().collect();
-		dirk.cursed = true;
+		new ScrollOfUpgrade().quantity(20).collect();
+		new ScrollOfRecharging().quantity(20).collect();
 		*/
-
 	}
 
 	private static void initMage( Hero hero ) {

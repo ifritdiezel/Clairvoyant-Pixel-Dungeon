@@ -40,14 +40,14 @@ public abstract class OptionSlider extends Component {
 	private RenderedTextBlock maxTxt;
 
 	//values are expressed internally as ints, but they can easily be interpreted as something else externally.
-	private int minVal;
-	private int maxVal;
+	private final int minVal;
+	private final int maxVal;
 	private int selectedVal;
 
 	private NinePatch sliderNode;
 	private NinePatch BG;
 	private ColorBlock sliderBG;
-	private ColorBlock[] sliderTicks;
+	private final ColorBlock[] sliderTicks;
 	private float tickDist;
 
 

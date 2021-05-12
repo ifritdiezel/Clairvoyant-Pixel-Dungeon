@@ -39,8 +39,6 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.LeafParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SmokeParticle;
-import com.shatteredpixel.shatteredpixeldungeon.effects.particles.WindParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
@@ -49,8 +47,8 @@ import com.shatteredpixel.shatteredpixeldungeon.plants.Plant;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndOptions;
 import com.watabou.noosa.particles.Emitter;
-import com.watabou.noosa.particles.PixelParticle;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
@@ -58,15 +56,17 @@ import java.util.ArrayList;
 
 public class SpellHand extends TargetedSpell {
 	private static final String AC_CHANNELLER_CHARGE = "CHANNELLER_CHARGE";
+	private static final String AC_EDIT_SPELLS = "EDIT_SPELLS";
 
 	@Override
 	public ArrayList<String> actions(Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		//TODO special attack
 		if (false)
 		{
 			actions.add( AC_CHANNELLER_CHARGE);
+			actions.add( AC_EDIT_SPELLS);
 		}
+
 		return actions;
 	}
 
@@ -78,14 +78,33 @@ public class SpellHand extends TargetedSpell {
 		if (action.equals(AC_CHANNELLER_CHARGE)) {
 			ArcaneCatalyst catalyst = hero.belongings.getItem( ArcaneCatalyst.class );
 			if (hero.belongings.getItem( ArcaneCatalyst.class )!=null) {
-				//special attack
-
+				//TODO special attack
 				execute(hero);
 				catalyst.detach( hero.belongings.backpack );
 			} else  {
 				GLog.w( Messages.get(this, "no_catalyst") );
 			}
+		}
+		if (action.equals(AC_EDIT_SPELLS)){
+			GameScene.show(new WndOptions(Messages.titleCase("edit spells"),
+					"Edit spells",
+					"button",
+					"another",
+					"yes",
+					"cancel"){
 
+				@Override
+				protected void onSelect(int index) {
+					if (index < 3) {
+						GLog.i("you chose" + index);
+					}
+				}
+
+				@Override
+				public void onBackPressed() {
+					//do nothing, reader has to cancel
+				}
+			});
 		}
 	}
 
@@ -94,7 +113,6 @@ public class SpellHand extends TargetedSpell {
 			usesTargeting = true;
 			unique = true;
 			bones = false;
-
 		}
 
 		@Override
@@ -166,7 +184,8 @@ public class SpellHand extends TargetedSpell {
 				}
 			}
 
-		}
+
+	}
 }
 
 
