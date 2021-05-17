@@ -215,7 +215,7 @@ public abstract class Level implements Bundlable {
 			if (Dungeon.depth > 1) {
 				//50% chance of getting a level feeling
 				//~7.15% chance for each feeling
-				switch (Random.Int( 14 )) {
+				switch (Random.Int( 10 )) {
 					case 0:
 						feeling = Feeling.CHASM;
 						break;

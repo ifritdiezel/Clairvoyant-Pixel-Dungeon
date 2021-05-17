@@ -133,6 +133,7 @@ public enum HeroClass {
 		(hero.belongings.weapon = new Eighterstaff()).identify();
 		new PotionOfExperience().identify();
 
+		new ScrollOfMagicMapping().quantity(5).collect();
 		/*new Food().quantity(10).collect();
 		new ArmorKit().collect();
 		new ScrollOfLullaby().quantity(1).collect();
