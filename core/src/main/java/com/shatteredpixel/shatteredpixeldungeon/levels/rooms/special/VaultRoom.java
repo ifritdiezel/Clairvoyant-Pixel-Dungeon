@@ -94,7 +94,7 @@ public class VaultRoom extends SpecialRoom {
 		return prize;
 	}
 	
-	private ArrayList<Generator.Category> prizeClasses = new ArrayList<>(
+	private final ArrayList<Generator.Category> prizeClasses = new ArrayList<>(
 			Arrays.asList(Generator.Category.WAND,
 					Generator.Category.RING,
 					Generator.Category.ARTIFACT));

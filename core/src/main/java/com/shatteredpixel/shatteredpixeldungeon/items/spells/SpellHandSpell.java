@@ -1,14 +1,28 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.watabou.utils.Random;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 
-public abstract class SpellHandSpell {
+/*
+0 - damage projectiles
+1 - modifiers
+2 - tile
+3 - passive
+ */
+public enum SpellHandSpell {
+BOLT(0), DMGT1(1), GRASS(2), SPEEDBOOST(3);
 
-public void damage(int damage ) {
-
-    }
-
+int spellClass;
+SpellHandSpell (int spellClass){
+    this.spellClass = spellClass;
+}
+public int spellClass() {
+    return spellClass();
 }
 
+public String title(){
+        return Messages.get(this, name() + ".title");
+    }
+public String desc(){
+        return Messages.get(this, name() + ".desc");
+    }
+}

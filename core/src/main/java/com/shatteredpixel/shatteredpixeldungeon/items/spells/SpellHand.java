@@ -32,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Light;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -52,6 +53,7 @@ import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 
 public class SpellHand extends TargetedSpell {
@@ -61,12 +63,10 @@ public class SpellHand extends TargetedSpell {
 	@Override
 	public ArrayList<String> actions(Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		if (false)
-		{
-			actions.add( AC_CHANNELLER_CHARGE);
-			actions.add( AC_EDIT_SPELLS);
+		if (hero.subClass == HeroSubClass.CHANNELLER) {
+			actions.add(AC_CHANNELLER_CHARGE);
 		}
-
+		actions.add( AC_EDIT_SPELLS);
 		return actions;
 	}
 
@@ -115,7 +115,10 @@ public class SpellHand extends TargetedSpell {
 			bones = false;
 		}
 
-		@Override
+
+
+
+	@Override
 		protected void affectTarget(Ballistica bolt, Hero hero) {
 			int cell = bolt.collisionPos;
 			quantity++;
@@ -187,6 +190,8 @@ public class SpellHand extends TargetedSpell {
 
 	}
 
+	public ArrayList<SpellHandSpell> spells = new ArrayList<>();
+	spells.add()
 
 }
 
