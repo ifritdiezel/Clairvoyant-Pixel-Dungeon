@@ -191,7 +191,6 @@ public class SpellHand extends TargetedSpell {
 	}
 
 	public ArrayList<SpellHandSpell> spells = new ArrayList<>();
-	spells.add()
 
 }
 
