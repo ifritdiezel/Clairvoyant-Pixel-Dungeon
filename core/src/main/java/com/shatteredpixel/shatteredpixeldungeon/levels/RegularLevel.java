@@ -328,27 +328,27 @@ public abstract class RegularLevel extends Level {
 				losBlocking[cell] = false;
 			}
 
-			Heap.Type type = null;
-			switch (Random.Int( 20 )) {
-			case 0:
-				type = Heap.Type.SKELETON;
+			Heap.Type type;
+			switch (Random.Int( 18 )) {
+				case 0:
+					type = Heap.Type.SKELETON;
 				break;
-			case 1:
-			case 2:
-			case 3:
-			case 4:
-				type = Heap.Type.CHEST;
+				case 1:
+				case 2:
+				case 3:
+				case 4:
+					type = Heap.Type.CHEST;
 				break;
-			case 5:
-				if (Dungeon.depth > 1 && findMob(cell) == null){
-					mobs.add(Mimic.spawnAt(cell, toDrop));
-					continue;
-				}
-				type = Heap.Type.CHEST;
-				break;
-			default:
-				type = Heap.Type.HEAP;
-				break;
+				case 7:
+					if (Dungeon.depth > 1 && findMob(cell) == null){
+						mobs.add(Mimic.spawnAt(cell, toDrop));
+						continue;
+					}
+					type = Heap.Type.CHEST;
+					break;
+				default:
+					type = Heap.Type.HEAP;
+					break;
 			}
 
 			if ((toDrop instanceof Artifact && Random.Int(2) == 0) ||
@@ -520,8 +520,7 @@ public abstract class RegularLevel extends Level {
 					Trap t = traps.get(pos);
 					
 					//items cannot spawn on traps which destroy items
-					if (t == null ||
-							! (t instanceof BurningTrap || t instanceof BlazingTrap
+					if (!(t instanceof BurningTrap || t instanceof BlazingTrap
 							|| t instanceof ChillingTrap || t instanceof FrostTrap
 							|| t instanceof ExplosiveTrap || t instanceof DisintegrationTrap)) {
 						

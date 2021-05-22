@@ -494,6 +494,7 @@ public class Generator {
 			cat = Random.chances( categoryProbs );
 		}
 		categoryProbs.put( cat, categoryProbs.get( cat ) - 1);
+		assert cat != null;
 		return random( cat );
 	}
 	
