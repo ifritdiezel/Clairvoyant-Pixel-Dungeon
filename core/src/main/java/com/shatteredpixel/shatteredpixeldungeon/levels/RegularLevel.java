@@ -335,9 +335,13 @@ public abstract class RegularLevel extends Level {
 				break;
 				case 1:
 				case 2:
+					type = Heap.Type.CHEST;
 				case 3:
 				case 4:
 					type = Heap.Type.CHEST;
+					if (toDrop.isUpgradable() && toDrop.level() != 3 && Random.Int(3)==0){
+						toDrop.upgrade();
+					}
 				break;
 				case 7:
 					if (Dungeon.depth > 1 && findMob(cell) == null){
