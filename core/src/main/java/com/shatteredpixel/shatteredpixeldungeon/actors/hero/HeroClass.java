@@ -38,6 +38,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Pasty;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHuntress;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfInvisibility;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLiquidFlame;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfMindVision;
@@ -136,13 +137,15 @@ public enum HeroClass {
 		new PotionOfExperience().identify();
 
 		new ScrollOfMagicMapping().quantity(5).collect();
+		new PotionOfHuntress().collect();
+		new ScrollOfIdentify().quantity(30).collect();
 		/*new Food().quantity(10).collect();
 		new ArmorKit().collect();
 		new ScrollOfLullaby().quantity(1).collect();
 		new TomeOfMastery().collect();
 
 		new Pasty().quantity(30).collect();
-		new ScrollOfIdentify().quantity(30).collect();
+
 		new WandOfMagicMissile().collect();
 		new WandOfLightning().collect();
 		new ScrollOfUpgrade().quantity(20).collect();
