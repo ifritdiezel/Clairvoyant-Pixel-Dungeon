@@ -139,6 +139,7 @@ public enum HeroClass {
 		new ScrollOfMagicMapping().quantity(5).collect();
 		new PotionOfHuntress().collect();
 		new ScrollOfIdentify().quantity(30).collect();
+
 		/*new Food().quantity(10).collect();
 		new ArmorKit().collect();
 		new ScrollOfLullaby().quantity(1).collect();
