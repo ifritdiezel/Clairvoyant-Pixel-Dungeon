@@ -57,6 +57,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.ThrowingKnife;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.plants.Sorrowmoss;
 import com.watabou.utils.Bundle;
 
 public enum HeroClass {
@@ -139,6 +140,7 @@ public enum HeroClass {
 		new ScrollOfMagicMapping().quantity(5).collect();
 		new PotionOfHuntress().collect();
 		new ScrollOfIdentify().quantity(30).collect();
+		new Sorrowmoss.Seed().quantity(10).collect();
 
 		/*new Food().quantity(10).collect();
 		new ArmorKit().collect();
