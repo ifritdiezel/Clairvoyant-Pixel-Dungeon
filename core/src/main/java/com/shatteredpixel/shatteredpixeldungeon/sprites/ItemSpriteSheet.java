@@ -232,6 +232,7 @@ public class ItemSpriteSheet {
 	public static final int ROUND_SHIELD    = WEP_TIER3+3;
 	public static final int SAI             = WEP_TIER3+4;
 	public static final int WHIP            = WEP_TIER3+5;
+	public static final int POWER_BRACELET  = WEP_TIER3+6;
 	static{
 		assignItemRect(SWORD,           14, 14);
 		assignItemRect(MACE,            15, 15);
@@ -239,6 +240,7 @@ public class ItemSpriteSheet {
 		assignItemRect(ROUND_SHIELD,    16, 16);
 		assignItemRect(SAI,             16, 16);
 		assignItemRect(WHIP,            14, 14);
+		assignItemRect(POWER_BRACELET,  13, 14);
 	}
 
 	private static final int WEP_TIER4      =                               xy(9, 8);   //8 slots

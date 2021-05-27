@@ -63,10 +63,9 @@ public class SpellHand extends TargetedSpell {
 	@Override
 	public ArrayList<String> actions(Hero hero ) {
 		ArrayList<String> actions = super.actions( hero );
-		if (hero.subClass == HeroSubClass.CHANNELLER) {
+		if (hero.subClass == HeroSubClass.CHANNELLER && false) {
 			actions.add(AC_CHANNELLER_CHARGE);
 		}
-		actions.add( AC_EDIT_SPELLS);
 		return actions;
 	}
 

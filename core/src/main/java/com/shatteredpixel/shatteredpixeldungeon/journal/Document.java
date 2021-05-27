@@ -114,20 +114,20 @@ public enum Document {
 		ADVENTURERS_GUIDE.pages.put("Magic", 			DeviceCompat.isDebug());
 		
 		//sewers
-		ALCHEMY_GUIDE.pages.put("Potions",              DeviceCompat.isDebug());
-		ALCHEMY_GUIDE.pages.put("Stones",               DeviceCompat.isDebug());
-		ALCHEMY_GUIDE.pages.put("Energy_Food",          DeviceCompat.isDebug());
-		ALCHEMY_GUIDE.pages.put("Bombs",                DeviceCompat.isDebug());
+		ALCHEMY_GUIDE.pages.put("Potions",              true);
+		ALCHEMY_GUIDE.pages.put("Stones",               true);
+		ALCHEMY_GUIDE.pages.put("Energy_Food",          true);
+		ALCHEMY_GUIDE.pages.put("Bombs",               	true);
 		//ALCHEMY_GUIDE.pages.put("Darts",              DeviceCompat.isDebug());
 		
 		//prison
-		ALCHEMY_GUIDE.pages.put("Exotic_Potions",       DeviceCompat.isDebug());
-		ALCHEMY_GUIDE.pages.put("Exotic_Scrolls",       DeviceCompat.isDebug());
+		ALCHEMY_GUIDE.pages.put("Exotic_Potions",       true);
+		ALCHEMY_GUIDE.pages.put("Exotic_Scrolls",       true);
 		
 		//caves
-		ALCHEMY_GUIDE.pages.put("Catalysts",            DeviceCompat.isDebug());
-		ALCHEMY_GUIDE.pages.put("Brews_Elixirs",        DeviceCompat.isDebug());
-		ALCHEMY_GUIDE.pages.put("Spells",               DeviceCompat.isDebug());
+		ALCHEMY_GUIDE.pages.put("Catalysts",            true);
+		ALCHEMY_GUIDE.pages.put("Brews_Elixirs",        true);
+		ALCHEMY_GUIDE.pages.put("Spells",               true);
 	}
 	
 	private static final String DOCUMENTS = "documents";

@@ -116,40 +116,34 @@ public class WndStartGame extends Window {
 		start.visible = false;
 		start.setRect(0, HEIGHT - 20, WIDTH, 20);
 		add(start);
-		
-		if (DeviceCompat.isDebug() || Badges.isUnlocked(Badges.Badge.VICTORY)){
-			IconButton challengeButton = new IconButton(
-					Icons.get( SPDSettings.challenges() > 0 ? Icons.CHALLENGE_ON :Icons.CHALLENGE_OFF)){
-				@Override
-				protected void onClick() {
-					ShatteredPixelDungeon.scene().addToFront(new WndChallenges(SPDSettings.challenges(), true) {
-						public void onBackPressed() {
-							super.onBackPressed();
-							if (parent != null) {
-								icon(Icons.get(SPDSettings.challenges() > 0 ?
-										Icons.CHALLENGE_ON : Icons.CHALLENGE_OFF));
-							}
+
+		IconButton challengeButton = new IconButton(
+				Icons.get( SPDSettings.challenges() > 0 ? Icons.CHALLENGE_ON :Icons.CHALLENGE_OFF)){
+			@Override
+			protected void onClick() {
+				ShatteredPixelDungeon.scene().addToFront(new WndChallenges(SPDSettings.challenges(), true) {
+					public void onBackPressed() {
+						super.onBackPressed();
+						if (parent != null) {
+							icon(Icons.get(SPDSettings.challenges() > 0 ?
+									Icons.CHALLENGE_ON : Icons.CHALLENGE_OFF));
 						}
-					} );
-				}
-				
-				@Override
-				public void update() {
-					if( !visible && GamesInProgress.selectedClass != null){
-						visible = true;
 					}
-					super.update();
+				} );
+			}
+
+			@Override
+			public void update() {
+				if( !visible && GamesInProgress.selectedClass != null){
+					visible = true;
 				}
-			};
-			challengeButton.setRect(WIDTH - 20, HEIGHT - 20, 20, 20);
-			challengeButton.visible = false;
-			add(challengeButton);
-			
-		} else {
-			Dungeon.challenges = 0;
-			SPDSettings.challenges(0);
-		}
-		
+				super.update();
+			}
+		};
+		challengeButton.setRect(WIDTH - 20, HEIGHT - 20, 20, 20);
+		challengeButton.visible = false;
+		add(challengeButton);
+
 		resize(WIDTH, HEIGHT);
 		
 	}

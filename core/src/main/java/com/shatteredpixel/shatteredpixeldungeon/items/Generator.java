@@ -129,6 +129,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Longsword;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Mace;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MeleeWeapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.PowerBracelet;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Quarterstaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.RoundShield;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.RunicBlade;
@@ -351,9 +352,10 @@ public class Generator {
 					Scimitar.class,
 					RoundShield.class,
 					Sai.class,
-					Whip.class
+					Whip.class,
+					PowerBracelet.class
 			};
-			WEP_T3.probs = new float[]{ 6, 5, 5, 4, 4, 4 };
+			WEP_T3.probs = new float[]{ 6, 5, 5, 4, 4, 4, 3 };
 			
 			WEP_T4.classes = new Class<?>[]{
 					Longsword.class,
