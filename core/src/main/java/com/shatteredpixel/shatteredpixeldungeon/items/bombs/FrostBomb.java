@@ -40,7 +40,7 @@ public class FrostBomb extends Bomb {
 	}
 	
 	@Override
-	public void explode(int cell) {
+	public void explode(int cell, boolean... centerUnaffected){
 		super.explode(cell);
 		PathFinder.buildDistanceMap( cell, BArray.not( Dungeon.level.solid, null ), 2 );
 		for (int i = 0; i < PathFinder.distance.length; i++) {

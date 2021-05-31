@@ -53,7 +53,7 @@ public class RegrowthBomb extends Bomb {
 	}
 	
 	@Override
-	public void explode(int cell) {
+	public void explode(int cell, boolean... centerUnaffected){
 		super.explode(cell);
 		
 		if (Dungeon.level.heroFOV[cell]) {

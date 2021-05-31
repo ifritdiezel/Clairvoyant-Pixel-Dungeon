@@ -41,6 +41,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.LeafParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -123,7 +124,6 @@ public class SpellHand extends TargetedSpell {
 			quantity++;
 
 			Char target = Actor.findChar(cell);
-
 			if (target instanceof Mob) {
 				if (target.alignment == Char.Alignment.ALLY) {
 					Emitter e = target.sprite.emitter();

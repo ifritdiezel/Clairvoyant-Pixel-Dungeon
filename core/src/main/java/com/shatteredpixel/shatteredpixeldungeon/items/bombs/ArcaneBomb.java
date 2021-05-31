@@ -60,7 +60,7 @@ public class ArcaneBomb extends Bomb {
 	}
 	
 	@Override
-	public void explode(int cell) {
+	public void explode(int cell, boolean... centerUnaffected){
 		super.explode(cell);
 		
 		ArrayList<Char> affected = new ArrayList<>();

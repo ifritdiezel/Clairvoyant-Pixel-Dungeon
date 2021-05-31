@@ -50,6 +50,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
@@ -59,6 +60,7 @@ import com.watabou.utils.Reflection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Optional;
 
 public class Bomb extends Item {
 	
@@ -131,7 +133,8 @@ public class Bomb extends Item {
 		return super.doPickUp(hero);
 	}
 
-	public void explode(int cell){
+	public void explode(int cell, boolean... centerUnaffected){
+		boolean flag = centerUnaffected.length >= 1 && centerUnaffected[0];
 		//We're blowing up, so no need for a fuse anymore.
 		this.fuse = null;
 
@@ -146,7 +149,8 @@ public class Bomb extends Item {
 			}
 			
 			boolean terrainAffected = false;
-			for (int n : PathFinder.NEIGHBOURS9) {
+			int[] centerflag = flag ? PathFinder.NEIGHBOURS8 : PathFinder.NEIGHBOURS9;
+			for (int n : centerflag) {
 				int c = cell + n;
 				if (c >= 0 && c < Dungeon.level.length()) {
 					if (Dungeon.level.heroFOV[c]) {

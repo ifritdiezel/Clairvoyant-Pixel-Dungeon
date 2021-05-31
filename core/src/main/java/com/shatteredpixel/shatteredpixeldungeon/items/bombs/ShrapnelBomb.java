@@ -45,7 +45,7 @@ public class ShrapnelBomb extends Bomb {
 	}
 	
 	@Override
-	public void explode(int cell) {
+	public void explode(int cell, boolean... centerUnaffected){
 		super.explode(cell);
 		
 		boolean[] FOV = new boolean[Dungeon.level.length()];
