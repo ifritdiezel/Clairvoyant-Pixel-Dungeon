@@ -57,7 +57,7 @@ public class PointerEvent {
 	// *** Static members ***
 	// **********************
 	
-	private static Signal<PointerEvent> pointerSignal = new Signal<>( true );
+	private static final Signal<PointerEvent> pointerSignal = new Signal<>( true );
 	
 	public static void addPointerListener( Signal.Listener<PointerEvent> listener ){
 		pointerSignal.add(listener);
@@ -72,8 +72,8 @@ public class PointerEvent {
 	}
 	
 	// Accumulated pointer events
-	private static ArrayList<PointerEvent> pointerEvents = new ArrayList<>();
-	private static HashMap<Integer, PointerEvent> activePointers = new HashMap<>();
+	private static final ArrayList<PointerEvent> pointerEvents = new ArrayList<>();
+	private static final HashMap<Integer, PointerEvent> activePointers = new HashMap<>();
 	
 	public static synchronized void addPointerEvent( PointerEvent event ){
 		pointerEvents.add( event );

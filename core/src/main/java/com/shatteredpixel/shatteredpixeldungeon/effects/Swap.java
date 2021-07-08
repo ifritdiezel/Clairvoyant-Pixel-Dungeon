@@ -34,13 +34,13 @@ import com.watabou.utils.PointF;
 
 public class Swap extends Actor {
 
-	private Char ch1;
-	private Char ch2;
+	private final Char ch1;
+	private final Char ch2;
 
 	private Effect eff1;
 	private Effect eff2;
 
-	private float delay;
+	private final float delay;
 
 	public Swap( Char ch1, Char ch2 ) {
 
@@ -87,8 +87,8 @@ public class Swap extends Actor {
 
 	private class Effect extends Visual {
 
-		private CharSprite sprite;
-		private PointF end;
+		private final CharSprite sprite;
+		private final PointF end;
 		private float passed;
 
 		public Effect( CharSprite sprite, int from, int to ) {

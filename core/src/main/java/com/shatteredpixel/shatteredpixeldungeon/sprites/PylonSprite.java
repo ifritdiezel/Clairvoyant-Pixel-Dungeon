@@ -30,7 +30,7 @@ import com.watabou.noosa.audio.Sample;
 
 public class PylonSprite extends MobSprite {
 
-	private Animation activeIdle;
+	private final Animation activeIdle;
 
 	public PylonSprite() {
 		super();

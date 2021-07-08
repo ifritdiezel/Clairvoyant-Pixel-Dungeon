@@ -41,7 +41,7 @@ public class RenderedTextBlock extends Component {
 	protected ArrayList<RenderedText> words = new ArrayList<>();
 	protected boolean multiline = false;
 
-	private int size;
+	private final int size;
 	private float zoom;
 	private int color = -1;
 	

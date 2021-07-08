@@ -33,11 +33,11 @@ public enum Languages {
 		REVIEWED    //100% reviewed
 	}
 
-	private String name;
-	private String code;
-	private Status status;
-	private String[] reviewers;
-	private String[] translators;
+	private final String name;
+	private final String code;
+	private final Status status;
+	private final String[] reviewers;
+	private final String[] translators;
 
 	Languages(String name, String code, Status status, String[] reviewers, String[] translators){
 		this.name = name;

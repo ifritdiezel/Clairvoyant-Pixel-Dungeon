@@ -363,7 +363,7 @@ public class NewTengu extends Mob {
 	}
 	
 	//don't bother bundling this, as its purely cosmetic
-	private boolean yelledCoward = false;
+	private final boolean yelledCoward = false;
 	
 	//tengu is always hunting
 	private class Hunting extends Mob.Hunting{
@@ -446,12 +446,8 @@ public class NewTengu extends Mob {
 				//standard delay before ability use, 1-4 turns
 				if (abilityCooldown == -1) abilityCooldown = Random.IntRange(1, 4);
 			}
-			
-			if (abilityCooldown == 0){
-				return true;
-			} else {
-				return false;
-			}
+
+			return abilityCooldown == 0;
 		}
 	}
 	
@@ -565,7 +561,7 @@ public class NewTengu extends Mob {
 		public int bombPos = -1;
 		private int timer = 3;
 
-		private ArrayList<Emitter> smokeEmitters = new ArrayList<>();
+		private final ArrayList<Emitter> smokeEmitters = new ArrayList<>();
 		
 		@Override
 		public boolean act() {

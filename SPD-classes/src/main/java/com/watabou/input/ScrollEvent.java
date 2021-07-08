@@ -40,7 +40,7 @@ public class ScrollEvent {
 	// *** Static members ***
 	// **********************
 	
-	private static Signal<ScrollEvent> scrollSignal = new Signal<>( true );
+	private static final Signal<ScrollEvent> scrollSignal = new Signal<>( true );
 	
 	public static void addScrollListener( Signal.Listener<ScrollEvent> listener ){
 		scrollSignal.add(listener);
@@ -55,7 +55,7 @@ public class ScrollEvent {
 	}
 	
 	//Accumulated key events
-	private static ArrayList<ScrollEvent> scrollEvents = new ArrayList<>();
+	private static final ArrayList<ScrollEvent> scrollEvents = new ArrayList<>();
 	
 	public static synchronized void addScrollEvent( ScrollEvent event ){
 		scrollEvents.add( event );

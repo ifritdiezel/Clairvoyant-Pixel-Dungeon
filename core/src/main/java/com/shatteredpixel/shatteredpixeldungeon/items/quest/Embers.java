@@ -21,16 +21,71 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.quest;
 
+import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
+import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Fire;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
+import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SmokeParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
+import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.watabou.utils.PathFinder;
+import com.watabou.utils.Random;
+
+import java.util.ArrayList;
 
 public class Embers extends Item {
 
 	{
 		image = ItemSpriteSheet.EMBER;
-
+		defaultAction = ABSORB;
 		unique = true;
+	}
+	private static final String ABSORB = "ABSORB";
+
+	@Override
+	public ArrayList<String> actions(Hero hero ) {
+		ArrayList<String> actions = super.actions( hero );
+		actions.add(ABSORB);
+		return actions;
+	}
+
+	@Override
+	public void execute( Hero hero, String action ) {
+
+		super.execute( hero, action );
+
+		if (action.equals(ABSORB)) {
+			Fire fire = (Fire)Dungeon.level.blobs.get( Fire.class );
+			int cell = curUser.pos;
+			int damage = 0;
+			boolean firePresent = curUser.buff( Burning.class ) != null;
+
+			for (int i : PathFinder.NEIGHBOURS9){
+				if (fire != null && fire.volume > 0 && fire.cur[cell + i] > 0) {
+					fire.clear(i + cell);
+					CellEmitter.get( cell+i ).burst(SmokeParticle.FACTORY, 3 );
+					firePresent = true;
+					damage +=1;
+				}
+			}
+			if (firePresent){
+				GLog.h("The embers absorb the flames around you, burning your hands!");
+				curUser.damage(Dungeon.depth/5*damage + Random.Int(4), this);
+				Buff.detach( curUser, Burning.class );
+				if (!curUser.isAlive()) {
+					Dungeon.fail( getClass() );
+					GLog.n( Messages.get(this, "ondeath") );
+				}
+			}
+			else {
+				GLog.i("There is no fire nearby to absorb.");
+			}
+		}
 	}
 
 	@Override

@@ -40,7 +40,7 @@ import com.watabou.utils.PathFinder;
 public class QuickSlotButton extends Button implements WndBag.Listener {
 	
 	private static QuickSlotButton[] instance = new QuickSlotButton[4];
-	private int slotNum;
+	private final int slotNum;
 
 	private ItemSlot slot;
 	
@@ -92,10 +92,12 @@ public class QuickSlotButton extends Button implements WndBag.Listener {
 					}
 				} else {
 					Item item = select(slotNum);
-					if (item.usesTargeting) {
-						useTargeting();
+					if (Dungeon.hero.belongings.contains(item)) {
+						item.execute(Dungeon.hero);
+						if (item.usesTargeting) {
+							useTargeting();
+						}
 					}
-					item.execute( Dungeon.hero );
 				}
 			}
 			
@@ -189,7 +191,7 @@ public class QuickSlotButton extends Button implements WndBag.Listener {
 		slot.item( item );
 		enableSlot();
 	}
-	
+
 	public void enable( boolean value ) {
 		active = value;
 		if (value) {
@@ -253,11 +255,12 @@ public class QuickSlotButton extends Button implements WndBag.Listener {
 		//couldn't find a cell, give up.
 		return -1;
 	}
-	
+
 	public static void refresh() {
 		for (int i = 0; i < instance.length; i++) {
 			if (instance[i] != null) {
 				instance[i].item(select(i));
+				instance[i].enable(instance[i].active);
 			}
 		}
 	}

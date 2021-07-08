@@ -56,6 +56,8 @@ import com.watabou.utils.Callback;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
+import java.nio.Buffer;
+
 public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip.Listener {
 	
 	// Color constants for floating text
@@ -64,6 +66,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public static final int NEGATIVE	= 0xFF0000;
 	public static final int WARNING		= 0xFF8800;
 	public static final int NEUTRAL		= 0xFFFF00;
+	public static final int DEBUG		= 0x3E86A0;
 	
 	public static final float DEFAULT_MOVE_INTERVAL = 0.1f;
 	private static float moveInterval = DEFAULT_MOVE_INTERVAL;
@@ -82,7 +85,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	public enum State {
 		BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED, CHILLED, DARKENED, MARKED, HEALING, SHIELDED
 	}
-	private int stunStates = 0;
+	private final int stunStates = 0;
 	
 	protected Animation idle;
 	protected Animation run;
@@ -276,7 +279,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	}
 
 	public void jump( int from, int to, Callback callback ) {
-		float distance = Dungeon.level.trueDistance( from, to );
+		float distance = Math.max( 1f, Dungeon.level.trueDistance( from, to ));
 		jump( from, to, callback, distance * 2, distance * 0.1f );
 	}
 
@@ -620,7 +623,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 		}
 	}
 
-	private float[] shadowMatrix = new float[16];
+	private final float[] shadowMatrix = new float[16];
 
 	@Override
 	protected void updateMatrix() {
@@ -639,7 +642,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 
 		if (renderShadow) {
 			if (dirty) {
-				verticesBuffer.position(0);
+				((Buffer)verticesBuffer).position(0);
 				verticesBuffer.put(vertices);
 				if (buffer == null)
 					buffer = new Vertexbuffer(verticesBuffer);

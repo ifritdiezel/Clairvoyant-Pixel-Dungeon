@@ -32,7 +32,7 @@ public class Beam extends Image {
 	
 	private static final double A = 180 / Math.PI;
 	
-	private  float duration;
+	private final float duration;
 	
 	private float timeLeft;
 

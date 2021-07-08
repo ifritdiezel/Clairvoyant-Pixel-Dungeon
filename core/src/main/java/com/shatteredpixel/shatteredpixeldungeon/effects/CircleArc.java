@@ -30,6 +30,7 @@ import com.watabou.noosa.NoosaScript;
 import com.watabou.noosa.Visual;
 import com.watabou.utils.PointF;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -46,13 +47,13 @@ public class CircleArc extends Visual {
 	
 	private boolean lightMode = true;
 	
-	private SmartTexture texture;
+	private final SmartTexture texture;
 	
-	private FloatBuffer vertices;
-	private ShortBuffer indices;
+	private final FloatBuffer vertices;
+	private final ShortBuffer indices;
 	
-	private int nTris;
-	private float rad;
+	private final int nTris;
+	private final float rad;
 	
 	//more triangles means a more precise visual
 	public CircleArc( int triangles, float radius ) {
@@ -111,10 +112,10 @@ public class CircleArc extends Visual {
 	private void updateTriangles(){
 		
 		dirty = false;
-		float v[] = new float[4];
+		float[] v = new float[4];
 		
-		indices.position( 0 );
-		vertices.position( 0 );
+		((Buffer)indices).position( 0 );
+		((Buffer)vertices).position( 0 );
 		
 		v[0] = 0;
 		v[1] = 0;
@@ -144,8 +145,8 @@ public class CircleArc extends Visual {
 			indices.put( (short)(1 + i * 2) );
 			indices.put( (short)(2 + i * 2) );
 		}
-		
-		indices.position( 0 );
+
+		((Buffer)indices).position( 0 );
 	}
 	
 	@Override

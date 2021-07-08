@@ -31,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfEnchantment;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndBag;
@@ -58,14 +59,15 @@ public class ScrollOfEnchantment extends ExoticScroll {
 			
 			if (item instanceof Weapon){
 				
-				final Weapon.Enchantment enchants[] = new Weapon.Enchantment[3];
+				final Weapon.Enchantment[] enchants = new Weapon.Enchantment[3];
 				
 				Class<? extends Weapon.Enchantment> existing = ((Weapon) item).enchantment != null ? ((Weapon) item).enchantment.getClass() : null;
 				enchants[0] = Weapon.Enchantment.randomCommon( existing );
 				enchants[1] = Weapon.Enchantment.randomUncommon( existing );
 				enchants[2] = Weapon.Enchantment.random( existing, enchants[0].getClass(), enchants[1].getClass());
 				
-				GameScene.show(new WndOptions(Messages.titleCase(ScrollOfEnchantment.this.name()),
+				GameScene.show(new WndOptions(new ItemSprite(ScrollOfEnchantment.this),
+						Messages.titleCase(ScrollOfEnchantment.this.name()),
 						Messages.get(ScrollOfEnchantment.class, "weapon") +
 						"\n\n" +
 						Messages.get(ScrollOfEnchantment.class, "cancel_warn"),
@@ -95,14 +97,15 @@ public class ScrollOfEnchantment extends ExoticScroll {
 			
 			} else if (item instanceof Armor) {
 				
-				final Armor.Glyph glyphs[] = new Armor.Glyph[3];
+				final Armor.Glyph[] glyphs = new Armor.Glyph[3];
 				
 				Class<? extends Armor.Glyph> existing = ((Armor) item).glyph != null ? ((Armor) item).glyph.getClass() : null;
 				glyphs[0] = Armor.Glyph.randomCommon( existing );
 				glyphs[1] = Armor.Glyph.randomUncommon( existing );
 				glyphs[2] = Armor.Glyph.random( existing, glyphs[0].getClass(), glyphs[1].getClass());
 				
-				GameScene.show(new WndOptions(Messages.titleCase(ScrollOfEnchantment.this.name()),
+				GameScene.show(new WndOptions( new ItemSprite(ScrollOfEnchantment.this),
+						Messages.titleCase(ScrollOfEnchantment.this.name()),
 						Messages.get(ScrollOfEnchantment.class, "armor") +
 						"\n\n" +
 						Messages.get(ScrollOfEnchantment.class, "cancel_warn"),

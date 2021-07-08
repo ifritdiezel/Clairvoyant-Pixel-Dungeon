@@ -22,7 +22,6 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
 public class RunicBlade extends MeleeWeapon {
@@ -43,9 +42,4 @@ public class RunicBlade extends MeleeWeapon {
 		return  5*(tier) +                	//20 base, down from 25
 				Math.round(lvl*(tier+2));	//+6 per level, up from +5
 	}
-	@Override
-	public int proc(Char attacker, Char defender, int damage) {
-		return super.proc(attacker, defender, damage);
-	}
 }
-

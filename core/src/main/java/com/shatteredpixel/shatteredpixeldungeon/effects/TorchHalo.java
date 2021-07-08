@@ -28,7 +28,7 @@ import com.watabou.noosa.Halo;
 
 public class TorchHalo extends Halo {
 
-	private CharSprite target;
+	private final CharSprite target;
 	
 	private float phase = 0;
 	

@@ -35,7 +35,6 @@ public class ApprenticeArmor extends ClassArmor {
 		image = ItemSpriteSheet.ARMOR_APPRENTICE;
 	}
 
-	@Override
 	public void doSpecial() {
 
 		charge -= 35;

@@ -29,24 +29,18 @@ import com.shatteredpixel.shatteredpixeldungeon.Rankings;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Journal;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ExitButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.IconButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
-import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
 import com.shatteredpixel.shatteredpixeldungeon.ui.StyledButton;
-import com.shatteredpixel.shatteredpixeldungeon.ui.TalentsPane;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndChallenges;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndHeroInfo;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndMessage;
-import com.shatteredpixel.shatteredpixeldungeon.windows.WndTabbed;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.input.PointerEvent;
 import com.watabou.noosa.Camera;
@@ -57,15 +51,13 @@ import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.GameMath;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 public class HeroSelectScene extends PixelScene {
 
 	private Image background;
 	private RenderedTextBlock prompt;
 
-	//fading UI elements
-	private ArrayList<StyledButton> heroBtns = new ArrayList<>();
+	private final ArrayList<StyledButton> heroBtns = new ArrayList<>();
 	private StyledButton startBtn;
 	private IconButton infoButton;
 	private IconButton challengeButton;
@@ -74,6 +66,8 @@ public class HeroSelectScene extends PixelScene {
 	@Override
 	public void create() {
 		super.create();
+
+		Dungeon.hero = null;
 
 		Badges.loadGlobal();
 		Journal.loadGlobal();
@@ -110,9 +104,33 @@ public class HeroSelectScene extends PixelScene {
 			add(fadeRight);
 		}
 
+		int btnPerRow = 4;
+		HeroClass[] classes = HeroClass.values();
+
+		int btnWidth = HeroBtn.MIN_WIDTH;
+		int curX = (Camera.main.width - btnWidth * classes.length)/2;
+		if (curX > 0){
+			btnWidth += Math.min(curX/(classes.length/2), 15);
+			curX = (Camera.main.width - btnWidth * btnPerRow)/2;
+		}
+
+		int heroBtnleft = curX;
+		int cycles = 0;
+
+		int lastButtonY = 0;
+
+		for (HeroClass cl : classes){
+			HeroBtn button = new HeroBtn(cl);
+			lastButtonY = Camera.main.height-HeroBtn.HEIGHT*(cycles/btnPerRow+1);
+			button.setRect(curX+(cycles % btnPerRow)*btnWidth, lastButtonY, btnWidth, HeroBtn.HEIGHT);
+			cycles +=1;
+			add(button);
+			heroBtns.add(button);
+		}
+
 		prompt = PixelScene.renderTextBlock(Messages.get(this, "title"), 12);
 		prompt.hardlight(Window.TITLE_COLOR);
-		prompt.setPos( (Camera.main.width - prompt.width())/2f, (Camera.main.height - HeroBtn.HEIGHT - prompt.height() - 4));
+		prompt.setPos( (Camera.main.width - prompt.width())/2f, lastButtonY - 12);
 		PixelScene.align(prompt);
 		add(prompt);
 
@@ -137,7 +155,7 @@ public class HeroSelectScene extends PixelScene {
 		};
 		startBtn.icon(Icons.get(Icons.ENTER));
 		startBtn.setSize(80, 21);
-		startBtn.setPos((Camera.main.width - startBtn.width())/2f, (Camera.main.height - HeroBtn.HEIGHT + 2 - startBtn.height()));
+		startBtn.setPos((Camera.main.width - startBtn.width())/2f, (lastButtonY + 2 - startBtn.height() - 4));
 		add(startBtn);
 		startBtn.visible = false;
 
@@ -151,25 +169,6 @@ public class HeroSelectScene extends PixelScene {
 		infoButton.visible = false;
 		infoButton.setSize(21, 21);
 		add(infoButton);
-
-		HeroClass[] classes = HeroClass.values();
-
-		int btnWidth = HeroBtn.MIN_WIDTH;
-		int curX = (Camera.main.width - btnWidth * classes.length)/2;
-		if (curX > 0){
-			btnWidth += Math.min(curX/(classes.length/2), 15);
-			curX = (Camera.main.width - btnWidth * classes.length)/2;
-		}
-
-		int heroBtnleft = curX;
-		for (HeroClass cl : classes){
-			HeroBtn button = new HeroBtn(cl);
-			button.setRect(curX, Camera.main.height-HeroBtn.HEIGHT+3, btnWidth, HeroBtn.HEIGHT);
-			curX += btnWidth;
-			add(button);
-			heroBtns.add(button);
-		}
-
 		challengeButton = new IconButton(
 				Icons.get( SPDSettings.challenges() > 0 ? Icons.CHALLENGE_ON :Icons.CHALLENGE_OFF)){
 			@Override
@@ -286,7 +285,7 @@ public class HeroSelectScene extends PixelScene {
 
 	private class HeroBtn extends StyledButton {
 
-		private HeroClass cl;
+		private final HeroClass cl;
 
 		private static final int MIN_WIDTH = 20;
 		private static final int HEIGHT = 24;
@@ -328,178 +327,4 @@ public class HeroSelectScene extends PixelScene {
 		}
 	}
 
-	private static class WndHeroInfo extends WndTabbed {
-
-		private RenderedTextBlock title;
-		private RenderedTextBlock info;
-
-		private TalentsPane talents;
-		private RedButton firstSub;
-		private RedButton secondSub;
-
-		private int WIDTH = 120;
-		private int HEIGHT = 120;
-		private int MARGIN = 2;
-		private int INFO_WIDTH = WIDTH - MARGIN*2;
-
-		private static boolean secondSubclass = false;
-
-		public WndHeroInfo( HeroClass cl ){
-
-			title = PixelScene.renderTextBlock(9);
-			title.hardlight(TITLE_COLOR);
-			add(title);
-
-			info = PixelScene.renderTextBlock(6);
-			add(info);
-
-			ArrayList<LinkedHashMap<Talent, Integer>> talentList = new ArrayList<>();
-			Talent.initClassTalents(cl, talentList);
-			Talent.initSubclassTalents(cl.subClasses()[secondSubclass ? 1 : 0], talentList);
-			talents = new TalentsPane(false, talentList);
-			add(talents);
-
-			firstSub = new RedButton(Messages.titleCase(cl.subClasses()[0].title()), 7){
-				@Override
-				protected void onClick() {
-					super.onClick();
-					if (secondSubclass){
-						secondSubclass = false;
-						hide();
-						WndHeroInfo newWindow = new WndHeroInfo(cl);
-						newWindow.talents.scrollTo(0, talents.content().camera.scroll.y);
-						newWindow.select(2);
-						ShatteredPixelDungeon.scene().addToFront(newWindow);
-					}
-				}
-			};
-			if (!secondSubclass) firstSub.textColor(Window.TITLE_COLOR);
-			firstSub.setSize(40, firstSub.reqHeight()+2);
-			add(firstSub);
-
-			secondSub = new RedButton(Messages.titleCase(cl.subClasses()[1].title()), 7){
-				@Override
-				protected void onClick() {
-					super.onClick();
-					if (!secondSubclass){
-						secondSubclass = true;
-						hide();
-						WndHeroInfo newWindow = new WndHeroInfo(cl);
-						newWindow.talents.scrollTo(0, talents.content().camera.scroll.y);
-						newWindow.select(2);
-						ShatteredPixelDungeon.scene().addToFront(newWindow);
-					}
-				}
-			};
-			if (secondSubclass) secondSub.textColor(Window.TITLE_COLOR);
-			secondSub.setSize(40, secondSub.reqHeight()+2);
-			add(secondSub);
-
-			Tab tab;
-			Image[] tabIcons;
-			switch (cl){
-				case APPRENTICE: default:
-					tabIcons = new Image[]{
-							new ItemSprite(ItemSpriteSheet.SEAL, null),
-							new ItemSprite(ItemSpriteSheet.WORN_SHORTSWORD, null)
-					};
-					break;
-				case MAGE:
-					tabIcons = new Image[]{
-							new ItemSprite(ItemSpriteSheet.MAGES_STAFF, null),
-							new ItemSprite(ItemSpriteSheet.HOLDER, null)
-					};
-					break;
-				case ROGUE:
-					tabIcons = new Image[]{
-							new ItemSprite(ItemSpriteSheet.ARTIFACT_CLOAK, null),
-							new ItemSprite(ItemSpriteSheet.DAGGER, null)
-					};
-					break;
-				case HUNTRESS:
-					tabIcons = new Image[]{
-							new ItemSprite(ItemSpriteSheet.SPIRIT_BOW, null),
-							new ItemSprite(ItemSpriteSheet.GLOVES, null)
-					};
-					break;
-			}
-
-			tab = new IconTab( tabIcons[0] ){
-				@Override
-				protected void select(boolean value) {
-					super.select(value);
-					if (value){
-						title.text(Messages.titleCase(Messages.get(WndHeroInfo.class, "innate_title")));
-						info.text(Messages.get(cl, cl.name() + "_desc_innate"), INFO_WIDTH);
-					}
-				}
-			};
-			add(tab);
-
-			tab = new IconTab( tabIcons[1] ){
-				@Override
-				protected void select(boolean value) {
-					super.select(value);
-					if (value){
-						title.text(Messages.titleCase(Messages.get(WndHeroInfo.class, "loadout_title")));
-						info.text(Messages.get(cl, cl.name() + "_desc_loadout"), INFO_WIDTH);
-					}
-				}
-			};
-			add(tab);
-
-			tab = new IconTab( Icons.get(Icons.TALENT) ){
-				@Override
-				protected void select(boolean value) {
-					super.select(value);
-					if (value){
-						title.text(Messages.titleCase(Messages.get(WndHeroInfo.class, "talents_title")));
-						info.text(Messages.get(WndHeroInfo.class, "talents_desc"), INFO_WIDTH);
-					}
-					talents.visible = talents.active = value;
-					firstSub.visible = firstSub.active = value;
-					secondSub.visible = secondSub.active = value;
-				}
-			};
-			add(tab);
-
-			tab = new IconTab(new ItemSprite(ItemSpriteSheet.MASTERY, null)){
-				@Override
-				protected void select(boolean value) {
-					super.select(value);
-					if (value){
-						title.text(Messages.titleCase(Messages.get(WndHeroInfo.class, "subclasses_title")));
-						String msg = Messages.get(cl, cl.name() + "_desc_subclasses");
-						for (HeroSubClass sub : cl.subClasses()){
-							msg += "\n\n" + sub.desc();
-						}
-						info.text(msg, INFO_WIDTH);
-					}
-				}
-			};
-			add(tab);
-
-			resize(WIDTH, HEIGHT);
-			select(0);
-
-		}
-
-		@Override
-		public void select(Tab tab) {
-			super.select(tab);
-
-			title.setPos((WIDTH-title.width())/2, MARGIN);
-			info.setPos(MARGIN, title.bottom()+2*MARGIN);
-
-			firstSub.setPos((title.left() - firstSub.width())/2, 0);
-			secondSub.setPos(title.right() + (WIDTH - title.right() - secondSub.width())/2, 0);
-
-			talents.setRect(0, info.bottom()+MARGIN, WIDTH, HEIGHT - (info.bottom()+MARGIN));
-
-			resize(WIDTH, Math.max(HEIGHT, (int)info.bottom()));
-
-			layoutTabs();
-
-		}
-	}
 }

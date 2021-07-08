@@ -39,7 +39,7 @@ public class KeyEvent {
 	// *** Static members ***
 	// **********************
 	
-	private static Signal<KeyEvent> keySignal = new Signal<>( true );
+	private static final Signal<KeyEvent> keySignal = new Signal<>( true );
 	
 	public static void addKeyListener( Signal.Listener<KeyEvent> listener ){
 		keySignal.add(listener);
@@ -54,7 +54,7 @@ public class KeyEvent {
 	}
 	
 	//Accumulated key events
-	private static ArrayList<KeyEvent> keyEvents = new ArrayList<>();
+	private static final ArrayList<KeyEvent> keyEvents = new ArrayList<>();
 	
 	public static synchronized void addKeyEvent( KeyEvent event ){
 		keyEvents.add( event );

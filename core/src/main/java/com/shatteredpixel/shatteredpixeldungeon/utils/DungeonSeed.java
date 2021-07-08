@@ -26,7 +26,7 @@ import com.watabou.utils.Random;
 //This class defines the parameters for seeds in ShatteredPD and contains a few convenience methods
 public class DungeonSeed {
 
-	private static long TOTAL_SEEDS = 5429503678976L; //26^9 possible seeds
+	private static final long TOTAL_SEEDS = 5429503678976L; //26^9 possible seeds
 
 	public static long randomSeed(){
 		return Random.Long( TOTAL_SEEDS );

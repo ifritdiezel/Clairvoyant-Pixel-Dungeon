@@ -25,6 +25,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.ViewConfiguration;
 
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.backends.android.AndroidApplication;
@@ -32,6 +33,7 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.watabou.noosa.Game;
+import com.watabou.noosa.ui.Button;
 import com.watabou.utils.FileUtils;
 
 public class AndroidGame extends AndroidApplication {
@@ -96,7 +98,9 @@ public class AndroidGame extends AndroidApplication {
 		else                 support.reloadGenerators();
 		
 		support.updateSystemUI();
-		
+
+		Button.longClick = ViewConfiguration.getLongPressTimeout()/1000f;
+
 		initialize(new ShatteredPixelDungeon(support), config);
 		
 	}

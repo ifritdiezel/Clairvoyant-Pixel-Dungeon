@@ -54,7 +54,7 @@ public abstract class TargetedSpell extends Spell {
 		Sample.INSTANCE.play( Assets.Sounds.ZAP );
 	}
 	
-	private  static CellSelector.Listener targeter = new  CellSelector.Listener(){
+	private  static final CellSelector.Listener targeter = new  CellSelector.Listener(){
 		
 		@Override
 		public void onSelect( Integer target ) {
@@ -88,7 +88,7 @@ public abstract class TargetedSpell extends Spell {
 						curSpell.affectTarget(shot, curUser);
 						curSpell.detach( curUser.belongings.backpack );
 						Invisibility.dispel();
-						curSpell.updateQuickslot();
+						updateQuickslot();
 						curUser.spendAndNext( 1f );
 					}
 				});

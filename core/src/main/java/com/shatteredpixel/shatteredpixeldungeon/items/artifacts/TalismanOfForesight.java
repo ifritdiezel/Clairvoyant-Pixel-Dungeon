@@ -120,7 +120,7 @@ public class TalismanOfForesight extends Artifact {
 		return Math.min(5 + 2*level(), (charge-3)/1.08f);
 	}
 
-	private CellSelector.Listener scry = new CellSelector.Listener(){
+	private final CellSelector.Listener scry = new CellSelector.Listener(){
 
 		@Override
 		public void onSelect(Integer target) {
@@ -324,6 +324,7 @@ public class TalismanOfForesight extends Artifact {
 		public void charge(int boost){
 			if (!cursed) {
 				charge = Math.min((charge + boost), chargeCap);
+				updateQuickslot();
 			}
 		}
 
@@ -349,7 +350,6 @@ public class TalismanOfForesight extends Artifact {
 	public static class CharAwareness extends FlavourBuff {
 
 		public int charID;
-		public int depth = Dungeon.depth;
 
 		private static final String CHAR_ID = "char_id";
 

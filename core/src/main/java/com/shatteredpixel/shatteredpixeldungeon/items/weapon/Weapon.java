@@ -75,8 +75,8 @@ abstract public class Weapon extends KindOfWeapon {
 		DAMAGE  (1.5f, 1.6667f),
 		NONE	(1.0f, 1.0000f);
 
-		private float damageFactor;
-		private float delayFactor;
+		private final float damageFactor;
+		private final float delayFactor;
 
 		Augment(float dmg, float dly){
 			damageFactor = dmg;
@@ -182,18 +182,24 @@ abstract public class Weapon extends KindOfWeapon {
 	}
 	
 	@Override
-	public float speedFactor( Char owner ) {
+	public float delayFactor( Char owner ) {
+		return baseDelay(owner) * (1f/speedMultiplier(owner));
+	}
 
-		int encumbrance = 0;
+	protected float baseDelay( Char owner ){
+		float delay = augment.delayFactor(this.DLY);
 		if (owner instanceof Hero) {
-			encumbrance = STRReq() - ((Hero)owner).STR();
+			int encumbrance = STRReq() - ((Hero)owner).STR();
+			if (encumbrance > 0){
+				delay *= Math.pow( 1.2, encumbrance );
+			}
 		}
 
-		float DLY = augment.delayFactor(this.DLY);
+		return delay;
+	}
 
-		DLY *= RingOfFuror.attackDelayMultiplier(owner);
-
-		return (encumbrance > 0 ? (float)(DLY * Math.pow( 1.2, encumbrance )) : DLY);
+	protected float speedMultiplier(Char owner ){
+		return RingOfFuror.attackSpeedMultiplier(owner);
 	}
 
 	@Override
@@ -211,7 +217,6 @@ abstract public class Weapon extends KindOfWeapon {
 		lvl = Math.max(0, lvl);
 
 		//strength req decreases at +1,+3,+6,+10,etc.
-
 		return (8 + tier * 2) - (int)(Math.sqrt(8 * lvl + 1) - 1)/2;
 	}
 

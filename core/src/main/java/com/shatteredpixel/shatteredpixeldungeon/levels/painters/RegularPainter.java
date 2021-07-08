@@ -415,6 +415,12 @@ public abstract class RegularPainter extends Painter {
 				l.map[trapPos] = trap.visible ? Terrain.TRAP : Terrain.SECRET_TRAP;
 			}
 		}
+
+		if (l.feeling == Level.Feeling.STEAM){
+			for (int cell : validCells) {
+				if (Random.Int(40)==0){l.map[cell]=Terrain.EMPTY_WELL;}
+			}
+		}
 	}
 	
 }

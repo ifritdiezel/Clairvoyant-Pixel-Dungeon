@@ -39,9 +39,9 @@ public class Lightning extends Group {
 	
 	private float life;
 
-	private List<Arc> arcs;
+	private final List<Arc> arcs;
 	
-	private Callback callback;
+	private final Callback callback;
 
 	public Lightning(int from, int to, Callback callback){
 		this(Arrays.asList(new Arc(from, to)), callback);
@@ -106,10 +106,12 @@ public class Lightning extends Group {
 	//these act as a means of easily expressing lighting between two points.
 	public static class Arc extends Group {
 
-		private Image arc1, arc2;
+		private final Image arc1;
+		private final Image arc2;
 
 		//starting and ending x/y values
-		private PointF start, end;
+		private final PointF start;
+		private final PointF end;
 
 		public Arc(int from, int to){
 			this( DungeonTilemap.tileCenterToWorld(from),

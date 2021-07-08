@@ -81,7 +81,7 @@ public class OldPrisonBossLevel extends Level {
 	}
 
 	//keep track of that need to be removed as the level is changed. We dump 'em back into the level at the end.
-	private ArrayList<Item> storedItems = new ArrayList<>();
+	private final ArrayList<Item> storedItems = new ArrayList<>();
 	
 	@Override
 	public String tilesTex() {
@@ -623,7 +623,7 @@ public class OldPrisonBossLevel extends Level {
 		
 		final int TEX_WIDTH = 256;
 		
-		private static short[] render = new short[]{
+		private static final short[] render = new short[]{
 				0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -666,7 +666,7 @@ public class OldPrisonBossLevel extends Level {
 		
 		final int TEX_WIDTH = 256;
 		
-		private static short[] render = new short[]{
+		private static final short[] render = new short[]{
 				0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
 				0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,

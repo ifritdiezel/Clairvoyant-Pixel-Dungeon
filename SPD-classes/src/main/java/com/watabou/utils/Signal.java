@@ -25,9 +25,9 @@ import java.util.LinkedList;
 
 public class Signal<T> {
 
-	private LinkedList<Listener<T>> listeners = new LinkedList<>();
+	private final LinkedList<Listener<T>> listeners = new LinkedList<>();
 	
-	private boolean stackMode;
+	private final boolean stackMode;
 	
 	public Signal() {
 		this( false );

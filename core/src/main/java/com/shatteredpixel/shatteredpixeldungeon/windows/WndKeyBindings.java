@@ -49,8 +49,8 @@ public class WndKeyBindings extends Window {
 	private static final int COL2_CENTER = 5*WIDTH/8;
 	private static final int COL3_CENTER = 7*WIDTH/8;
 
-	private Component bindingsList;
-	private ArrayList<BindingItem> listItems = new ArrayList<>();
+	private final Component bindingsList;
+	private final ArrayList<BindingItem> listItems = new ArrayList<>();
 
 	private LinkedHashMap<Integer, GameAction> changedBindings;
 
@@ -170,20 +170,20 @@ public class WndKeyBindings extends Window {
 		private static final int UNBOUND = 0x888888;
 		private static final int UNBOUND_CHANGED = 0x888822;
 
-		private GameAction gameAction;
+		private final GameAction gameAction;
 		private int key1;
 		private int key2;
 
-		private int origKey1;
-		private int origKey2;
+		private final int origKey1;
+		private final int origKey2;
 
-		private RenderedTextBlock actionName;
-		private RenderedTextBlock key1Name;
-		private RenderedTextBlock key2Name;
+		private final RenderedTextBlock actionName;
+		private final RenderedTextBlock key1Name;
+		private final RenderedTextBlock key2Name;
 
-		private ColorBlock sep1;
-		private ColorBlock sep2;
-		private ColorBlock sep3;
+		private final ColorBlock sep1;
+		private final ColorBlock sep2;
+		private final ColorBlock sep3;
 
 		public BindingItem( GameAction action ){
 			gameAction = action;
@@ -277,15 +277,15 @@ public class WndKeyBindings extends Window {
 
 	private class WndChangeBinding extends Window {
 
-		private int curKeyCode;
-		private int otherBoundKey;
+		private final int curKeyCode;
+		private final int otherBoundKey;
 		private int changedKeyCode = -1;
 
 		private BindingItem changedAction;
-		private RenderedTextBlock changedKey;
-		private RenderedTextBlock warnErr;
+		private final RenderedTextBlock changedKey;
+		private final RenderedTextBlock warnErr;
 
-		private RedButton btnConfirm;
+		private final RedButton btnConfirm;
 
 		public WndChangeBinding(GameAction action, BindingItem listItem, boolean firstKey, int curKeyCode, int otherBoundKey ){
 

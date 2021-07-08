@@ -28,8 +28,8 @@ public class GameAction {
 
 	private static final ArrayList<GameAction> ALL_ACTIONS = new ArrayList<>();
 
-	private int code;
-	private String name;
+	private final int code;
+	private final String name;
 
 	protected GameAction( String name ){
 		code = ALL_ACTIONS.size();

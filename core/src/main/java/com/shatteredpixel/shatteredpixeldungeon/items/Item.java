@@ -96,7 +96,7 @@ public class Item implements Bundlable {
 	// whether an item can be included in heroes remains
 	public boolean bones = false;
 	
-	private static Comparator<Item> itemComparator = new Comparator<Item>() {
+	private static final Comparator<Item> itemComparator = new Comparator<Item>() {
 		@Override
 		public int compare( Item lhs, Item rhs ) {
 			return Generator.Category.order( lhs ) - Generator.Category.order( rhs );
@@ -109,7 +109,11 @@ public class Item implements Bundlable {
 		actions.add( AC_THROW );
 		return actions;
 	}
-	
+
+	public String actionName(String action, Hero hero){
+		return Messages.get(this, "ac_" + action);
+	}
+
 	public boolean doPickUp( Hero hero ) {
 		if (collect( hero.belongings.backpack )) {
 			
@@ -215,6 +219,7 @@ public class Item implements Bundlable {
 				if (isSimilar( item )) {
 					item.merge( this );
 					updateQuickslot();
+					Talent.onItemCollected( Dungeon.hero, item );
 					return true;
 				}
 			}
@@ -222,6 +227,7 @@ public class Item implements Bundlable {
 
 		if (Dungeon.hero != null && Dungeon.hero.isAlive()) {
 			Badges.validateItemLevelAquired( this );
+			Talent.onItemCollected( Dungeon.hero, this );
 		}
 
 		items.add( this );
@@ -389,6 +395,7 @@ public class Item implements Bundlable {
 	}
 	
 	public Item identify() {
+
 		if (Dungeon.hero != null && Dungeon.hero.isAlive()){
 			Catalog.setSeen(getClass());
 			if (!isIdentified()) {
@@ -496,9 +503,9 @@ public class Item implements Bundlable {
 	public String status() {
 		return quantity != 1 ? Integer.toString( quantity ) : null;
 	}
-	
+
 	public static void updateQuickslot() {
-			QuickSlotButton.refresh();
+		QuickSlotButton.refresh();
 	}
 	
 	private static final String QUANTITY		= "quantity";
@@ -585,12 +592,15 @@ public class Item implements Bundlable {
 					reset(user.sprite,
 							cell,
 							this,
-							() -> {
-								curUser = user;
-								Item i = Item.this.detach(user.belongings.backpack);
-								if (i != null) i.onThrow(cell);
-								user.spendAndNext(delay);
-							});
+							new Callback() {
+						@Override
+						public void call() {
+							curUser = user;
+							Item i = Item.this.detach(user.belongings.backpack);
+							if (i != null) i.onThrow(cell);
+							user.spendAndNext(delay);
+						}
+					});
 		}
 	}
 	

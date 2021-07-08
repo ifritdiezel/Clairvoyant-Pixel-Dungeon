@@ -39,7 +39,7 @@ public class GameLog extends Component implements Signal.Listener<String> {
 	private RenderedTextBlock lastEntry;
 	private int lastColor;
 
-	private static ArrayList<Entry> entries = new ArrayList<>();
+	private static final ArrayList<Entry> entries = new ArrayList<>();
 
 	public GameLog() {
 		super();
@@ -48,7 +48,7 @@ public class GameLog extends Component implements Signal.Listener<String> {
 		recreateLines();
 	}
 	
-	private static ArrayList<String> textsToAdd = new ArrayList<>();
+	private static final ArrayList<String> textsToAdd = new ArrayList<>();
 	
 	@Override
 	public synchronized void update() {
@@ -79,7 +79,10 @@ public class GameLog extends Component implements Signal.Listener<String> {
 			if (text.startsWith( GLog.HIGHLIGHT )) {
 				text = text.substring( GLog.HIGHLIGHT.length() );
 				color = CharSprite.NEUTRAL;
-			}
+			} else
+			if (text.startsWith( GLog.DEBUG )) {
+				text = text.substring( GLog.DEBUG.length() );
+				color = CharSprite.DEBUG;}
 			
 			if (lastEntry != null && color == lastColor && lastEntry.nLines < MAX_LINES) {
 				
@@ -158,12 +161,6 @@ public class GameLog extends Component implements Signal.Listener<String> {
 		}
 	}
 
-	@Override
-	public void destroy() {
-		GLog.update.remove( this );
-		super.destroy();
-	}
-
 	private static class Entry {
 		public String text;
 		public int color;
@@ -175,5 +172,6 @@ public class GameLog extends Component implements Signal.Listener<String> {
 
 	public static void wipe() {
 		entries.clear();
+		textsToAdd.clear();
 	}
 }

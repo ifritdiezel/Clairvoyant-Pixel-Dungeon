@@ -12,7 +12,7 @@ import com.watabou.noosa.tweeners.AlphaTweener;
 
 public class WardSprite extends MobSprite {
 
-	private Animation tierIdles[] = new Animation[7];
+	private final Animation[] tierIdles = new Animation[7];
 
 	public WardSprite(){
 		super();

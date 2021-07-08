@@ -29,7 +29,7 @@ public class Renderbuffer {
 	public static final int DEPTH16		= Gdx.gl.GL_DEPTH_COMPONENT16;
 	public static final int STENCIL8	= Gdx.gl.GL_STENCIL_INDEX8;
 	
-	private int id;
+	private final int id;
 	
 	public Renderbuffer() {
 		id = Gdx.gl.glGenRenderbuffer();

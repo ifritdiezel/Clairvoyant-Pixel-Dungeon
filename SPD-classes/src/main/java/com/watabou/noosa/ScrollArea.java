@@ -37,7 +37,7 @@ public class ScrollArea extends PointerArea {
 		ScrollEvent.addScrollListener( scrollListener );
 	}
 	
-	private Signal.Listener<ScrollEvent> scrollListener = new Signal.Listener<ScrollEvent>() {
+	private final Signal.Listener<ScrollEvent> scrollListener = new Signal.Listener<ScrollEvent>() {
 		@Override
 		public boolean onSignal(ScrollEvent event) {
 

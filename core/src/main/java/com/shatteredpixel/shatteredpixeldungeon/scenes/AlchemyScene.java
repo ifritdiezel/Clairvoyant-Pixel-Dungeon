@@ -65,7 +65,7 @@ import java.util.ArrayList;
 
 public class AlchemyScene extends PixelScene {
 	
-	private static ItemButton[] inputs = new ItemButton[3];
+	private static final ItemButton[] inputs = new ItemButton[3];
 	private ItemSlot output;
 	
 	private Emitter smokeEmitter;
@@ -457,7 +457,7 @@ public class AlchemyScene extends PixelScene {
 				curslot++;
 				needed -= detached.quantity();
 				if (detached == found.get(0)) {
-					final Item remove = found.remove(0);
+					found.remove(0);
 				}
 			}
 		}

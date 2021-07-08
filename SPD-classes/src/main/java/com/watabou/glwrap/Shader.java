@@ -31,7 +31,7 @@ public class Shader {
 	public static final int VERTEX		= Gdx.gl.GL_VERTEX_SHADER;
 	public static final int FRAGMENT	= Gdx.gl.GL_FRAGMENT_SHADER;
 	
-	private int handle;
+	private final int handle;
 	
 	public Shader( int type ) {
 		handle = Gdx.gl.glCreateShader( type );

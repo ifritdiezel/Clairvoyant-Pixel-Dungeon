@@ -35,6 +35,8 @@ public class Berry extends Food {
 	{
 		image = ItemSpriteSheet.BERRY;
 		energy = Hunger.HUNGRY/3f; //100 food value
+
+		bones = false;
 	}
 
 	@Override
@@ -61,5 +63,5 @@ public class Berry extends Food {
 		return 5 * quantity;
 	}
 
-	public static class SeedCounter extends CounterBuff{};
+	public static class SeedCounter extends CounterBuff{}
 }

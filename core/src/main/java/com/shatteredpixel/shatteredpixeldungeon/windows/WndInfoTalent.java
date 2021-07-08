@@ -41,8 +41,8 @@ public class WndInfoTalent extends Window {
 
 	private static final int WIDTH = 120;
 
-	private SmartTexture icons;
-	private TextureFilm film;
+	private final SmartTexture icons;
+	private final TextureFilm film;
 
 	public WndInfoTalent(Talent talent, int points, Callback onUpgradeButton){
 		super();

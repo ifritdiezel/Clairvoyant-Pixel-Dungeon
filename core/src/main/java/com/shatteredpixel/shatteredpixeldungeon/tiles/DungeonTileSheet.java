@@ -208,7 +208,7 @@ public class DungeonTileSheet {
 	// makes array traversal much faster than something like HashSet.contains.
 
 	//These tiles count as wall for the purposes of wall stitching
-	private static int[] wallStitcheable = new int[]{
+	private static final int[] wallStitcheable = new int[]{
 			Terrain.WALL, Terrain.WALL_DECO, Terrain.SECRET_DOOR,
 			Terrain.LOCKED_EXIT, Terrain.UNLOCKED_EXIT, Terrain.BOOKSHELF, NULL_TILE
 	};
@@ -253,7 +253,7 @@ public class DungeonTileSheet {
 		else return -1;
 	}
 
-	private static int[] doorTiles = new int[]{
+	private static final int[] doorTiles = new int[]{
 			Terrain.DOOR, Terrain.LOCKED_DOOR, Terrain.OPEN_DOOR
 	};
 

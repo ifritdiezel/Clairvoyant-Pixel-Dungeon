@@ -158,7 +158,7 @@ public class CrystalMimic extends Mimic {
 			if (!item.stackable) {
 				Dungeon.quickslot.convertToPlaceholder(item);
 			}
-			item.updateQuickslot();
+			Item.updateQuickslot();
 
 			if (item instanceof Honeypot){
 				items.add(((Honeypot)item).shatter(this, this.pos));

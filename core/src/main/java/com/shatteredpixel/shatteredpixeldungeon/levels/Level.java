@@ -44,8 +44,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Shadows;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.SpiritHawk;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Bestiary;
-import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mimic;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.YogFist;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.Sheep;
@@ -97,7 +97,7 @@ import java.util.HashSet;
 
 public abstract class Level implements Bundlable {
 	
-	public static enum Feeling {
+	public enum Feeling {
 		NONE,
 		CHASM,
 		WATER,
@@ -105,7 +105,8 @@ public abstract class Level implements Bundlable {
 		DARK,
 		LARGE,
 		TRAPS,
-		SECRETS
+		SECRETS,
+		STEAM
 	}
 
 	protected int width;
@@ -215,7 +216,7 @@ public abstract class Level implements Bundlable {
 			if (Dungeon.depth > 1) {
 				//50% chance of getting a level feeling
 				//~7.15% chance for each feeling
-				switch (Random.Int( 10 )) {
+				switch (Random.Int( 14 )) {
 					case 0:
 						feeling = Feeling.CHASM;
 						break;
@@ -239,6 +240,9 @@ public abstract class Level implements Bundlable {
 						break;
 					case 6:
 						feeling = Feeling.SECRETS;
+						break;
+					case 7:
+						feeling = Feeling.STEAM;
 						break;
 				}
 			}
@@ -393,13 +397,6 @@ public abstract class Level implements Bundlable {
 		buildFlagMaps();
 		cleanWalls();
 
-		//compat with pre-0.8.0 saves
-		for (Heap h : heaps.valueList()){
-			if (h.type == Heap.Type.MIMIC){
-				heaps.remove(h.pos);
-				mobs.add(Mimic.spawnAt(h.pos, h.items));
-			}
-		}
 	}
 	
 	@Override
@@ -933,20 +930,23 @@ public abstract class Level implements Bundlable {
 			Web.affectChar( ch );
 		}
 
-		if ( (map[ch.pos] == Terrain.GRASS || map[ch.pos] == Terrain.EMBERS)
-				&& ch == Dungeon.hero && Dungeon.hero.hasTalent(Talent.REJUVENATING_STEPS)
-				&& ch.buff(Talent.RejuvenatingStepsCooldown.class) == null){
-
-			if (Dungeon.hero.buff(LockedFloor.class) != null && !Dungeon.hero.buff(LockedFloor.class).regenOn()){
-				set(ch.pos, Terrain.FURROWED_GRASS);
-			} else {
-				set(ch.pos, Terrain.HIGH_GRASS);
-			}
-			GameScene.updateMap(ch.pos);
-			Buff.affect(ch, Talent.RejuvenatingStepsCooldown.class, 15f - 5f*Dungeon.hero.pointsInTalent(Talent.REJUVENATING_STEPS));
-		}
-
 		if (!ch.flying){
+
+			if ( (map[ch.pos] == Terrain.GRASS || map[ch.pos] == Terrain.EMBERS)
+					&& ch == Dungeon.hero && Dungeon.hero.hasTalent(Talent.REJUVENATING_STEPS)
+					&& ch.buff(Talent.RejuvenatingStepsCooldown.class) == null){
+
+				if (Dungeon.hero.buff(LockedFloor.class) != null && !Dungeon.hero.buff(LockedFloor.class).regenOn()){
+					set(ch.pos, Terrain.FURROWED_GRASS);
+				} else if (ch.buff(Talent.RejuvenatingStepsFurrow.class) != null && ch.buff(Talent.RejuvenatingStepsFurrow.class).count() >= 200) {
+					set(ch.pos, Terrain.FURROWED_GRASS);
+				} else {
+					set(ch.pos, Terrain.HIGH_GRASS);
+					Buff.count(ch, Talent.RejuvenatingStepsFurrow.class, 3 - Dungeon.hero.pointsInTalent(Talent.REJUVENATING_STEPS));
+				}
+				GameScene.updateMap(ch.pos);
+				Buff.affect(ch, Talent.RejuvenatingStepsCooldown.class, 15f - 5f*Dungeon.hero.pointsInTalent(Talent.REJUVENATING_STEPS));
+			}
 			
 			if (pit[ch.pos]){
 				if (ch == Dungeon.hero) {
@@ -1121,6 +1121,18 @@ public abstract class Level implements Bundlable {
 			}
 		}
 
+		if (c instanceof SpiritHawk.HawkAlly && Dungeon.hero.pointsInTalent(Talent.EAGLE_EYE) >= 3){
+			int range = 1+(Dungeon.hero.pointsInTalent(Talent.EAGLE_EYE)-2);
+			for (Mob mob : mobs) {
+				int p = mob.pos;
+				if (!fieldOfView[p] && distance(c.pos, p) <= range) {
+					for (int i : PathFinder.NEIGHBOURS9) {
+						fieldOfView[mob.pos + i] = true;
+					}
+				}
+			}
+		}
+
 		//Currently only the hero can get mind vision or awareness
 		if (c.isAlive() && c == Dungeon.hero) {
 
@@ -1138,9 +1150,11 @@ public abstract class Level implements Bundlable {
 					}
 				}
 			} else if (((Hero) c).hasTalent(Talent.HEIGHTENED_SENSES)) {
+				Hero h = (Hero) c;
+				int range = 1+h.pointsInTalent(Talent.HEIGHTENED_SENSES);
 				for (Mob mob : mobs) {
 					int p = mob.pos;
-					if (!fieldOfView[p] && distance(c.pos, p) <= 1+((Hero) c).pointsInTalent(Talent.HEIGHTENED_SENSES)) {
+					if (!fieldOfView[p] && distance(c.pos, p) <= range) {
 						for (int i : PathFinder.NEIGHBOURS9) {
 							heroMindFov[mob.pos + i] = true;
 						}
@@ -1156,10 +1170,8 @@ public abstract class Level implements Bundlable {
 			}
 
 			for (TalismanOfForesight.CharAwareness a : c.buffs(TalismanOfForesight.CharAwareness.class)){
-				if (Dungeon.depth != a.depth) continue;
 				Char ch = (Char) Actor.findById(a.charID);
 				if (ch == null) {
-					a.detach();
 					continue;
 				}
 				int p = ch.pos;
@@ -1172,7 +1184,9 @@ public abstract class Level implements Bundlable {
 			}
 
 			for (Mob m : mobs){
-				if (m instanceof WandOfWarding.Ward || m instanceof WandOfRegrowth.Lotus){
+				if (m instanceof WandOfWarding.Ward
+						|| m instanceof WandOfRegrowth.Lotus
+						|| m instanceof SpiritHawk.HawkAlly){
 					if (m.fieldOfView == null || m.fieldOfView.length != length()){
 						m.fieldOfView = new boolean[length()];
 						Dungeon.level.updateFieldOfView( m, m.fieldOfView );

@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.services.updates;
 
 public class UpdateImpl {
 
-	private static UpdateService updateChecker = new DebugUpdates();
+	private static final UpdateService updateChecker = new DebugUpdates();
 
 	public static UpdateService getUpdateService(){
 		return updateChecker;

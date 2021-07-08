@@ -136,7 +136,7 @@ public enum Catalog {
 	POTIONS,
 	SCROLLS;
 	
-	private LinkedHashMap<Class<? extends Item>, Boolean> seen = new LinkedHashMap<>();
+	private final LinkedHashMap<Class<? extends Item>, Boolean> seen = new LinkedHashMap<>();
 	
 	public Collection<Class<? extends Item>> items(){
 		return seen.keySet();

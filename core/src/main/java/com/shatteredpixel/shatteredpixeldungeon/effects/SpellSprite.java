@@ -30,6 +30,7 @@ import com.watabou.noosa.TextureFilm;
 
 import java.util.HashMap;
 
+//FIXME this is seriously underused atm, should add more of these!
 public class SpellSprite extends Image {
 
 	public static final int FOOD		= 0;
@@ -56,7 +57,7 @@ public class SpellSprite extends Image {
 	private float duration;
 	private float passed;
 	
-	private static HashMap<Char,SpellSprite> all = new HashMap<>();
+	private static final HashMap<Char,SpellSprite> all = new HashMap<>();
 	
 	public SpellSprite() {
 		super( Assets.Effects.SPELL_ICONS );

@@ -27,10 +27,8 @@ import com.watabou.utils.Bundle;
 import com.watabou.utils.DeviceCompat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 public enum Document {
 	
@@ -41,7 +39,7 @@ public enum Document {
 		pageSprite = sprite;
 	}
 	
-	private LinkedHashMap<String, Boolean> pages = new LinkedHashMap<>();
+	private final LinkedHashMap<String, Boolean> pages = new LinkedHashMap<>();
 	
 	public Collection<String> pages(){
 		return pages.keySet();
@@ -73,7 +71,7 @@ public enum Document {
 		return false;
 	}
 	
-	private int pageSprite;
+	private final int pageSprite;
 	public int pageSprite(){
 		return pageSprite;
 	}
@@ -162,7 +160,7 @@ public enum Document {
 		
 		for ( Document doc : values()){
 			if (docBundle.contains(doc.name())){
-				List<String> pages = Arrays.asList(docBundle.getStringArray(doc.name()));
+				String[] pages = docBundle.getStringArray(doc.name());
 				for (String page : pages){
 					if (doc.pages.containsKey(page)) {
 						doc.pages.put(page, true);

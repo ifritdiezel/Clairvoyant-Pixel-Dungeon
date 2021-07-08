@@ -37,7 +37,7 @@ import java.util.ArrayList;
 
 public class Blooming extends Weapon.Enchantment {
 	
-	private static ItemSprite.Glowing DARK_GREEN = new ItemSprite.Glowing( 0x008800 );
+	private static final ItemSprite.Glowing DARK_GREEN = new ItemSprite.Glowing( 0x008800 );
 	
 	@Override
 	public int proc(Weapon weapon, Char attacker, Char defender, int damage) {

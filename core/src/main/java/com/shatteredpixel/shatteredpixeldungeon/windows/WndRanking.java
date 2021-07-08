@@ -140,7 +140,7 @@ public class WndRanking extends WndTabbed {
 
 	private class RankingTab extends LabeledTab {
 		
-		private Group page;
+		private final Group page;
 		
 		public RankingTab( String label, Group page ) {
 			super( label );
@@ -158,7 +158,7 @@ public class WndRanking extends WndTabbed {
 	
 	private class StatsTab extends Group {
 
-		private int GAP	= 4;
+		private final int GAP	= 4;
 		
 		public StatsTab() {
 			super();
@@ -181,6 +181,7 @@ public class WndRanking extends WndTabbed {
 					int tiers = 1;
 					if (Dungeon.hero.lvl >= 6) tiers++;
 					if (Dungeon.hero.lvl >= 12 && Dungeon.hero.subClass != HeroSubClass.NONE) tiers++;
+					if (Dungeon.hero.lvl >= 20 && Dungeon.hero.armorAbility != null) tiers++;
 					while (Dungeon.hero.talents.size() > tiers){
 						Dungeon.hero.talents.remove(Dungeon.hero.talents.size()-1);
 					}
@@ -331,7 +332,7 @@ public class WndRanking extends WndTabbed {
 		
 		public static final int HEIGHT	= 23;
 		
-		private Item item;
+		private final Item item;
 		
 		private ItemSlot slot;
 		private ColorBlock bg;
@@ -407,7 +408,7 @@ public class WndRanking extends WndTabbed {
 
 		public static final int HEIGHT	= 23;
 
-		private Item item;
+		private final Item item;
 		private ColorBlock bg;
 
 		QuickSlotButton(Item item){

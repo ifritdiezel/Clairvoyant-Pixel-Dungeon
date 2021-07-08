@@ -164,13 +164,13 @@ public abstract class Recipe {
 	// Static members
 	//*******
 	
-	private static Recipe[] oneIngredientRecipes = new Recipe[]{
+	private static final Recipe[] oneIngredientRecipes = new Recipe[]{
 		new AlchemistsToolkit.upgradeKit(),
 		new Scroll.ScrollToStone(),
 		new StewedMeat.oneMeat()
 	};
 	
-	private static Recipe[] twoIngredientRecipes = new Recipe[]{
+	private static final Recipe[] twoIngredientRecipes = new Recipe[]{
 		new Blandfruit.CookFruit(),
 		new Bomb.EnhanceBomb(),
 		new AlchemicalCatalyst.Recipe(),
@@ -200,7 +200,7 @@ public abstract class Recipe {
 		new StewedMeat.twoMeat()
 	};
 	
-	private static Recipe[] threeIngredientRecipes = new Recipe[]{
+	private static final Recipe[] threeIngredientRecipes = new Recipe[]{
 		new Potion.SeedToPotion(),
 		new ExoticPotion.PotionToExotic(),
 		new ExoticScroll.ScrollToExotic(),

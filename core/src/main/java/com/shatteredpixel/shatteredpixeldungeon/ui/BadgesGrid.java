@@ -110,10 +110,10 @@ public class BadgesGrid extends Component {
 
 	private static class BadgeButton extends Button {
 
-		private Badges.Badge badge;
-		private boolean unlocked;
+		private final Badges.Badge badge;
+		private final boolean unlocked;
 
-		private Image icon;
+		private final Image icon;
 
 		public BadgeButton( Badges.Badge badge, boolean unlocked ) {
 			super();

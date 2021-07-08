@@ -31,7 +31,7 @@ import com.watabou.utils.Random;
 
 public class Vampiric extends Weapon.Enchantment {
 
-	private static ItemSprite.Glowing RED = new ItemSprite.Glowing( 0x660022 );
+	private static final ItemSprite.Glowing RED = new ItemSprite.Glowing( 0x660022 );
 	
 	@Override
 	public int proc( Weapon weapon, Char attacker, Char defender, int damage ) {

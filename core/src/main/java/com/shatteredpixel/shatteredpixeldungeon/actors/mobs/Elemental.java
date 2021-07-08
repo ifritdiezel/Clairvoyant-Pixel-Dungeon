@@ -88,8 +88,13 @@ public abstract class Elemental extends Mob {
 
 	@Override
 	protected boolean canAttack( Char enemy ) {
-		return !Dungeon.level.adjacent( pos, enemy.pos ) && new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT).collisionPos == enemy.pos;
+		if (rangedCooldown <= 0) {
+			return new Ballistica( pos, enemy.pos, Ballistica.MAGIC_BOLT ).collisionPos == enemy.pos;
+		} else {
+			return super.canAttack( enemy );
+		}
 	}
+
 	protected boolean doAttack( Char enemy ) {
 		
 		if (Dungeon.level.adjacent( pos, enemy.pos ) || rangedCooldown > 0) {
@@ -127,7 +132,7 @@ public abstract class Elemental extends Mob {
 			enemy.sprite.showStatus( CharSprite.NEUTRAL,  enemy.defenseVerb() );
 		}
 
-		rangedCooldown = 0;
+		rangedCooldown = Random.NormalIntRange( 3, 5 );
 	}
 	
 	public void onZapComplete() {

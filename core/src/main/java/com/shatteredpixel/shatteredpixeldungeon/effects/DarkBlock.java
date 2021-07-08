@@ -26,7 +26,7 @@ import com.watabou.noosa.Gizmo;
 
 public class DarkBlock extends Gizmo{
 
-	private CharSprite target;
+	private final CharSprite target;
 
 	public DarkBlock( CharSprite target ) {
 		super();

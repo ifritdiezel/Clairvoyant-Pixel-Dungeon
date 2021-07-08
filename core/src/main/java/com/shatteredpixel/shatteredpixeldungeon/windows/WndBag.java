@@ -33,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.Recipe;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.SandalsOfNature;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.UnstableSpellbook;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.MagicalHolster;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.PotionBandolier;
@@ -40,7 +41,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bags.ScrollHolder;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.Recycle;
@@ -72,7 +72,7 @@ public class WndBag extends WndTabbed {
 	private static WndBag INSTANCE;
 	
 	//FIXME this is getting cumbersome, there should be a better way to manage this
-	public static enum Mode {
+	public enum Mode {
 		ALL,
 		UNIDENTIFED,
 		UNCURSABLE,
@@ -109,12 +109,12 @@ public class WndBag extends WndTabbed {
 	
 	protected static final int TITLE_HEIGHT	= 14;
 	
-	private Listener listener;
-	private WndBag.Mode mode;
-	private String title;
+	private final Listener listener;
+	private final WndBag.Mode mode;
+	private final String title;
 
-	private int nCols;
-	private int nRows;
+	private final int nCols;
+	private final int nRows;
 
 	private int slotWidth;
 	private int slotHeight;
@@ -337,7 +337,7 @@ public class WndBag extends WndTabbed {
 	
 	private class BagTab extends IconTab {
 
-		private Bag bag;
+		private final Bag bag;
 		
 		public BagTab( Bag bag ) {
 			super( icon(bag) );
@@ -374,7 +374,7 @@ public class WndBag extends WndTabbed {
 		private static final int NORMAL		= 0x9953564D;
 		private static final int EQUIPPED	= 0x9991938C;
 		
-		private Item item;
+		private final Item item;
 		private ColorBlock bg;
 		
 		public ItemButton( Item item ) {
@@ -443,7 +443,7 @@ public class WndBag extends WndTabbed {
 						mode == Mode.SEED && SandalsOfNature.canUseSeed(item) ||
 						mode == Mode.FOOD && (item instanceof Food) ||
 						mode == Mode.POTION && (item instanceof Potion) ||
-						mode == Mode.SCROLL && (item instanceof Scroll) ||
+						mode == Mode.SCROLL && UnstableSpellbook.canUseScroll(item) ||
 						mode == Mode.INTUITIONABLE && StoneOfIntuition.isIntuitionable(item) ||
 						mode == Mode.EQUIPMENT && (item instanceof EquipableItem || item instanceof Wand) ||
 						mode == Mode.ALCHEMY && Recipe.usableInRecipe(item) ||

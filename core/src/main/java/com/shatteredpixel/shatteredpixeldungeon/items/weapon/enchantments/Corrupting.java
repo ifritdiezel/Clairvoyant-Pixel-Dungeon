@@ -39,7 +39,7 @@ import com.watabou.utils.Random;
 
 public class Corrupting extends Weapon.Enchantment {
 	
-	private static ItemSprite.Glowing BLACK = new ItemSprite.Glowing( 0x440066 );
+	private static final ItemSprite.Glowing BLACK = new ItemSprite.Glowing( 0x440066 );
 	
 	@Override
 	public int proc(Weapon weapon, Char attacker, Char defender, int damage) {

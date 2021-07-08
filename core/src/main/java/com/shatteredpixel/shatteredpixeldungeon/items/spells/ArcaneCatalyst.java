@@ -51,7 +51,7 @@ public class ArcaneCatalyst extends Spell {
 		image = ItemSpriteSheet.SCROLL_CATALYST;
 	}
 	
-	private static HashMap<Class<? extends Scroll>, Float> scrollChances = new HashMap<>();
+	private static final HashMap<Class<? extends Scroll>, Float> scrollChances = new HashMap<>();
 	static{
 		scrollChances.put( ScrollOfIdentify.class,      3f );
 		scrollChances.put( ScrollOfRemoveCurse.class,   2f );

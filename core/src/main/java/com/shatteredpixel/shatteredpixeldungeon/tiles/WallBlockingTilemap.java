@@ -23,7 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.tiles;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
-import com.shatteredpixel.shatteredpixeldungeon.levels.NewHallsBossLevel;
+import com.shatteredpixel.shatteredpixeldungeon.levels.HallsBossLevel;
 import com.watabou.noosa.TextureFilm;
 import com.watabou.noosa.Tilemap;
 
@@ -67,7 +67,7 @@ public class WallBlockingTilemap extends Tilemap {
 
 		//FIXME this is to address the wall blocking looking odd on the new yog floor.
 		// The true solution is to improve the fog of war so the blockers aren't necessary.
-		if (Dungeon.level instanceof NewHallsBossLevel){
+		if (Dungeon.level instanceof HallsBossLevel){
 			data[cell] = CLEARED;
 			super.updateMapCell(cell);
 			return;
@@ -186,12 +186,9 @@ public class WallBlockingTilemap extends Tilemap {
 	private boolean fogHidden(int cell){
 		if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]) {
 			return true;
-		} else if (wall(cell) && cell + mapWidth < size && !wall(cell + mapWidth) &&
-				!Dungeon.level.visited[cell + mapWidth] && !Dungeon.level.mapped[cell + mapWidth]) {
-			return true;
-		}
-		return false;
-	}
+		} else return wall(cell) && cell + mapWidth < size && !wall(cell + mapWidth) &&
+                !Dungeon.level.visited[cell + mapWidth] && !Dungeon.level.mapped[cell + mapWidth];
+    }
 
 	private boolean wall(int cell) {
 		return DungeonTileSheet.wallStitcheable(Dungeon.level.map[cell]);

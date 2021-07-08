@@ -65,6 +65,8 @@ public class Random {
 		return generators.peek().nextFloat();
 	}
 
+	public static synchronized boolean Boolean() { return generators.peek().nextBoolean(); }
+
 	//returns a uniformly distributed float in the range [0, max)
 	public static float Float( float max ) {
 		return Float() * max;

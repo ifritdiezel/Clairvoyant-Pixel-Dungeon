@@ -55,7 +55,7 @@ public class Messages {
 	 * Setup Methods
 	 */
 
-	private static String[] prop_files = new String[]{
+	private static final String[] prop_files = new String[]{
 			Assets.Messages.ACTORS,
 			Assets.Messages.ITEMS,
 			Assets.Messages.JOURNAL,
@@ -157,10 +157,8 @@ public class Messages {
 	//Words which should not be capitalized in title case, mostly prepositions which appear ingame
 	//This list is not comprehensive!
 	private static final HashSet<String> noCaps = new HashSet<>(
-			Arrays.asList(new String[]{
-					//English
-					"a", "an", "and", "of", "by", "to", "the", "x"
-			})
+			Arrays.asList(//English
+					"a", "an", "and", "of", "by", "to", "the", "x")
 	);
 
 	public static String titleCase( String str ){

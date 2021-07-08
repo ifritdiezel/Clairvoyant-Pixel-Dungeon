@@ -52,7 +52,7 @@ public abstract class ConnectionRoom extends Room {
 	}
 	
 	//FIXME this is a very messy way of handing variable connection rooms
-	private static ArrayList<Class<?extends ConnectionRoom>> rooms = new ArrayList<>();
+	private static final ArrayList<Class<?extends ConnectionRoom>> rooms = new ArrayList<>();
 	static {
 		rooms.add(TunnelRoom.class);
 		rooms.add(BridgeRoom.class);
@@ -64,7 +64,7 @@ public abstract class ConnectionRoom extends Room {
 		rooms.add(RingBridgeRoom.class);
 	}
 	
-	private static float[][] chances = new float[27][];
+	private static final float[][] chances = new float[27][];
 	static {
 		chances[1] =  new float[]{20, 1,    0, 2,       2, 1};
 		chances[4] =  chances[3] = chances[2] = chances[1];

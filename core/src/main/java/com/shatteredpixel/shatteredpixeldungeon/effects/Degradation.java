@@ -29,7 +29,7 @@ import com.watabou.utils.Random;
 
 public class Degradation extends Group {
 
-	private static int[] WEAPON = {
+	private static final int[] WEAPON = {
 		+2, -2,
 		+1, -1,
 		 0,  0,
@@ -39,7 +39,7 @@ public class Degradation extends Group {
 		 0, +2
 	};
 	
-	private static int[] ARMOR = {
+	private static final int[] ARMOR = {
 		-2, -1,
 		-1, -1,
 		+1, -1,
@@ -56,7 +56,7 @@ public class Degradation extends Group {
 		+1, +2
 	};
 	
-	private static int[] RING = {
+	private static final int[] RING = {
 		 0, -1,
 		-1,  0,
 		 0,  0,
@@ -68,7 +68,7 @@ public class Degradation extends Group {
 		+1, +2
 	};
 	
-	private static int[] WAND = {
+	private static final int[] WAND = {
 		+2, -2,
 		+1, -1,
 		 0,  0,

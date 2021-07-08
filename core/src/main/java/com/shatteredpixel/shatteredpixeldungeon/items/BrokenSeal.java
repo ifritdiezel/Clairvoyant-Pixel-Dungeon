@@ -113,7 +113,8 @@ public class BrokenSeal extends Item {
 
 				} else if (armor.glyph != null && seal.getGlyph() != null
 						&& armor.glyph.getClass() != seal.getGlyph().getClass()) {
-					GameScene.show(new WndOptions(Messages.get(BrokenSeal.class, "choose_title"),
+					GameScene.show(new WndOptions(new ItemSprite(seal),
+							Messages.get(BrokenSeal.class, "choose_title"),
 							Messages.get(BrokenSeal.class, "choose_desc"),
 							armor.glyph.name(),
 							seal.getGlyph().name()){
@@ -125,7 +126,6 @@ public class BrokenSeal extends Item {
 							GLog.p(Messages.get(BrokenSeal.class, "affix"));
 							Dungeon.hero.sprite.operate(Dungeon.hero.pos);
 							Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
-							armor.affixSeal(seal);
 							seal.detach(Dungeon.hero.belongings.backpack);
 						}
 					});
@@ -134,7 +134,6 @@ public class BrokenSeal extends Item {
 					GLog.p(Messages.get(BrokenSeal.class, "affix"));
 					Dungeon.hero.sprite.operate(Dungeon.hero.pos);
 					Sample.INSTANCE.play(Assets.Sounds.UNLOCK);
-					armor.affixSeal((BrokenSeal)curItem);
 					curItem.detach(Dungeon.hero.belongings.backpack);
 				}
 			}
@@ -155,7 +154,7 @@ public class BrokenSeal extends Item {
 		glyph = (Armor.Glyph)bundle.get(GLYPH);
 	}
 
-	public static class ApprenticeShield extends ShieldBuff {
+	public static class WarriorShield extends ShieldBuff {
 
 		private Armor armor;
 		private float partialShield;
@@ -190,11 +189,7 @@ public class BrokenSeal extends Item {
 		}
 
 		public synchronized int maxShield() {
-			if (armor != null && armor.isEquipped((Hero)target)) {
-				return armor.tier + armor.level() + ((Hero) target).pointsInTalent(Talent.MAGIC_SHIELD);
-			} else {
 				return 0;
-			}
 		}
 		
 		@Override

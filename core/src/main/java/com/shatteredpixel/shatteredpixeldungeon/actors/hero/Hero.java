@@ -51,6 +51,9 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Regeneration;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.SnipersMark;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.huntress.NaturesPower;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.warrior.Endure;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Monk;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
@@ -64,6 +67,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap.Type;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.AntiMagic;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Brimstone;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Viscosity;
@@ -95,7 +99,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMappi
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfLivingEarth;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Blocking;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Flail;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
@@ -153,6 +156,7 @@ public class Hero extends Char {
 	
 	public HeroClass heroClass = HeroClass.ROGUE;
 	public HeroSubClass subClass = HeroSubClass.NONE;
+	public ArmorAbility armorAbility = null;
 	public ArrayList<LinkedHashMap<Talent, Integer>> talents = new ArrayList<>();
 	
 	private int attackSkill = 10;
@@ -225,6 +229,10 @@ public class Hero extends Char {
 		return STR;
 	}
 
+	private static final String CLASS       = "class";
+	private static final String SUBCLASS    = "subClass";
+	private static final String ABILITY     = "armorAbility";
+
 	private static final String ATTACK		= "attackSkill";
 	private static final String DEFENSE		= "defenseSkill";
 	private static final String STRENGTH	= "STR";
@@ -236,9 +244,10 @@ public class Hero extends Char {
 	public void storeInBundle( Bundle bundle ) {
 
 		super.storeInBundle( bundle );
-		
-		heroClass.storeInBundle( bundle );
-		subClass.storeInBundle( bundle );
+
+		bundle.put( CLASS, heroClass );
+		bundle.put( SUBCLASS, subClass );
+		bundle.put( ABILITY, armorAbility );
 		Talent.storeTalentsInBundle( bundle, this );
 		
 		bundle.put( ATTACK, attackSkill );
@@ -263,9 +272,10 @@ public class Hero extends Char {
 		HTBoost = bundle.getInt(HTBOOST);
 
 		super.restoreFromBundle( bundle );
-		
-		heroClass = HeroClass.restoreInBundle( bundle );
-		subClass = HeroSubClass.restoreInBundle( bundle );
+
+		heroClass = bundle.getEnum( CLASS, HeroClass.class );
+		subClass = bundle.getEnum( SUBCLASS, HeroSubClass.class );
+		armorAbility = (ArmorAbility)bundle.get( ABILITY );
 		Talent.restoreTalentsFromBundle( bundle, this );
 		
 		attackSkill = bundle.getInt( ATTACK );
@@ -283,8 +293,8 @@ public class Hero extends Char {
 		info.hp = bundle.getInt( Char.TAG_HP );
 		info.ht = bundle.getInt( Char.TAG_HT );
 		info.shld = bundle.getInt( Char.TAG_SHLD );
-		info.heroClass = HeroClass.restoreInBundle( bundle );
-		info.subClass = HeroSubClass.restoreInBundle( bundle );
+		info.heroClass = bundle.getEnum( CLASS, HeroClass.class );
+		info.subClass = bundle.getEnum( SUBCLASS, HeroSubClass.class );
 		Belongings.preview( info, bundle );
 	}
 
@@ -320,7 +330,8 @@ public class Hero extends Char {
 
 	public int talentPointsAvailable(int tier){
 		if (lvl < Talent.tierLevelThresholds[tier]
-			|| (tier == 3 && subClass == HeroSubClass.NONE)){
+			|| (tier == 3 && subClass == HeroSubClass.NONE)
+			|| (tier == 4 && armorAbility == null)){
 			return 0;
 		} else if (lvl >= Talent.tierLevelThresholds[tier+1]){
 			return Talent.tierLevelThresholds[tier+1] - Talent.tierLevelThresholds[tier] - talentPointsSpent(tier);
@@ -365,7 +376,13 @@ public class Hero extends Char {
 	}
 	
 	public int tier() {
-		return belongings.armor == null ? 0 : belongings.armor.tier;
+		if (belongings.armor instanceof ClassArmor){
+			return 6;
+		} else if (belongings.armor != null){
+			return belongings.armor.tier;
+		} else {
+			return 0;
+		}
 	}
 	
 	public boolean shoot( Char enemy, MissileWeapon wep ) {
@@ -463,11 +480,8 @@ public class Hero extends Char {
 			}
 			if (wepDr > 0) dr += wepDr;
 		}
-		Barkskin bark = buff(Barkskin.class);
-		if (bark != null)               dr += Random.NormalIntRange( 0 , bark.level() );
-		
-		Blocking.BlockBuff block = buff(Blocking.BlockBuff.class);
-		if (block != null)              dr += block.blockingRoll();
+
+
 
 		return dr;
 	}
@@ -487,7 +501,9 @@ public class Hero extends Char {
 		
 		Berserk berserk = buff(Berserk.class);
 		if (berserk != null) dmg = berserk.damageFactor(dmg);
-		
+
+
+
 		return buff( Fury.class ) != null ? (int)(dmg * 1.5f) : dmg;
 	}
 	
@@ -509,7 +525,12 @@ public class Hero extends Char {
 		} else {
 			((HeroSprite)sprite).sprint( 1f );
 		}
-		
+
+		NaturesPower.naturesPowerTracker natStrength = buff(NaturesPower.naturesPowerTracker.class);
+		if (natStrength != null){
+			speed *= (2f + 0.25f*pointsInTalent(Talent.GROWING_POWER));
+		}
+
 		return speed;
 		
 	}
@@ -540,16 +561,20 @@ public class Hero extends Char {
 	}
 
 	public float attackDelay() {
+		if (buff(Talent.LethalMomentumTracker.class) != null){
+			buff(Talent.LethalMomentumTracker.class).detach();
+			return 0;
+		}
 
 		if (belongings.weapon != null) {
 			
-			return belongings.weapon.speedFactor( this );
+			return belongings.weapon.delayFactor( this );
 			
 		} else {
 			//Normally putting furor speed on unarmed attacks would be unnecessary
 			//But there's going to be that one guy who gets a furor+force ring combo
 			//This is for that one guy, you shall get your fists of fury!
-			return RingOfFuror.attackDelayMultiplier(this);
+			return 1f/RingOfFuror.attackSpeedMultiplier(this);
 		}
 	}
 
@@ -582,7 +607,11 @@ public class Hero extends Char {
 		
 		//calls to dungeon.observe will also update hero's local FOV.
 		fieldOfView = Dungeon.level.heroFOV;
-		
+
+		if (buff(Endure.EndureTracker.class) != null){
+			buff(Endure.EndureTracker.class).endEnduring();
+		}
+
 		if (!ready) {
 			//do a full observe (including fog update) if not resting.
 			if (!resting || buff(MindVision.class) != null || buff(Awareness.class) != null) {
@@ -658,7 +687,7 @@ public class Hero extends Char {
 		}
 		
 		if(hasTalent(Talent.BARKSKIN) && Dungeon.level.map[pos] == Terrain.FURROWED_GRASS){
-			Buff.affect(this, Barkskin.class).set( lvl, pointsInTalent(Talent.BARKSKIN) );
+			Buff.affect(this, Barkskin.class).set( (lvl*pointsInTalent(Talent.BARKSKIN))/2, 1 );
 		}
 		
 		return actResult;
@@ -773,7 +802,7 @@ public class Hero extends Char {
 			
 			Alchemy alch = (Alchemy) Dungeon.level.blobs.get(Alchemy.class);
 			if (alch != null) {
-				alch.alchPos = dst;
+				Alchemy.alchPos = dst;
 				AlchemyScene.setProvider( alch );
 			}
 			ShatteredPixelDungeon.switchScene(AlchemyScene.class);
@@ -1069,9 +1098,17 @@ public class Hero extends Char {
 
 		if (wep != null) damage = wep.proc( this, enemy, damage );
 
+		if (buff(Talent.SpiritBladesTracker.class) != null
+				&& Random.Int(4) < pointsInTalent(Talent.SPIRIT_BLADES)){
+			SpiritBow bow = belongings.getItem(SpiritBow.class);
+			if (bow != null) damage = bow.proc( this, enemy, damage );
+			buff(Talent.SpiritBladesTracker.class).detach();
+		}
+
 		damage = Talent.onAttackProc( this, enemy, damage );
 
-		if (subClass == HeroSubClass.SNIPER) {
+		switch (subClass) {
+		case SNIPER:
 			if (wep instanceof MissileWeapon && !(wep instanceof SpiritBow.SpiritArrow) && enemy != this) {
 				Actor.add(new Actor() {
 
@@ -1090,6 +1127,8 @@ public class Hero extends Char {
 					}
 				});
 			}
+			break;
+		default:
 		}
 		
 		return damage;
@@ -1098,6 +1137,10 @@ public class Hero extends Char {
 	@Override
 	public int defenseProc( Char enemy, int damage ) {
 
+		if (damage > 0 && subClass == HeroSubClass.BERSERKER){
+			Berserk berserk = Buff.affect(this, Berserk.class);
+			berserk.damage(damage);
+		}
 		
 		if (belongings.armor != null) {
 			damage = belongings.armor.proc( enemy, this, damage );
@@ -1139,12 +1182,12 @@ public class Hero extends Char {
 		dmg = (int)Math.ceil(dmg * RingOfTenacity.damageMultiplier( this ));
 
 		//TODO improve this when I have proper damage source logic
-
 		if (belongings.armor != null && belongings.armor.hasGlyph(AntiMagic.class, this)
-				&& AntiMagic.RESISTS.contains(src.getClass()))
-		{
+				&& AntiMagic.RESISTS.contains(src.getClass())){
 			dmg -= AntiMagic.drRoll(belongings.armor.buffedLvl());
 		}
+
+
 
 		int preHP = HP + shielding();
 		super.damage( dmg, src );
@@ -1386,13 +1429,9 @@ public class Hero extends Char {
 			curAction = new HeroAction.Ascend( cell );
 			
 		} else  {
-			
-			if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
-					&& Dungeon.level.traps.get(cell) != null && Dungeon.level.traps.get(cell).visible) {
-				walkingToVisibleTrapInFog = true;
-			} else {
-				walkingToVisibleTrapInFog = false;
-			}
+
+			walkingToVisibleTrapInFog = !Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]
+					&& Dungeon.level.traps.get(cell) != null && Dungeon.level.traps.get(cell).visible;
 			
 			curAction = new HeroAction.Move( cell );
 			lastAction = null;
@@ -1422,6 +1461,12 @@ public class Hero extends Char {
 		if (source != PotionOfExperience.class) {
 			for (Item i : belongings) {
 				i.onHeroGainExp(percent, this);
+			}
+			if (buff(Talent.RejuvenatingStepsFurrow.class) != null){
+				buff(Talent.RejuvenatingStepsFurrow.class).countDown(percent*200f);
+				if (buff(Talent.RejuvenatingStepsFurrow.class).count() <= 0){
+					buff(Talent.RejuvenatingStepsFurrow.class).detach();
+				}
 			}
 		}
 		
@@ -1638,6 +1683,12 @@ public class Hero extends Char {
 			items.remove( item );
 		}
 
+		for (Char c : Actor.chars()){
+			if (c instanceof DriedRose.GhostHero){
+				((DriedRose.GhostHero) c).sayHeroKilled();
+			}
+		}
+
 		GameScene.gameOver();
 		
 		if (cause instanceof Hero.Doom) {
@@ -1716,7 +1767,7 @@ public class Hero extends Char {
 		
 		if (curAction instanceof HeroAction.Unlock) {
 
-			int doorCell = ((HeroAction.Unlock)curAction).dst;
+			int doorCell = curAction.dst;
 			int door = Dungeon.level.map[doorCell];
 			
 			if (Dungeon.level.distance(pos, doorCell) <= 1) {
@@ -1739,7 +1790,7 @@ public class Hero extends Char {
 			
 		} else if (curAction instanceof HeroAction.OpenChest) {
 			
-			Heap heap = Dungeon.level.heaps.get( ((HeroAction.OpenChest)curAction).dst );
+			Heap heap = Dungeon.level.heaps.get( curAction.dst );
 			
 			if (Dungeon.level.distance(pos, heap.pos) <= 1){
 				boolean hasKey = true;
@@ -1920,7 +1971,7 @@ public class Hero extends Char {
 			super.next();
 	}
 
-	public static interface Doom {
-		public void onDeath();
+	public interface Doom {
+		void onDeath();
 	}
 }

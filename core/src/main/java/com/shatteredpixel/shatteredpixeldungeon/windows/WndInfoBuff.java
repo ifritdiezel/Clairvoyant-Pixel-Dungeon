@@ -38,8 +38,8 @@ public class WndInfoBuff extends Window {
 
 	private static final int WIDTH = 120;
 
-	private SmartTexture icons;
-	private TextureFilm film;
+	private final SmartTexture icons;
+	private final TextureFilm film;
 
 	public WndInfoBuff(Buff buff){
 		super();

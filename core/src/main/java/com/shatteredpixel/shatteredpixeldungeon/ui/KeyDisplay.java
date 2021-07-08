@@ -37,16 +37,17 @@ import com.watabou.noosa.NoosaScript;
 import com.watabou.noosa.Visual;
 import com.watabou.utils.RectF;
 
+import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.util.LinkedHashMap;
 
 public class KeyDisplay extends Visual {
 	
-	private float[] vertices = new float[16];
+	private final float[] vertices = new float[16];
 	private FloatBuffer quads;
 	private Vertexbuffer buffer;
 	
-	private SmartTexture tx = TextureCache.get(Assets.Interfaces.MENU);
+	private final SmartTexture tx = TextureCache.get(Assets.Interfaces.MENU);
 	
 	private boolean dirty = true;
 	private int[] keys;
@@ -97,8 +98,8 @@ public class KeyDisplay extends Visual {
 		if (dirty){
 			
 			updateVertices();
-			
-			quads.limit(quads.position());
+
+			((Buffer)quads).limit(quads.position());
 			if (buffer == null)
 				buffer = new Vertexbuffer(quads);
 			else

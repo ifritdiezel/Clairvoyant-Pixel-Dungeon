@@ -34,7 +34,7 @@ import com.watabou.utils.Random;
 
 public class Blocking extends Weapon.Enchantment {
 	
-	private static ItemSprite.Glowing BLUE = new ItemSprite.Glowing( 0x0000FF );
+	private static final ItemSprite.Glowing BLUE = new ItemSprite.Glowing( 0x0000FF );
 	
 	@Override
 	public int proc(Weapon weapon, Char attacker, Char defender, int damage) {

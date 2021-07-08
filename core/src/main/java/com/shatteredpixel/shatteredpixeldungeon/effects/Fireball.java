@@ -124,8 +124,8 @@ public class Fireball extends Component {
 		
 		private static final float LIFESPAN	= 1f;
 		
-		private static float SPEED	= -40f;
-		private static float ACC	= -20f;
+		private static final float SPEED	= -40f;
+		private static final float ACC	= -20f;
 		
 		private float timeLeft;
 		private float heightLimit;

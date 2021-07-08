@@ -35,7 +35,7 @@ import com.watabou.utils.Random;
 
 public class Entanglement extends Glyph {
 	
-	private static ItemSprite.Glowing BROWN = new ItemSprite.Glowing( 0x663300 );
+	private static final ItemSprite.Glowing BROWN = new ItemSprite.Glowing( 0x663300 );
 	
 	@Override
 	public int proc(Armor armor, Char attacker, final Char defender, final int damage ) {

@@ -33,6 +33,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Archs;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.shatteredpixel.shatteredpixeldungeon.ui.StyledButton;
+import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndSettings;
 import com.watabou.glwrap.Blending;
 import com.watabou.noosa.BitmapText;
@@ -156,7 +157,7 @@ public class TitleScene extends PixelScene {
 				ShatteredPixelDungeon.switchScene( AboutScene.class );
 			}
 		};
-		btnAbout.icon(Icons.get(Icons.IFRIT));
+		btnAbout.icon(Icons.get(Icons.CVPD));
 		add(btnAbout);
 		
 		final int BTN_HEIGHT = 20;
@@ -191,6 +192,14 @@ public class TitleScene extends PixelScene {
 		version.y = h - version.height() - 2;
 		add( version );
 
+		if (DeviceCompat.isDebug()) {
+			BitmapText debugon = new BitmapText("Debug_ON", pixelFont);
+			debugon.measure();
+			debugon.hardlight(0x666666);
+			debugon.x = w - debugon.width() - 4;
+			debugon.y = h - debugon.height() - 10;
+			add(debugon);
+		}
 		fadeIn();
 	}
 	
@@ -254,6 +263,7 @@ public class TitleScene extends PixelScene {
 		public SupportButton( Chrome.Type type, String label ){
 			super(type, label);
 			icon(Icons.get(Icons.GOLD));
+			textColor(Window.TITLE_COLOR);
 		}
 
 		@Override

@@ -23,7 +23,6 @@ package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -83,8 +82,7 @@ public class ArmorKit extends Item {
 	private void upgrade( Armor armor ) {
 		
 		detach( curUser.belongings.backpack );
-		
-		curUser.sprite.centerEmitter().start( Speck.factory( Speck.KIT ), 0.05f, 10 );
+
 		curUser.spend( TIME_TO_UPGRADE );
 		curUser.busy();
 		

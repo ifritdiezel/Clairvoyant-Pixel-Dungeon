@@ -111,11 +111,10 @@ public class Shopkeeper extends NPC {
 		if (item.value() <= 0)                                               return false;
 		if (item.unique && !item.stackable)                                 return false;
 		if (item instanceof Armor && ((Armor) item).checkSeal() != null)    return false;
-		if (item.isEquipped(Dungeon.hero) && item.cursed)                   return false;
-		return true;
+		return !item.isEquipped(Dungeon.hero) || !item.cursed;
 	}
 	
-	private static WndBag.Listener itemSelector = new WndBag.Listener() {
+	private static final WndBag.Listener itemSelector = new WndBag.Listener() {
 		@Override
 		public void onSelect( Item item ) {
 			if (item != null) {

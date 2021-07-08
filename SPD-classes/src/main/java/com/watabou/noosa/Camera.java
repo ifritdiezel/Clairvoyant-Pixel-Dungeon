@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 public class Camera extends Gizmo {
 
-	private static ArrayList<Camera> all = new ArrayList<>();
+	private static final ArrayList<Camera> all = new ArrayList<>();
 	
 	protected static float invW2;
 	protected static float invH2;

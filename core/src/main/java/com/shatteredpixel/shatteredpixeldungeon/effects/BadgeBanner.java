@@ -46,7 +46,7 @@ public class BadgeBanner extends Image {
 	private static final float STATIC_TIME		= 1f;
 	private static final float FADE_OUT_TIME	= 1.0f;
 	
-	private int index;
+	private final int index;
 	private float time;
 	
 	private static TextureFilm atlas;
@@ -126,7 +126,7 @@ public class BadgeBanner extends Image {
 	}
 
 	//map to cache highlight positions so we don't have to keep looking at texture pixels
-	private static HashMap<Integer, Point> highlightPositions = new HashMap<>();
+	private static final HashMap<Integer, Point> highlightPositions = new HashMap<>();
 
 	//we also hardcode any special cases
 	static {

@@ -226,11 +226,11 @@ public class NewPrisonBossLevel extends Level {
 	
 	}
 	
-	private static int W = Terrain.WALL;
-	private static int D = Terrain.WALL_DECO;
-	private static int e = Terrain.EMPTY;
-	private static int E = Terrain.EXIT;
-	private static int C = Terrain.CHASM;
+	private static final int W = Terrain.WALL;
+	private static final int D = Terrain.WALL_DECO;
+	private static final int e = Terrain.EMPTY;
+	private static final int E = Terrain.EXIT;
+	private static final int C = Terrain.CHASM;
 	
 	private static final Point endStart = new Point( startHallway.left+2, startHallway.top+2);
 	private static final Point levelExit = new Point( endStart.x+12, endStart.y+6);
@@ -296,7 +296,7 @@ public class NewPrisonBossLevel extends Level {
 	}
 	
 	//keep track of removed items as the level is changed. Dump them back into the level at the end.
-	private ArrayList<Item> storedItems = new ArrayList<>();
+	private final ArrayList<Item> storedItems = new ArrayList<>();
 	
 	private void clearEntities(Rect safeArea){
 		for (Heap heap : heaps.valueList()){
@@ -652,8 +652,8 @@ public class NewPrisonBossLevel extends Level {
 		
 		Rect area;
 		
-		private float fadeDuration = 1f;
-		private float initialAlpha = .4f;
+		private final float fadeDuration = 1f;
+		private final float initialAlpha = .4f;
 		private float fadeDelay = 1f;
 		
 		public void setCoveringArea(Rect area){
@@ -762,7 +762,7 @@ public class NewPrisonBossLevel extends Level {
 		
 		final int TEX_WIDTH = 256;
 		
-		private static byte[] render = new byte[]{
+		private static final byte[] render = new byte[]{
 				0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0,
 				1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
 				1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
@@ -808,7 +808,7 @@ public class NewPrisonBossLevel extends Level {
 		
 		final int TEX_WIDTH = 256;
 		
-		private static byte[] render = new byte[]{
+		private static final byte[] render = new byte[]{
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
 				0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,

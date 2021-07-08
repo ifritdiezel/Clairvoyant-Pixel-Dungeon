@@ -29,7 +29,7 @@ import com.watabou.utils.PointF;
 
 public class ShieldHalo extends Halo {
 	
-	private CharSprite target;
+	private final CharSprite target;
 	
 	private float phase;
 	

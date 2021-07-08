@@ -29,7 +29,7 @@ import java.nio.IntBuffer;
 
 public class Program {
 
-	private int handle;
+	private final int handle;
 	
 	public Program() {
 		handle = Gdx.gl.glCreateProgram();

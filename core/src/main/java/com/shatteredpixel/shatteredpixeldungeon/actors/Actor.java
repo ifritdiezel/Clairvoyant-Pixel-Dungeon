@@ -111,7 +111,6 @@ public abstract class Actor implements Bundlable {
 		}
 	}
 
-	private static int nextID = 1;
 	public int id() {
 		if (id > 0) {
 			return id;
@@ -124,11 +123,12 @@ public abstract class Actor implements Bundlable {
 	// *** Static members ***
 	// **********************
 	
-	private static HashSet<Actor> all = new HashSet<>();
-	private static HashSet<Char> chars = new HashSet<>();
+	private static final HashSet<Actor> all = new HashSet<>();
+	private static final HashSet<Char> chars = new HashSet<>();
 	private static volatile Actor current;
 
-	private static SparseArray<Actor> ids = new SparseArray<>();
+	private static final SparseArray<Actor> ids = new SparseArray<>();
+	private static int nextID = 1;
 
 	private static float now = 0;
 	

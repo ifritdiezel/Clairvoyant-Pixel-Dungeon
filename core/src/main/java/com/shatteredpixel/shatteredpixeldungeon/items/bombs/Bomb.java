@@ -50,7 +50,6 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
@@ -60,7 +59,6 @@ import com.watabou.utils.Reflection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Optional;
 
 public class Bomb extends Item {
 	
@@ -167,7 +165,6 @@ public class Bomb extends Item {
 					Heap heap = Dungeon.level.heaps.get(c);
 					if (heap != null)
 						heap.explode();
-
 
 					Char ch = Actor.findChar(c);
 					if (ch != null) {

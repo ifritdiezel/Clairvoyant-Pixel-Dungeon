@@ -39,6 +39,7 @@ public class FrostImbue extends FlavourBuff {
 		Buff.affect(enemy, Chill.class, 2f);
 		enemy.sprite.emitter().burst( SnowParticle.FACTORY, 2 );
 	}
+
 	@Override
 	public int icon() {
 		return BuffIndicator.FROST;

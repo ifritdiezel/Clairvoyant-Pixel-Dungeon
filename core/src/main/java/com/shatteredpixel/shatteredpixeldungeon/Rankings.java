@@ -251,6 +251,7 @@ public enum Rankings {
 		private static final String CAUSE   = "cause";
 		private static final String WIN		= "win";
 		private static final String SCORE	= "score";
+		private static final String CLASS	= "class";
 		private static final String TIER	= "tier";
 		private static final String LEVEL	= "level";
 		private static final String DEPTH	= "depth";
@@ -259,7 +260,7 @@ public enum Rankings {
 
 		public Class cause;
 		public boolean win;
-		
+
 		public HeroClass heroClass;
 		public int armorTier;
 		public int herolevel;
@@ -295,7 +296,7 @@ public enum Rankings {
 			win		= bundle.getBoolean( WIN );
 			score	= bundle.getInt( SCORE );
 			
-			heroClass	= HeroClass.restoreInBundle( bundle );
+			heroClass	= bundle.getEnum( CLASS, HeroClass.class );
 			armorTier	= bundle.getInt( TIER );
 			
 			if (bundle.contains(DATA))  gameData = bundle.getBundle(DATA);
@@ -316,7 +317,7 @@ public enum Rankings {
 			bundle.put( WIN, win );
 			bundle.put( SCORE, score );
 			
-			heroClass.storeInBundle( bundle );
+			bundle.put( CLASS, heroClass );
 			bundle.put( TIER, armorTier );
 			bundle.put( LEVEL, herolevel );
 			bundle.put( DEPTH, depth );

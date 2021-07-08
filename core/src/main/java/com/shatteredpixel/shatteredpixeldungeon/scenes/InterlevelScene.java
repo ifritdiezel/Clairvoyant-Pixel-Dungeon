@@ -45,6 +45,7 @@ import com.watabou.noosa.Image;
 import com.watabou.noosa.NoosaScript;
 import com.watabou.noosa.NoosaScriptNoLighting;
 import com.watabou.noosa.SkinnedBlock;
+import com.watabou.utils.DeviceCompat;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -137,6 +138,10 @@ public class InterlevelScene extends PixelScene {
 		else if (loadingDepth <= 25)    loadingAsset = Assets.Interfaces.LOADING_HALLS;
 		else                            loadingAsset = Assets.Interfaces.SHADOW;
 
+		//slow down transition when displaying an install prompt
+	 if (DeviceCompat.isDebug()){
+			fadeTime = 0f;
+		}
 		
 		SkinnedBlock bg = new SkinnedBlock(Camera.main.width, Camera.main.height, loadingAsset ){
 			@Override

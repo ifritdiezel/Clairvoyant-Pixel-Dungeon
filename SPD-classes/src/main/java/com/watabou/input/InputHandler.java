@@ -69,7 +69,7 @@ public class InputHandler extends InputAdapter {
 	}
 	
 	//TODO tracking this should probably be in PointerEvent
-	private static PointF pointerHoverPos = new PointF();
+	private static final PointF pointerHoverPos = new PointF();
 	
 	@Override
 	public boolean mouseMoved(int screenX, int screenY) {

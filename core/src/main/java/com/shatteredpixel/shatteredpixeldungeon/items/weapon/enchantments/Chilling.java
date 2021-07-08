@@ -32,7 +32,7 @@ import com.watabou.utils.Random;
 
 public class Chilling extends Weapon.Enchantment {
 
-	private static ItemSprite.Glowing TEAL = new ItemSprite.Glowing( 0x00FFFF );
+	private static final ItemSprite.Glowing TEAL = new ItemSprite.Glowing( 0x00FFFF );
 	
 	@Override
 	public int proc( Weapon weapon, Char attacker, Char defender, int damage ) {

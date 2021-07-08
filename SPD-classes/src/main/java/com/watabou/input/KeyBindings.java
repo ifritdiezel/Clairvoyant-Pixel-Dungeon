@@ -41,7 +41,7 @@ public class KeyBindings {
 	}
 
 	//these are special keybinding that are not user-configurable
-	private static LinkedHashMap<Integer, GameAction> hardBindings = new LinkedHashMap<>();
+	private static final LinkedHashMap<Integer, GameAction> hardBindings = new LinkedHashMap<>();
 
 	public static void addHardBinding(int keyCode, GameAction action){
 		hardBindings.put(keyCode, action);

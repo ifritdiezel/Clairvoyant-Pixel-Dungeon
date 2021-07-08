@@ -78,8 +78,8 @@ public class NewCavesBossLevel extends Level {
 		return Assets.Environment.WATER_CAVES;
 	}
 
-	private static int WIDTH = 33;
-	private static int HEIGHT = 42;
+	private static final int WIDTH = 33;
+	private static final int HEIGHT = 42;
 
 	public static Rect mainArena = new Rect(5, 14, 28, 37);
 	public static Rect gate = new Rect(14, 13, 19, 14);
@@ -406,7 +406,7 @@ public class NewCavesBossLevel extends Level {
 	private static final short e = Terrain.EMPTY;
 	private static final short s = Terrain.EMPTY_SP;
 
-	private static short[] entrance1 = {
+	private static final short[] entrance1 = {
 			n, n, n, n, n, n, n, n,
 			n, n, n, n, n, n, n, n,
 			n, n, n, n, W, e, W, W,
@@ -417,7 +417,7 @@ public class NewCavesBossLevel extends Level {
 			n, n, W, W, e, e, e, e
 	};
 
-	private static short[] entrance2 = {
+	private static final short[] entrance2 = {
 			n, n, n, n, n, n, n, n,
 			n, n, n, n, n, n, n, n,
 			n, n, n, n, n, e, e, e,
@@ -428,7 +428,7 @@ public class NewCavesBossLevel extends Level {
 			n, n, e, e, e, e, e, e
 	};
 
-	private static short[] entrance3 = {
+	private static final short[] entrance3 = {
 			n, n, n, n, n, n, n, n,
 			n, n, n, n, n, n, n, n,
 			n, n, n, n, n, n, n, n,
@@ -439,7 +439,7 @@ public class NewCavesBossLevel extends Level {
 			n, n, n, W, W, e, e, e
 	};
 
-	private static short[] entrance4 = {
+	private static final short[] entrance4 = {
 			n, n, n, n, n, n, n, n,
 			n, n, n, n, n, n, n, e,
 			n, n, n, n, n, n, W, e,
@@ -450,7 +450,7 @@ public class NewCavesBossLevel extends Level {
 			n, e, e, e, e, e, e, e
 	};
 
-	private static short[][] entranceVariants = {
+	private static final short[][] entranceVariants = {
 			entrance1,
 			entrance2,
 			entrance3,
@@ -482,7 +482,7 @@ public class NewCavesBossLevel extends Level {
 		Painter.set(this, entrance, Terrain.ENTRANCE);
 	}
 
-	private static short[] corner1 = {
+	private static final short[] corner1 = {
 			W, W, W, W, W, W, W, W, W, W,
 			W, s, s, s, e, e, e, W, W, W,
 			W, s, s, s, W, W, e, e, W, W,
@@ -495,7 +495,7 @@ public class NewCavesBossLevel extends Level {
 			W, W, W, W, n, n, n, n, n, n,
 	};
 
-	private static short[] corner2 = {
+	private static final short[] corner2 = {
 			W, W, W, W, W, W, W, W, W, W,
 			W, s, s, s, W, W, W, W, W, W,
 			W, s, s, s, e, e, e, e, e, W,
@@ -508,7 +508,7 @@ public class NewCavesBossLevel extends Level {
 			W, W, W, e, e, n, n, n, n, n,
 	};
 
-	private static short[] corner3 = {
+	private static final short[] corner3 = {
 			W, W, W, W, W, W, W, W, W, W,
 			W, s, s, s, W, W, W, W, W, W,
 			W, s, s, s, e, e, e, e, W, W,
@@ -521,7 +521,7 @@ public class NewCavesBossLevel extends Level {
 			W, W, W, W, n, n, n, n, n, n,
 	};
 
-	private static short[] corner4 = {
+	private static final short[] corner4 = {
 			W, W, W, W, W, W, W, W, W, W,
 			W, s, s, s, W, W, W, W, W, W,
 			W, s, s, s, e, e, e, W, W, W,
@@ -534,7 +534,7 @@ public class NewCavesBossLevel extends Level {
 			W, W, W, W, n, n, n, n, n, n,
 	};
 
-	private static short[][] cornerVariants = {
+	private static final short[][] cornerVariants = {
 			corner1,
 			corner2,
 			corner3,
@@ -571,7 +571,7 @@ public class NewCavesBossLevel extends Level {
 			texture = Assets.Environment.CAVES_BOSS;
 		}
 
-		private static short[] entryWay = new short[]{
+		private static final short[] entryWay = new short[]{
 				-1,  7,  7,  7, -1,
 				-1,  1,  2,  3, -1,
 				 8,  1,  2,  3, 12,
@@ -619,7 +619,7 @@ public class NewCavesBossLevel extends Level {
 			texture = Assets.Environment.CAVES_BOSS;
 		}
 
-		private static short[] entryWay = new short[]{
+		private static final short[] entryWay = new short[]{
 				 0,  7,  7,  7,  4,
 				 0, 15, 15, 15,  4,
 				-1, 23, 23, 23, -1,
@@ -793,7 +793,7 @@ public class NewCavesBossLevel extends Level {
 
 		private static CharSprite energySourceSprite = null;
 
-		private static Emitter.Factory DIRECTED_SPARKS = new Emitter.Factory() {
+		private static final Emitter.Factory DIRECTED_SPARKS = new Emitter.Factory() {
 			@Override
 			public void emit(Emitter emitter, int index, float x, float y) {
 				if (energySourceSprite == null){

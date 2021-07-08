@@ -81,11 +81,11 @@ import java.util.Arrays;
 
 public class QuickRecipe extends Component {
 	
-	private ArrayList<Item> ingredients;
+	private final ArrayList<Item> ingredients;
 	
-	private ArrayList<ItemSlot> inputs;
-	private QuickRecipe.arrow arrow;
-	private ItemSlot output;
+	private final ArrayList<ItemSlot> inputs;
+	private final QuickRecipe.arrow arrow;
+	private final ItemSlot output;
 	
 	public QuickRecipe(Recipe.SimpleRecipe r){
 		this(r, r.getIngredients(), r.sampleOutput(null));

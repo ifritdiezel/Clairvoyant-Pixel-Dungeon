@@ -40,7 +40,7 @@ import com.watabou.utils.Bundle;
 
 public class Viscosity extends Glyph {
 	
-	private static ItemSprite.Glowing PURPLE = new ItemSprite.Glowing( 0x8844CC );
+	private static final ItemSprite.Glowing PURPLE = new ItemSprite.Glowing( 0x8844CC );
 	
 	@Override
 	public int proc( Armor armor, Char attacker, Char defender, int damage ) {
@@ -53,10 +53,9 @@ public class Viscosity extends Glyph {
 		if (attacker instanceof Hero
 				&& ((Hero) attacker).belongings.weapon instanceof MissileWeapon
 				&& ((Hero) attacker).subClass == HeroSubClass.SNIPER
-				&& !Dungeon.level.adjacent(attacker.pos, defender.pos))
-
+				&& !Dungeon.level.adjacent(attacker.pos, defender.pos)){
 			realDamage = damage;
-
+		}
 
 		if (realDamage <= 0) {
 			return 0;

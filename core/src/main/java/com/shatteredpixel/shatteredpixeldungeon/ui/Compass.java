@@ -32,10 +32,10 @@ public class Compass extends Image {
 	private static final float RAD_2_G	= 180f / 3.1415926f;
 	private static final float RADIUS	= 12;
 	
-	private int cell;
-	private PointF cellCenter;
+	private final int cell;
+	private final PointF cellCenter;
 	
-	private PointF lastScroll = new PointF();
+	private final PointF lastScroll = new PointF();
 	
 	public Compass( int cell ) {
 		

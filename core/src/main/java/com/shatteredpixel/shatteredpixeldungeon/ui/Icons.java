@@ -75,6 +75,7 @@ public enum Icons {
 	SHPX,
 	IFRIT,
 	TRASHBOX_BOBYLEV,
+	CVPD,
 	
 	//misc icons
 	LIBGDX,
@@ -215,6 +216,10 @@ public enum Icons {
 			case TRASHBOX_BOBYLEV:
 			icon.frame( icon.texture.uvRect( 128, 65, 156, 84 ) );
 			icon.scale.set(PixelScene.align(0.69f));
+			break;
+		case CVPD:
+			icon.frame( icon.texture.uvRect( 128, 96, 159, 128 ) );
+			icon.scale.set(PixelScene.align(0.49f));
 			break;
 		case GOLD:
 			icon.frame( icon.texture.uvRect( 102, 64, 119, 80 ) );

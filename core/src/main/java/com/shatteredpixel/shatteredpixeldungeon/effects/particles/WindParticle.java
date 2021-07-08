@@ -76,7 +76,7 @@ public class WindParticle extends PixelParticle {
 
 	public static class Wind extends Emitter {
 		
-		private int pos;
+		private final int pos;
 		
 		public Wind( int pos ) {
 			super();

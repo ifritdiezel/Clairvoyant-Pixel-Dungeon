@@ -123,7 +123,7 @@ public class PixelScene extends Scene {
 	}
 	
 	//FIXME this system currently only works for a subset of windows
-	private static ArrayList<Class<?extends Window>> savedWindows = new ArrayList<>();
+	private static final ArrayList<Class<?extends Window>> savedWindows = new ArrayList<>();
 	private static Class<?extends PixelScene> savedClass = null;
 	
 	public synchronized void saveWindows(){
@@ -213,9 +213,9 @@ public class PixelScene extends Scene {
 	
 	protected static class Fader extends ColorBlock {
 		
-		private static float FADE_TIME = 1f;
+		private static final float FADE_TIME = 1f;
 		
-		private boolean light;
+		private final boolean light;
 		
 		private float time;
 		

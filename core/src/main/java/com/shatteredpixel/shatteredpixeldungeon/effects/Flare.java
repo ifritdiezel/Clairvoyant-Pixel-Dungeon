@@ -31,6 +31,7 @@ import com.watabou.noosa.NoosaScript;
 import com.watabou.noosa.Visual;
 import com.watabou.utils.PointF;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -43,18 +44,18 @@ public class Flare extends Visual {
 	
 	private boolean lightMode = true;
 	
-	private SmartTexture texture;
+	private final SmartTexture texture;
 	
-	private FloatBuffer vertices;
-	private ShortBuffer indices;
+	private final FloatBuffer vertices;
+	private final ShortBuffer indices;
 	
-	private int nRays;
+	private final int nRays;
 	
 	public Flare( int nRays, float radius ) {
 		
 		super( 0, 0, 0, 0 );
 
-		int gradient[] = {0xFFFFFFFF, 0x00FFFFFF};
+		int[] gradient = {0xFFFFFFFF, 0x00FFFFFF};
 		texture = TextureCache.createGradient( gradient );
 		
 		this.nRays = nRays;
@@ -72,7 +73,7 @@ public class Flare extends Visual {
 			order( ByteOrder.nativeOrder() ).
 			asShortBuffer();
 		
-		float v[] = new float[4];
+		float[] v = new float[4];
 		
 		v[0] = 0;
 		v[1] = 0;
@@ -99,8 +100,8 @@ public class Flare extends Visual {
 			indices.put( (short)(1 + i * 2) );
 			indices.put( (short)(2 + i * 2) );
 		}
-		
-		indices.position( 0 );
+
+		((Buffer)indices).position( 0 );
 	}
 	
 	public Flare color( int color, boolean lightMode ) {

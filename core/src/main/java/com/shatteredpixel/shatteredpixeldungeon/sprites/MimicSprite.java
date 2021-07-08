@@ -27,7 +27,7 @@ import com.watabou.noosa.TextureFilm;
 
 public class MimicSprite extends MobSprite {
 
-	private Animation hiding;
+	private final Animation hiding;
 
 	{
 		//adjust shadow slightly to account for 1 empty bottom pixel (used for border while hiding)

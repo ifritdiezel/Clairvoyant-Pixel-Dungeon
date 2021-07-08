@@ -28,6 +28,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.KindofMisc;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Artifact;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.keys.Key;
@@ -42,7 +43,7 @@ import java.util.Iterator;
 
 public class Belongings implements Iterable<Item> {
 
-	private Hero owner;
+	private final Hero owner;
 	
 	public Bag backpack;
 
@@ -120,10 +121,10 @@ public class Belongings implements Iterable<Item> {
 			m = (KindofMisc)bundle.get("misc2");
 			if (m instanceof Artifact){
 				if (artifact == null)   artifact = (Artifact) m;
-				else                    misc = (Artifact) m;
+				else                    misc = m;
 			} else if (m instanceof Ring) {
 				if (ring == null)       ring = (Ring) m;
-				else                    misc = (Ring) m;
+				else                    misc = m;
 			}
 
 		} else {
@@ -139,7 +140,12 @@ public class Belongings implements Iterable<Item> {
 	
 	public static void preview( GamesInProgress.Info info, Bundle bundle ) {
 		if (bundle.contains( ARMOR )){
-			info.armorTier = ((Armor)bundle.get( ARMOR )).tier;
+			Armor armor = ((Armor)bundle.get( ARMOR ));
+			if (armor instanceof ClassArmor){
+				info.armorTier = 6;
+			} else {
+				info.armorTier = armor.tier;
+			}
 		} else {
 			info.armorTier = 0;
 		}
@@ -156,7 +162,19 @@ public class Belongings implements Iterable<Item> {
 		
 		return null;
 	}
-	
+
+	public<T extends Item> ArrayList<T> getAllItems( Class<T> itemClass ) {
+		ArrayList<T> result = new ArrayList<>();
+
+		for (Item item : this) {
+			if (itemClass.isInstance( item )) {
+				result.add((T) item);
+			}
+		}
+
+		return result;
+	}
+
 	public boolean contains( Item contains ){
 		
 		for (Item item : this) {
@@ -297,10 +315,10 @@ public class Belongings implements Iterable<Item> {
 
 		private int index = 0;
 		
-		private Iterator<Item> backpackIterator = backpack.iterator();
+		private final Iterator<Item> backpackIterator = backpack.iterator();
 		
-		private Item[] equipped = {weapon, armor, artifact, misc, ring};
-		private int backpackIndex = equipped.length;
+		private final Item[] equipped = {weapon, armor, artifact, misc, ring};
+		private final int backpackIndex = equipped.length;
 		
 		@Override
 		public boolean hasNext() {

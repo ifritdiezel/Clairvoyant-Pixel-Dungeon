@@ -32,7 +32,7 @@ import com.watabou.utils.Random;
 
 public class Elastic extends Weapon.Enchantment {
 	
-	private static ItemSprite.Glowing PINK = new ItemSprite.Glowing( 0xFF00FF );
+	private static final ItemSprite.Glowing PINK = new ItemSprite.Glowing( 0xFF00FF );
 	
 	@Override
 	public int proc(Weapon weapon, Char attacker, Char defender, int damage ) {

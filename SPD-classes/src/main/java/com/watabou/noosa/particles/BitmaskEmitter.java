@@ -30,9 +30,9 @@ public class BitmaskEmitter extends Emitter {
 
 	// DON'T USE WITH COMPLETELY TRANSPARENT IMAGES!!!
 
-	private SmartTexture map;
-	private int mapW;
-	private int mapH;
+	private final SmartTexture map;
+	private final int mapW;
+	private final int mapH;
 
 	public BitmaskEmitter( Image target ) {
 		super();

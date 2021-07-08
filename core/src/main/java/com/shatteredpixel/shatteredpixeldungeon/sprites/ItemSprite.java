@@ -43,6 +43,8 @@ import com.watabou.noosa.particles.Emitter;
 import com.watabou.utils.PointF;
 import com.watabou.utils.Random;
 
+import java.nio.Buffer;
+
 public class ItemSprite extends MovieClip {
 
 	public static final int SIZE	= 16;
@@ -206,7 +208,6 @@ public class ItemSprite extends MovieClip {
 			case HEAP: case FOR_SALE:
 				return view( heap.peek() );
 			case CHEST:
-			case MIMIC:
 				return view( ItemSpriteSheet.CHEST, null );
 			case LOCKED_CHEST:
 				return view( ItemSpriteSheet.LOCKED_CHEST, null );
@@ -249,11 +250,14 @@ public class ItemSprite extends MovieClip {
 	@Override
 	public void kill() {
 		super.kill();
-		if (emitter != null) emitter.killAndErase();
+		if (emitter != null) {
+			emitter.on = false;
+			emitter.autoKill = true;
+		}
 		emitter = null;
 	}
 
-	private float[] shadowMatrix = new float[16];
+	private final float[] shadowMatrix = new float[16];
 
 	@Override
 	protected void updateMatrix() {
@@ -272,7 +276,7 @@ public class ItemSprite extends MovieClip {
 
 		if (renderShadow) {
 			if (dirty) {
-				verticesBuffer.position(0);
+				((Buffer)verticesBuffer).position(0);
 				verticesBuffer.put(vertices);
 				if (buffer == null)
 					buffer = new Vertexbuffer(verticesBuffer);

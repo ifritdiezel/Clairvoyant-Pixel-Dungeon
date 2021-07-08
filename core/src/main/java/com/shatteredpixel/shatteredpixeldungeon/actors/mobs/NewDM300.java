@@ -609,7 +609,7 @@ public class NewDM300 extends Mob {
 	public static class FallingRockBuff extends FlavourBuff {
 
 		private int[] rockPositions;
-		private ArrayList<Emitter> rockEmitters = new ArrayList<>();
+		private final ArrayList<Emitter> rockEmitters = new ArrayList<>();
 
 		public void setRockPositions( List<Integer> rockPositions ) {
 			this.rockPositions = new int[rockPositions.size()];

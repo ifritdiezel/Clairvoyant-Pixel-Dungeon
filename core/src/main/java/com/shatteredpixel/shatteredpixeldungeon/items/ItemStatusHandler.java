@@ -34,10 +34,10 @@ import java.util.List;
 
 public class ItemStatusHandler<T extends Item> {
 
-	private Class<? extends T>[] items;
-	private LinkedHashMap<Class<? extends T>, String> itemLabels;
-	private LinkedHashMap<String, Integer> labelImages;
-	private LinkedHashSet<Class<? extends T>> known;
+	private final Class<? extends T>[] items;
+	private final LinkedHashMap<Class<? extends T>, String> itemLabels;
+	private final LinkedHashMap<String, Integer> labelImages;
+	private final LinkedHashSet<Class<? extends T>> known;
 
 	public ItemStatusHandler( Class<? extends T>[] items, HashMap<String, Integer> labelImages ) {
 

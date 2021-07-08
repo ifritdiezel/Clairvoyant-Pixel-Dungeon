@@ -30,7 +30,7 @@ import com.watabou.utils.Callback;
 
 public class GnollTricksterSprite extends MobSprite {
 
-	private Animation cast;
+	private final Animation cast;
 
 	public GnollTricksterSprite() {
 		super();

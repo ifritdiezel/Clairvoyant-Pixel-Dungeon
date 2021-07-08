@@ -28,9 +28,9 @@ import com.watabou.utils.Random;
 
 public class RipperSprite extends MobSprite {
 
-	private Animation stab;
-	private Animation prep;
-	private Animation leap;
+	private final Animation stab;
+	private final Animation prep;
+	private final Animation leap;
 
 	private boolean alt = Random.Int(2) == 0;
 

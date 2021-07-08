@@ -70,7 +70,7 @@ public class FlowParticle extends PixelParticle {
 
 	public static class Flow extends Emitter {
 		
-		private int pos;
+		private final int pos;
 		
 		public Flow( int pos ) {
 			super();

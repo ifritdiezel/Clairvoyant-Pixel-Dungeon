@@ -222,7 +222,7 @@ public class Generator {
 		public float prob;
 		public Class<? extends Item> superClass;
 		
-		private Category( float prob, Class<? extends Item> superClass ) {
+		Category(float prob, Class<? extends Item> superClass) {
 			this.prob = prob;
 			this.superClass = superClass;
 		}
@@ -472,7 +472,7 @@ public class Generator {
 			{0,  0,  0, 20, 80}
 	};
 	
-	private static HashMap<Category,Float> categoryProbs = new LinkedHashMap<>();
+	private static final HashMap<Category,Float> categoryProbs = new LinkedHashMap<>();
 
 	public static void fullReset() {
 		generalReset();
@@ -498,7 +498,6 @@ public class Generator {
 			cat = Random.chances( categoryProbs );
 		}
 		categoryProbs.put( cat, categoryProbs.get( cat ) - 1);
-		assert cat != null;
 		return random( cat );
 	}
 	

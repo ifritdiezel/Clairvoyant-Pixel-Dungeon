@@ -116,43 +116,49 @@ public class WndStartGame extends Window {
 		start.visible = false;
 		start.setRect(0, HEIGHT - 20, WIDTH, 20);
 		add(start);
-
-		IconButton challengeButton = new IconButton(
-				Icons.get( SPDSettings.challenges() > 0 ? Icons.CHALLENGE_ON :Icons.CHALLENGE_OFF)){
-			@Override
-			protected void onClick() {
-				ShatteredPixelDungeon.scene().addToFront(new WndChallenges(SPDSettings.challenges(), true) {
-					public void onBackPressed() {
-						super.onBackPressed();
-						if (parent != null) {
-							icon(Icons.get(SPDSettings.challenges() > 0 ?
-									Icons.CHALLENGE_ON : Icons.CHALLENGE_OFF));
+		
+		if (DeviceCompat.isDebug() || Badges.isUnlocked(Badges.Badge.VICTORY)){
+			IconButton challengeButton = new IconButton(
+					Icons.get( SPDSettings.challenges() > 0 ? Icons.CHALLENGE_ON :Icons.CHALLENGE_OFF)){
+				@Override
+				protected void onClick() {
+					ShatteredPixelDungeon.scene().addToFront(new WndChallenges(SPDSettings.challenges(), true) {
+						public void onBackPressed() {
+							super.onBackPressed();
+							if (parent != null) {
+								icon(Icons.get(SPDSettings.challenges() > 0 ?
+										Icons.CHALLENGE_ON : Icons.CHALLENGE_OFF));
+							}
 						}
-					}
-				} );
-			}
-
-			@Override
-			public void update() {
-				if( !visible && GamesInProgress.selectedClass != null){
-					visible = true;
+					} );
 				}
-				super.update();
-			}
-		};
-		challengeButton.setRect(WIDTH - 20, HEIGHT - 20, 20, 20);
-		challengeButton.visible = false;
-		add(challengeButton);
-
+				
+				@Override
+				public void update() {
+					if( !visible && GamesInProgress.selectedClass != null){
+						visible = true;
+					}
+					super.update();
+				}
+			};
+			challengeButton.setRect(WIDTH - 20, HEIGHT - 20, 20, 20);
+			challengeButton.visible = false;
+			add(challengeButton);
+			
+		} else {
+			Dungeon.challenges = 0;
+			SPDSettings.challenges(0);
+		}
+		
 		resize(WIDTH, HEIGHT);
 		
 	}
 	
 	private static class HeroBtn extends Button {
 		
-		private HeroClass cl;
+		private final HeroClass cl;
 		
-		private Image hero;
+		private final Image hero;
 		
 		private static final int WIDTH = 24;
 		private static final int HEIGHT = 16;
@@ -193,6 +199,12 @@ public class WndStartGame extends Window {
 		@Override
 		protected void onClick() {
 			super.onClick();
+			
+			if( !cl.isUnlocked() ){
+				ShatteredPixelDungeon.scene().addToFront( new WndMessage(cl.unlockMsg()));
+			} else {
+				GamesInProgress.selectedClass = cl;
+			}
 		}
 	}
 	
@@ -255,7 +267,7 @@ public class WndStartGame extends Window {
 					if (cl == null) return;
 					String msg = Messages.get(cl, cl.name() + "_desc_subclasses");
 					for (HeroSubClass sub : cl.subClasses()){
-						msg += "\n\n" + sub.desc();
+						msg += "\n\n" + sub.shortDesc();
 					}
 					ShatteredPixelDungeon.scene().addToFront(new WndMessage(msg));
 				}

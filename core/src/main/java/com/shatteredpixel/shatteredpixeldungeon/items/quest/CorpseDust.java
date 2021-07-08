@@ -125,7 +125,7 @@ public class CorpseDust extends Item {
 			}
 		}
 
-		private static String SPAWNPOWER = "spawnpower";
+		private static final String SPAWNPOWER = "spawnpower";
 
 		@Override
 		public void storeInBundle(Bundle bundle) {

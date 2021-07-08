@@ -49,7 +49,7 @@ public class StatueSprite extends MobSprite {
 		play( idle );
 	}
 
-	private static int[] tierFrames = {0, 21, 32, 43, 54, 65};
+	private static final int[] tierFrames = {0, 21, 32, 43, 54, 65};
 
 	public void setArmor( int tier ){
 		int c = tierFrames[(int)GameMath.gate(0, tier, 5)];

@@ -153,7 +153,7 @@ public class RankingsScene extends PixelScene {
 		private static final int FLARE_WIN	= 0x888866;
 		private static final int FLARE_LOSE	= 0x666666;
 		
-		private Rankings.Record rec;
+		private final Rankings.Record rec;
 		
 		protected ItemSprite shield;
 		private Flare flare;

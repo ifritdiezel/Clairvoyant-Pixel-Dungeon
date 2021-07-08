@@ -28,9 +28,9 @@ import com.watabou.noosa.ui.Button;
 
 public class Tag extends Button {
 
-	private float r;
-	private float g;
-	private float b;
+	private final float r;
+	private final float g;
+	private final float b;
 	protected NinePatch bg;
 	
 	protected float lightness = 0;

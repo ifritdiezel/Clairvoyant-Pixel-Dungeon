@@ -57,10 +57,10 @@ public class WndSettings extends WndTabbed {
 	private static final int BTN_HEIGHT	    = 18;
 	private static final float GAP          = 2;
 
-	private DisplayTab  display;
-	private UITab       ui;
-	private AudioTab    audio;
-	private LangsTab    langs;
+	private final DisplayTab  display;
+	private final UITab       ui;
+	private final AudioTab    audio;
+	private final LangsTab    langs;
 
 	public static int last_index = 0;
 

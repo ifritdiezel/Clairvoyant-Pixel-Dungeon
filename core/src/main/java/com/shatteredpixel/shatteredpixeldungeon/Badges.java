@@ -50,6 +50,7 @@ public class Badges {
 		MASTERY_MAGE,
 		MASTERY_ROGUE,
 		MASTERY_HUNTRESS,
+		FOUND_RATMOGRIFY,
 
 		//bronze
 		UNLOCK_MAGE                 ( 1 ),
@@ -221,7 +222,7 @@ public class Badges {
 		addReplacedBadges(badges);
 
 		int count = 0;
-		String names[] = new String[badges.size()];
+		String[] names = new String[badges.size()];
 		
 		for (Badge badge:badges) {
 			names[count++] = badge.toString();
@@ -699,7 +700,14 @@ public class Badges {
 			saveNeeded = true;
 		}
 	}
-	
+
+	public static void validateRatmogrify(){
+		if (!global.contains( Badge.FOUND_RATMOGRIFY )) {
+			global.add( Badge.FOUND_RATMOGRIFY );
+			saveNeeded = true;
+		}
+	}
+
 	public static void validateMageUnlock(){
 		if (Statistics.upgradesUsed >= 1 && !global.contains(Badge.UNLOCK_MAGE)){
 			displayBadge( Badge.UNLOCK_MAGE );
@@ -797,9 +805,7 @@ public class Badges {
 	
 	//necessary in order to display the happy end badge in the surface scene
 	public static void silentValidateHappyEnd() {
-		if (!local.contains( Badge.HAPPY_END )){
-			local.add( Badge.HAPPY_END );
-		}
+		local.add( Badge.HAPPY_END );
 	}
 	
 	public static void validateHappyEnd() {

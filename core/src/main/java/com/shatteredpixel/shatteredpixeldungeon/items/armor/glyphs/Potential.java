@@ -32,7 +32,7 @@ import com.watabou.utils.Random;
 
 public class Potential extends Glyph {
 	
-	private static ItemSprite.Glowing WHITE = new ItemSprite.Glowing( 0xFFFFFF, 0.6f );
+	private static final ItemSprite.Glowing WHITE = new ItemSprite.Glowing( 0xFFFFFF, 0.6f );
 	
 	@Override
 	public int proc( Armor armor, Char attacker, Char defender, int damage) {

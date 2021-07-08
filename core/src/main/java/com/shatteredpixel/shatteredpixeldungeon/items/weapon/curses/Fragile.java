@@ -28,7 +28,7 @@ import com.watabou.utils.Bundle;
 
 public class Fragile extends Weapon.Enchantment {
 
-	private static ItemSprite.Glowing BLACK = new ItemSprite.Glowing( 0x000000 );
+	private static final ItemSprite.Glowing BLACK = new ItemSprite.Glowing( 0x000000 );
 	private int hits = 0;
 
 	@Override

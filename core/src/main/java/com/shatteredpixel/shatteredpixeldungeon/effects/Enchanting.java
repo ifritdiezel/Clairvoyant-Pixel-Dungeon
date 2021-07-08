@@ -39,7 +39,7 @@ public class Enchanting extends ItemSprite {
 
 	private static final float ALPHA	= 0.6f;
 
-	private int color;
+	private final int color;
 
 	private Char target;
 

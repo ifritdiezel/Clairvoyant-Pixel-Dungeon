@@ -33,7 +33,7 @@ public class WndHardNotification extends WndTitledMessage{
 	RedButton btnOkay;
 
 	private double timeLeft;
-	private String btnMessage;
+	private final String btnMessage;
 
 	public WndHardNotification( Image icon, String title, String message, String btnMessage, int time) {
 		this(new IconTitle(icon, title), message, btnMessage, time);

@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 
 public class Projecting extends Weapon.Enchantment {
 
-	private static ItemSprite.Glowing PURPLE = new ItemSprite.Glowing( 0x8844CC );
+	private static final ItemSprite.Glowing PURPLE = new ItemSprite.Glowing( 0x8844CC );
 
 	@Override
 	public int proc(Weapon weapon, Char attacker, Char defender, int damage) {

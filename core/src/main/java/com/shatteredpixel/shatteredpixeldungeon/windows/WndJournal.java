@@ -261,7 +261,7 @@ public class WndJournal extends WndTabbed {
 		
 		private static class GuideItem extends ListItem {
 			
-			private final boolean found;
+			private boolean found = false;
 			private final String page;
 			
 			public GuideItem( String page ){

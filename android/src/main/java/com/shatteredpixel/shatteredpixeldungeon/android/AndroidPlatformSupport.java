@@ -214,19 +214,19 @@ public class AndroidPlatformSupport extends PlatformSupport {
 	
 	//droid sans / roboto, or a custom pixel font, for use with Latin and Cyrillic languages
 	private static FreeTypeFontGenerator basicFontGenerator;
-	private static HashMap<Integer, BitmapFont> basicFonts = new HashMap<>();
+	private static final HashMap<Integer, BitmapFont> basicFonts = new HashMap<>();
 	
 	//droid sans / nanum gothic / noto sans, for use with Korean
 	private static FreeTypeFontGenerator KRFontGenerator;
-	private static HashMap<Integer, BitmapFont> KRFonts = new HashMap<>();
+	private static final HashMap<Integer, BitmapFont> KRFonts = new HashMap<>();
 	
 	//droid sans / noto sans, for use with Simplified Chinese
 	private static FreeTypeFontGenerator SCFontGenerator;
-	private static HashMap<Integer, BitmapFont> SCFonts = new HashMap<>();
+	private static final HashMap<Integer, BitmapFont> SCFonts = new HashMap<>();
 	
 	//droid sans / noto sans, for use with Japanese
 	private static FreeTypeFontGenerator JPFontGenerator;
-	private static HashMap<Integer, BitmapFont> JPFonts = new HashMap<>();
+	private static final HashMap<Integer, BitmapFont> JPFonts = new HashMap<>();
 	
 	private static HashMap<FreeTypeFontGenerator, HashMap<Integer, BitmapFont>> fonts;
 	
@@ -363,9 +363,9 @@ public class AndroidPlatformSupport extends PlatformSupport {
 		}
 	}
 
-	private static Pattern KRMatcher = Pattern.compile("\\p{InHangul_Syllables}");
-	private static Pattern SCMatcher = Pattern.compile("\\p{InCJK_Unified_Ideographs}|\\p{InCJK_Symbols_and_Punctuation}|\\p{InHalfwidth_and_Fullwidth_Forms}");
-	private static Pattern JPMatcher = Pattern.compile("\\p{InHiragana}|\\p{InKatakana}");
+	private static final Pattern KRMatcher = Pattern.compile("\\p{InHangul_Syllables}");
+	private static final Pattern SCMatcher = Pattern.compile("\\p{InCJK_Unified_Ideographs}|\\p{InCJK_Symbols_and_Punctuation}|\\p{InHalfwidth_and_Fullwidth_Forms}");
+	private static final Pattern JPMatcher = Pattern.compile("\\p{InHiragana}|\\p{InKatakana}");
 	
 	private static FreeTypeFontGenerator getGeneratorForString( String input ){
 		if (KRMatcher.matcher(input).find()){
@@ -423,7 +423,7 @@ public class AndroidPlatformSupport extends PlatformSupport {
 	}
 	
 	//splits on newlines, underscores, and chinese/japaneses characters
-	private Pattern regularsplitter = Pattern.compile(
+	private final Pattern regularsplitter = Pattern.compile(
 			"(?<=\n)|(?=\n)|(?<=_)|(?=_)|" +
 					"(?<=\\p{InHiragana})|(?=\\p{InHiragana})|" +
 					"(?<=\\p{InKatakana})|(?=\\p{InKatakana})|" +
@@ -432,7 +432,7 @@ public class AndroidPlatformSupport extends PlatformSupport {
 					"(?<=\\p{InHalfwidth_and_Fullwidth_Forms})|(?=\\p{InHalfwidth_and_Fullwidth_Forms})");
 	
 	//additionally splits on words, so that each word can be arranged individually
-	private Pattern regularsplitterMultiline = Pattern.compile(
+	private final Pattern regularsplitterMultiline = Pattern.compile(
 			"(?<= )|(?= )|(?<=\n)|(?=\n)|(?<=_)|(?=_)|" +
 					"(?<=\\p{InHiragana})|(?=\\p{InHiragana})|" +
 					"(?<=\\p{InKatakana})|(?=\\p{InKatakana})|" +
@@ -441,7 +441,7 @@ public class AndroidPlatformSupport extends PlatformSupport {
 					"(?<=\\p{InHalfwidth_and_Fullwidth_Forms})|(?=\\p{InHalfwidth_and_Fullwidth_Forms})");
 	
 	//splits on each non-hangul character. Needed for weird android 6.0 font files
-	private Pattern android6KRSplitter = Pattern.compile(
+	private final Pattern android6KRSplitter = Pattern.compile(
 			"(?<= )|(?= )|(?<=\n)|(?=\n)|(?<=_)|(?=_)|" +
 					"(?!\\p{InHangul_Syllables})|(?<!\\p{InHangul_Syllables})");
 	

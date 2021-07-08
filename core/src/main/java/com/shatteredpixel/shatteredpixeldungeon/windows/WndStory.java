@@ -60,7 +60,7 @@ public class WndStory extends Window {
 	}
 
 	private IconTitle ttl;
-	private RenderedTextBlock tf;
+	private final RenderedTextBlock tf;
 	
 	private float delay;
 

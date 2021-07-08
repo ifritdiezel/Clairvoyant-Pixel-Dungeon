@@ -21,17 +21,12 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
-import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
-import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
-import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal.ApprenticeShield;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
 import com.watabou.noosa.Image;
-import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.GameMath;
 
@@ -71,7 +66,7 @@ public class Berserk extends Buff {
 	@Override
 	public boolean act() {
 		if (berserking()){
-			ShieldBuff buff = target.buff(ApprenticeShield.class);
+			ShieldBuff buff = target.buff(ShieldBuff.class);
 			if (target.HP <= 0) {
 				int dmg = 1 + (int)Math.ceil(target.shielding() * 0.05f);
 				if (buff != null && buff.shielding() > 0) {
@@ -95,7 +90,7 @@ public class Berserk extends Buff {
 			}
 		} else if (state == State.NORMAL) {
 			power -= GameMath.gate(0.1f, power, 1f) * 0.067f * Math.pow((target.HP/(float)target.HT), 2);
-			
+
 			if (power <= 0){
 				detach();
 			}
@@ -113,22 +108,7 @@ public class Berserk extends Buff {
 		return Math.round(dmg * bonus);
 	}
 
-	public boolean berserking(){
-		if (target.HP == 0 && state == State.NORMAL && power >= 1f){
-
-			ApprenticeShield shield = target.buff(ApprenticeShield.class);
-			if (shield != null){
-				state = State.BERSERK;
-				int shieldAmount = shield.maxShield() * 8;
-				shieldAmount = Math.round(shieldAmount * (1f + Dungeon.hero.pointsInTalent(Talent.BERSERKING_STAMINA)/6f));
-				shield.supercharge(shieldAmount);
-
-				SpellSprite.show(target, SpellSprite.BERSERK);
-				Sample.INSTANCE.play( Assets.Sounds.CHALLENGE );
-				GameScene.flash(0xFF0000);
-			}
-
-		}
+	public <ApprenticeShield> boolean berserking(){
 
 		return state == State.BERSERK && target.shielding() > 0;
 	}

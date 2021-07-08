@@ -213,7 +213,7 @@ public class WndTabbed extends Window {
 	protected class IconTab extends Tab {
 		
 		protected Image icon;
-		private RectF defaultFrame;
+		private final RectF defaultFrame;
 		
 		public IconTab( Image icon ){
 			super();

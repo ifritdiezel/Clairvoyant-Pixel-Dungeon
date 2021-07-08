@@ -26,7 +26,6 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Momentum;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -81,8 +80,8 @@ public class Armor extends EquipableItem {
 		DEFENSE (-2f, 1f),
 		NONE	(0f   ,  0f);
 		
-		private float evasionFactor;
-		private float defenceFactor;
+		private final float evasionFactor;
+		private final float defenceFactor;
 		
 		Augment(float eva, float df){
 			evasionFactor = eva;
@@ -161,7 +160,11 @@ public class Armor extends EquipableItem {
 		return actions;
 	}
 
+	@Override
+	public void execute(Hero hero, String action) {
 
+		super.execute(hero, action);
+	}
 
 	@Override
 	public boolean doEquip( Hero hero ) {
@@ -194,25 +197,8 @@ public class Armor extends EquipableItem {
 
 	@Override
 	public void activate(Char ch) {
-		if (seal != null) Buff.affect(ch, BrokenSeal.ApprenticeShield.class).setArmor(this);
 	}
 
-	public void affixSeal(BrokenSeal seal){
-		this.seal = seal;
-		if (seal.level() > 0){
-			//doesn't trigger upgrading logic such as affecting curses/glyphs
-			int newLevel = level()+1;
-			if (curseInfusionBonus) newLevel--;
-			level(newLevel);
-			Badges.validateItemLevelAquired(this);
-		}
-		if (seal.getGlyph() != null){
-			inscribe(seal.getGlyph());
-		}
-		if (isEquipped(Dungeon.hero)){
-			Buff.affect(Dungeon.hero, BrokenSeal.ApprenticeShield.class).setArmor(this);
-		}
-	}
 
 	public BrokenSeal checkSeal(){
 		return seal;
@@ -230,8 +216,6 @@ public class Armor extends EquipableItem {
 			hero.belongings.armor = null;
 			((HeroSprite)hero.sprite).updateArmor();
 
-			BrokenSeal.ApprenticeShield sealBuff = hero.buff(BrokenSeal.ApprenticeShield.class);
-			if (sealBuff != null) sealBuff.setArmor(null);
 
 			return true;
 

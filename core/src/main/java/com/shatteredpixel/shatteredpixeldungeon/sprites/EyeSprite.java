@@ -36,7 +36,7 @@ public class EyeSprite extends MobSprite {
 
 	private int zapPos;
 
-	private Animation charging;
+	private final Animation charging;
 	private Emitter chargeParticles;
 	
 	public EyeSprite() {

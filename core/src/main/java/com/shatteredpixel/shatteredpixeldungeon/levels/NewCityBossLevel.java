@@ -56,8 +56,8 @@ public class NewCityBossLevel extends Level {
 		color2 = 0xf2f2f2;
 	}
 
-	private static int WIDTH = 15;
-	private static int HEIGHT = 48;
+	private static final int WIDTH = 15;
+	private static final int HEIGHT = 48;
 
 	private static final Rect entry = new Rect(1, 37, 14, 48);
 	private static final Rect arena = new Rect(1, 25, 14, 38);

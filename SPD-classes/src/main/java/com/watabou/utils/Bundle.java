@@ -48,9 +48,9 @@ public class Bundle {
 
 	public static final String DEFAULT_KEY = "key";
 	
-	private static HashMap<String,String> aliases = new HashMap<>();
+	private static final HashMap<String,String> aliases = new HashMap<>();
 	
-	private JSONObject data;
+	private final JSONObject data;
 	
 	public Bundle() {
 		this( new JSONObject() );

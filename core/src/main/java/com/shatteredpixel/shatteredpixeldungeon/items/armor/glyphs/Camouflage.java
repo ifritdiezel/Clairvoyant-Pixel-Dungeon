@@ -27,7 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 
 public class Camouflage extends Armor.Glyph {
 
-	private static ItemSprite.Glowing GREEN = new ItemSprite.Glowing( 0x448822 );
+	private static final ItemSprite.Glowing GREEN = new ItemSprite.Glowing( 0x448822 );
 
 	@Override
 	public int proc(Armor armor, Char attacker, Char defender, int damage) {

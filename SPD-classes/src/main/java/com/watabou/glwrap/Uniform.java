@@ -25,7 +25,7 @@ import com.badlogic.gdx.Gdx;
 
 public class Uniform {
 
-	private int location;
+	private final int location;
 	
 	public Uniform(int location) {
 		this.location = location;

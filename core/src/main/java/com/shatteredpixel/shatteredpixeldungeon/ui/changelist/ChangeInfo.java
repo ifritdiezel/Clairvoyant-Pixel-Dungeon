@@ -32,12 +32,12 @@ public class ChangeInfo extends Component {
 	
 	protected ColorBlock line;
 	
-	private RenderedTextBlock title;
+	private final RenderedTextBlock title;
 	public boolean major;
 	
 	private RenderedTextBlock text;
 	
-	private ArrayList<ChangeButton> buttons = new ArrayList<>();
+	private final ArrayList<ChangeButton> buttons = new ArrayList<>();
 	
 	public ChangeInfo( String title, boolean majorTitle, String text){
 		super();
@@ -45,11 +45,12 @@ public class ChangeInfo extends Component {
 		if (majorTitle){
 			this.title = PixelScene.renderTextBlock( title, 9 );
 			line = new ColorBlock( 1, 1, 0xFF222222);
+			add(line);
 		} else {
 			this.title = PixelScene.renderTextBlock( title, 6 );
 			line = new ColorBlock( 1, 1, 0xFF333333);
+			add(line);
 		}
-		add(line);
 		major = majorTitle;
 		
 		add(this.title);

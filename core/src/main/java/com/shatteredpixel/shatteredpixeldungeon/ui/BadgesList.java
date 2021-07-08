@@ -35,7 +35,7 @@ import java.util.ArrayList;
 
 public class BadgesList extends ScrollPane {
 
-	private ArrayList<ListItem> items = new ArrayList<>();
+	private final ArrayList<ListItem> items = new ArrayList<>();
 	
 	public BadgesList( boolean global ) {
 		super( new Component() );
@@ -82,7 +82,7 @@ public class BadgesList extends ScrollPane {
 		
 		private static final float HEIGHT	= 20;
 		
-		private Badges.Badge badge;
+		private final Badges.Badge badge;
 		
 		private Image icon;
 		private RenderedTextBlock label;

@@ -33,7 +33,7 @@ import com.watabou.noosa.particles.Emitter;
 
 public class NecromancerSprite extends MobSprite {
 	
-	private Animation charging;
+	private final Animation charging;
 	private Emitter summoningBones;
 	
 	public NecromancerSprite(){

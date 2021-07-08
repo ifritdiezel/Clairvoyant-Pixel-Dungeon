@@ -31,7 +31,7 @@ import com.watabou.utils.Random;
 
 public class Friendly extends Weapon.Enchantment {
 	
-	private static ItemSprite.Glowing BLACK = new ItemSprite.Glowing( 0x000000 );
+	private static final ItemSprite.Glowing BLACK = new ItemSprite.Glowing( 0x000000 );
 	
 	@Override
 	public int proc(Weapon weapon, Char attacker, Char defender, int damage ) {

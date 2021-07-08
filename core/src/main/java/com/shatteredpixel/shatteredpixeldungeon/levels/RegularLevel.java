@@ -223,8 +223,8 @@ public abstract class RegularLevel extends Level {
 				mobsToSpawn--;
 				mobs.add(mob);
 
-				//add a second mob to this room
-				if (mobsToSpawn > 0 && Random.Int(4) == 0){
+				//chance to add a second mob to this room, except on floor 1
+				if (Dungeon.depth > 1 && mobsToSpawn > 0 && Random.Int(4) == 0){
 					mob = createMob();
 
 					tries = 30;
@@ -524,7 +524,8 @@ public abstract class RegularLevel extends Level {
 					Trap t = traps.get(pos);
 					
 					//items cannot spawn on traps which destroy items
-					if (!(t instanceof BurningTrap || t instanceof BlazingTrap
+					if (t == null ||
+							! (t instanceof BurningTrap || t instanceof BlazingTrap
 							|| t instanceof ChillingTrap || t instanceof FrostTrap
 							|| t instanceof ExplosiveTrap || t instanceof DisintegrationTrap)) {
 						

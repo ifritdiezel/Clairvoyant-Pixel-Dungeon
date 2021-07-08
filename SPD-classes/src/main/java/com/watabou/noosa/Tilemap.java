@@ -28,6 +28,7 @@ import com.watabou.glwrap.Vertexbuffer;
 import com.watabou.utils.Rect;
 import com.watabou.utils.RectF;
 
+import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.util.Arrays;
 
@@ -41,14 +42,14 @@ public class Tilemap extends Visual {
 	protected int mapHeight;
 	protected int size;
 
-	private float cellW;
-	private float cellH;
+	private final float cellW;
+	private final float cellH;
 
 	protected float[] vertices;
 	protected FloatBuffer quads;
 	protected Vertexbuffer buffer;
 
-	private volatile Rect updated;
+	private final Rect updated;
 	private boolean fullUpdate;
 	private Rect updating;
 	private int topLeftUpdating;
@@ -136,7 +137,7 @@ public class Tilemap extends Visual {
 
 				bottomRightUpdating = pos + 1;
 
-				quads.position(pos*16);
+				((Buffer)quads).position(pos*16);
 				
 				uv = tileset.get(data[pos]);
 				
