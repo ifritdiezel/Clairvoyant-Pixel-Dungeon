@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.effects;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.watabou.glwrap.Blending;
 import com.watabou.glwrap.Texture;
+import com.watabou.input.PointerEvent;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
@@ -99,16 +100,14 @@ public class Fireball extends Component {
 	
 	@Override
 	public void update() {
-		
 		super.update();
-		if (Random.Float()-0.2 < Game.elapsed) {
+		if (Random.Float() < Game.elapsed) {
 			PixelParticle spark = (PixelParticle)sparks.recycle( PixelParticle.Shrinking.class );
-			spark.reset( -100, y, Random.Int( 0x222222, 0xFFFFFF ), 2, 20 );
+			spark.reset( -100, y, Random.Int( 0x222222, 0xFFFFFF ), 2, 40 );
+			spark.angularSpeed = 60;
 			spark.speed.set(
 				Random.Float( -20, +80 ),
-				Random.Float( -5, +5 ) );
-			spark.acc.set( 0, +0 );
-			sparks.add( spark );
+				Random.Float( -1, +1 ) );
 			sparks.add( spark );
 		}
 	}

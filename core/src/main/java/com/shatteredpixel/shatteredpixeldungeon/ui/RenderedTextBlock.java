@@ -43,7 +43,7 @@ public class RenderedTextBlock extends Component {
 
 	private final int size;
 	private float zoom;
-	private int color = -1;
+	public int color = -1;
 	
 	private int hightlightColor = Window.TITLE_COLOR;
 	private boolean highlightingEnabled = true;

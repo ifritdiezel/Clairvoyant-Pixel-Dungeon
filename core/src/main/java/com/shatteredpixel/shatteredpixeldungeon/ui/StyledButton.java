@@ -24,10 +24,13 @@ package com.shatteredpixel.shatteredpixeldungeon.ui;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
+import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.NinePatch;
 import com.watabou.noosa.audio.Sample;
+import com.watabou.noosa.particles.PixelParticle;
 import com.watabou.noosa.ui.Button;
+import com.watabou.utils.Random;
 
 //simple button which support a background chrome, text, and an icon.
 public class StyledButton extends Button {
@@ -36,7 +39,6 @@ public class StyledButton extends Button {
 	protected RenderedTextBlock text;
 	protected Image icon;
 	public boolean leftJustify = false;
-
 	public boolean multiline;
 	
 	public StyledButton(Chrome.Type type, String label ) {
@@ -104,6 +106,17 @@ public class StyledButton extends Button {
 	protected void onPointerDown() {
 		bg.brightness( 1.2f );
 		Sample.INSTANCE.play( Assets.Sounds.CLICK );
+		Group sparks = new Group();
+		for(int i=1;i<=10;i++) {
+			PixelParticle spark = new PixelParticle.Shrinking();
+			spark.reset(x + Random.Float(0, width), y + Random.Float(0, height),  text.color, 2, 1);
+			spark.angularSpeed = 60;
+			spark.speed.set(
+					Random.Float(-10, 10),
+					Random.Float(-10, 10));
+			sparks.add(spark);
+		}
+		add( sparks );
 	}
 	
 	@Override

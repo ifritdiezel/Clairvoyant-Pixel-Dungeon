@@ -242,7 +242,7 @@ public enum Rankings {
 				}
 			}
 
-		} catch (IOException e) {
+		} catch (IOException ignored) {
 		}
 	}
 	
