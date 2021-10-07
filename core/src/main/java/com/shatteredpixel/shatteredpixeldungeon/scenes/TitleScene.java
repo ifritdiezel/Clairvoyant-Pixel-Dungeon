@@ -63,6 +63,8 @@ public class TitleScene extends PixelScene {
 		add( archs );
 		
 		Image title = BannerSprites.get( BannerSprites.Type.PIXEL_DUNGEON );
+
+
 		add( title );
 
 		float topRegion = Math.max(title.height - 6, h*0.45f);

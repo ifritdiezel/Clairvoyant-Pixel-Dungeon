@@ -148,6 +148,7 @@ public class GameScene extends PixelScene {
 	private Group terrain;
 	private Group customTiles;
 	private Group levelVisuals;
+	private Group spellCircles;
 	private Group customWalls;
 	private Group ripples;
 	private Group plants;
@@ -223,6 +224,9 @@ public class GameScene extends PixelScene {
 
 		customTiles = new Group();
 		terrain.add(customTiles);
+
+		spellCircles = new Group();
+		add( spellCircles );
 
 		for( CustomTilemap visual : Dungeon.level.customTiles){
 			addCustomTile(visual);
@@ -855,6 +859,10 @@ public class GameScene extends PixelScene {
 	
 	public static void effect( Visual effect ) {
 		if (scene != null) scene.effects.add( effect );
+	}
+
+	public static void spellcircle ( Visual effect ) {
+		if (scene != null) scene.spellCircles.add( effect );
 	}
 
 	public static void effectOverFog( Visual effect ) {

@@ -24,7 +24,6 @@ package com.shatteredpixel.shatteredpixeldungeon.effects;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.watabou.glwrap.Blending;
 import com.watabou.glwrap.Texture;
-import com.watabou.input.PointerEvent;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
@@ -40,26 +39,25 @@ public class Fireball extends Component {
 	private static final RectF FLIGHT = new RectF( 0.25f, 0, 0.5f, 1 );
 	private static final RectF FLAME1 = new RectF( 0.50f, 0, 0.75f, 1 );
 	private static final RectF FLAME2 = new RectF( 0.75f, 0, 1.00f, 1 );
-	
-	private static final int COLOR = 0x888888;
-	
+
 	private Image bLight;
 	private Image fLight;
 	private Emitter emitter;
 	private Group sparks;
-	
+	static boolean firstflame = true;
+
 	@Override
 	protected void createChildren() {
-		
 		sparks = new Group();
 		add( sparks );
 		
 		bLight = new Image( Assets.Effects.FIREBALL );
 		bLight.frame( BLIGHT );
 		bLight.origin.set( bLight.width / 2 );
-		bLight.angularSpeed = -45;
+		bLight.angularSpeed = -40;
 		add( bLight );
-		
+
+		//the flying flames
 		emitter = new Emitter();
 		emitter.pour( new Emitter.Factory() {
 			@Override
@@ -72,16 +70,19 @@ public class Fireball extends Component {
 			}
 		}, 0.05f );
 		add( emitter );
-		
+
+		//the spell circles
+
 		fLight = new Image( Assets.Effects.FIREBALL );
 		fLight.frame( FLIGHT );
 		fLight.origin.set( fLight.width / 2 );
-		fLight.angularSpeed = 60;
+
+		firstflame = !firstflame;
+		fLight.angularSpeed = firstflame ? 40f : -40f;
 		add( fLight );
-		
 		bLight.texture.filter( Texture.LINEAR, Texture.LINEAR );
 	}
-	
+
 	@Override
 	protected void layout() {
 		
@@ -101,12 +102,12 @@ public class Fireball extends Component {
 	@Override
 	public void update() {
 		super.update();
-		if (Random.Float() < Game.elapsed) {
+		if (Random.Float()-0.1f < Game.elapsed) {
 			PixelParticle spark = (PixelParticle)sparks.recycle( PixelParticle.Shrinking.class );
 			spark.reset( -100, y, Random.Int( 0x222222, 0xFFFFFF ), 2, 40 );
 			spark.angularSpeed = 60;
 			spark.speed.set(
-				Random.Float( -20, +80 ),
+				Random.Float( -30, +80 ),
 				Random.Float( -1, +1 ) );
 			sparks.add( spark );
 		}
@@ -132,8 +133,7 @@ public class Fireball extends Component {
 		public Flame() {
 			
 			super( Assets.Effects.FIREBALL );
-			
-			frame( Random.Int( 2 ) == 0 ? FLAME1 : FLAME2 );
+			frame( Random.Boolean() ? FLAME1 : FLAME2 );
 			origin.set( width / 2, height / 2 );
 			acc.set( 0, ACC );
 		}

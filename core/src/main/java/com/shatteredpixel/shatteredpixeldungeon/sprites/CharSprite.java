@@ -31,11 +31,13 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.FloatingText;
 import com.shatteredpixel.shatteredpixeldungeon.effects.IceBlock;
 import com.shatteredpixel.shatteredpixeldungeon.effects.ShieldHalo;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
+import com.shatteredpixel.shatteredpixeldungeon.effects.SpellCircle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Splash;
 import com.shatteredpixel.shatteredpixeldungeon.effects.TorchHalo;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.SnowParticle;
+import com.shatteredpixel.shatteredpixeldungeon.items.spells.Spell;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
@@ -83,10 +85,9 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected float shadowOffset    = 0.25f;
 
 	public enum State {
-		BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED, CHILLED, DARKENED, MARKED, HEALING, SHIELDED
+		BURNING, LEVITATING, INVISIBLE, PARALYSED, FROZEN, ILLUMINATED, CHILLED, DARKENED, MARKED, HEALING, SHIELDED, MAGICCIRCLE
 	}
-	private final int stunStates = 0;
-	
+
 	protected Animation idle;
 	protected Animation run;
 	protected Animation attack;
@@ -108,6 +109,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected DarkBlock darkBlock;
 	protected TorchHalo light;
 	protected ShieldHalo shield;
+	protected SpellCircle spellcircle;
 	protected AlphaTweener invisible;
 	protected Flare aura;
 	
@@ -394,6 +396,9 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				break;
 			case SHIELDED:
 				GameScene.effect( shield = new ShieldHalo( this ));
+				break;
+			case MAGICCIRCLE:
+				GameScene.spellcircle(spellcircle = new SpellCircle(this));
 				break;
 		}
 	}

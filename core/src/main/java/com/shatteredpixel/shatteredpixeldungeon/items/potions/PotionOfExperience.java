@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.SpellCircleBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
@@ -36,6 +38,7 @@ public class PotionOfExperience extends Potion {
 	public void apply( Hero hero ) {
 		identify();
 		hero.earnExp( hero.maxExp(), getClass() );
+		Buff.affect(hero, SpellCircleBuff.class).setCircleTier(3);
 	}
 	
 	@Override
