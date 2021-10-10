@@ -109,7 +109,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 	protected DarkBlock darkBlock;
 	protected TorchHalo light;
 	protected ShieldHalo shield;
-	protected SpellCircle spellcircle;
+	public SpellCircle spellcircle;
 	protected AlphaTweener invisible;
 	protected Flare aura;
 	
@@ -398,7 +398,7 @@ public class CharSprite extends MovieClip implements Tweener.Listener, MovieClip
 				GameScene.effect( shield = new ShieldHalo( this ));
 				break;
 			case MAGICCIRCLE:
-				GameScene.spellcircle(spellcircle = new SpellCircle(this));
+				GameScene.spellcircle(spellcircle = new SpellCircle (this));
 				break;
 		}
 	}

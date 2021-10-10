@@ -146,9 +146,9 @@ public class GameScene extends PixelScene {
 	private static CellSelector cellSelector;
 	
 	private Group terrain;
+	private Group spellCircles;
 	private Group customTiles;
 	private Group levelVisuals;
-	private Group spellCircles;
 	private Group customWalls;
 	private Group ripples;
 	private Group plants;
@@ -193,6 +193,9 @@ public class GameScene extends PixelScene {
 		terrain = new Group();
 		add( terrain );
 
+		spellCircles = new Group();
+		add( spellCircles );
+
 		water = new SkinnedBlock(
 			Dungeon.level.width() * DungeonTilemap.SIZE,
 			Dungeon.level.height() * DungeonTilemap.SIZE,
@@ -224,9 +227,6 @@ public class GameScene extends PixelScene {
 
 		customTiles = new Group();
 		terrain.add(customTiles);
-
-		spellCircles = new Group();
-		add( spellCircles );
 
 		for( CustomTilemap visual : Dungeon.level.customTiles){
 			addCustomTile(visual);
@@ -416,7 +416,7 @@ public class GameScene extends PixelScene {
 		ArrayList<Item> ported = Dungeon.portedItems.get( Dungeon.depth );
 		if (ported != null){
 			//TODO currently items are only ported to boss rooms, so this works well
-			//might want to have a 'near entrance' function if items can be ported elsewhere
+			// might want to have a 'near entrance' function if items can be ported elsewhere
 			int pos;
 			//try to find a tile with no heap, otherwise just stick items onto a heap.
 			int tries = 100;
@@ -624,8 +624,8 @@ public class GameScene extends PixelScene {
 				if (Runtime.getRuntime().availableProcessors() == 1) {
 					actorThread.setPriority(Thread.NORM_PRIORITY - 1);
 				}
-				actorThread.setName("SHPD Actor Thread");
-				Thread.currentThread().setName("SHPD Render Thread");
+				actorThread.setName("CVPD Actor Thread");
+				Thread.currentThread().setName("CVPD Render Thread");
 				Actor.keepActorThreadAlive = true;
 				actorThread.start();
 			} else if (notifyDelay <= 0f) {

@@ -27,11 +27,16 @@ public class SpellCircleBuff extends Buff {
         circleTier = count;
     }
 
+    public void setCircleSpeed(float speed){
+        target.sprite.spellcircle.angularSpeed = speed;
+     }
+
     @Override
     public void fx(boolean on) {
         if (on) target.sprite.add(CharSprite.State.MAGICCIRCLE);
         else target.sprite.remove(CharSprite.State.MAGICCIRCLE);
     }
+
     @Override
     public int icon() {
         return BuffIndicator.BLESS;
