@@ -44,7 +44,7 @@ public class Fireball extends Component {
 	private Image fLight;
 	private Emitter emitter;
 	private Group sparks;
-	static boolean firstflame = true;
+	static boolean firstflame = Random.Boolean();
 
 	@Override
 	protected void createChildren() {

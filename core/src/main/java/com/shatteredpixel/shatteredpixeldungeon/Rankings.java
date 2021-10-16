@@ -105,7 +105,12 @@ public enum Rankings {
 	}
 
 	private int score( boolean win ) {
-		return (Statistics.goldCollected + Dungeon.hero.lvl * (win ? 26 : Dungeon.depth ) * 100) * (win ? 2 : 1);
+		return (Statistics.goldCollected + Statistics.enemiesSlain - Statistics.upgradesUsed * 5 - Statistics.ankhsUsed * 10 + Dungeon.hero.lvl * (win ? 26 : Statistics.deepestFloor ) * 100)
+
+				//final score multipliers
+				* (win ? 2 : 1)
+				* (Statistics.completedWithNoKilling ? 2 : 1)
+				;
 	}
 
 	public static final String HERO = "hero";
