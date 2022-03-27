@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,10 +55,10 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 	}
 	
 	public enum AttackLevel{
-		LVL_1( 1, 0.15f, 1),
-		LVL_2( 3, 0.30f, 1),
-		LVL_3( 5, 0.45f, 2),
-		LVL_4( 9, 0.60f, 3);
+		LVL_1( 1, 0.10f, 1),
+		LVL_2( 3, 0.20f, 1),
+		LVL_3( 5, 0.35f, 2),
+		LVL_4( 9, 0.50f, 3);
 
 		final int turnsReq;
 		final float baseDmgBonus;
@@ -149,7 +149,7 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 	public int attackLevel(){
 		return AttackLevel.getLvl(turnsInvis).ordinal()+1;
 	}
-
+	
 	public int damageRoll( Char attacker ){
 		return AttackLevel.getLvl(turnsInvis).damageRoll(attacker);
 	}
@@ -193,6 +193,11 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 			float turnsToNext = turnsInvis - turnsForCur;
 			return Math.min(1, (turnsForNext - turnsToNext)/(turnsForNext));
 		}
+	}
+
+	@Override
+	public String iconTextDisplay() {
+		return Integer.toString(turnsInvis);
 	}
 
 	@Override
@@ -243,9 +248,14 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		super.storeInBundle(bundle);
 		bundle.put(TURNS, turnsInvis);
 	}
+
+	@Override
+	public String actionName() {
+		return Messages.get(this, "action_name");
+	}
 	
 	@Override
-	public Image getIcon() {
+	public Image actionIcon() {
 		Image actionIco = Effects.get(Effects.Type.WOUND);
 		tintIcon(actionIco);
 		return actionIco;
@@ -256,13 +266,13 @@ public class Preparation extends Buff implements ActionIndicator.Action {
 		GameScene.selectCell(attack);
 	}
 	
-	private final CellSelector.Listener attack = new CellSelector.Listener() {
+	private CellSelector.Listener attack = new CellSelector.Listener() {
 		
 		@Override
 		public void onSelect(Integer cell) {
 			if (cell == null) return;
 			final Char enemy = Actor.findChar( cell );
-			if (enemy == null || Dungeon.hero.isCharmedBy(enemy) || enemy instanceof NPC || !Dungeon.level.heroFOV[cell]){
+			if (enemy == null || Dungeon.hero.isCharmedBy(enemy) || enemy instanceof NPC || !Dungeon.level.heroFOV[cell] || enemy == Dungeon.hero){
 				GLog.w(Messages.get(Preparation.class, "no_target"));
 			} else {
 

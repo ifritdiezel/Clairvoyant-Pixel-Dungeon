@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,14 +40,14 @@ public abstract class OptionSlider extends Component {
 	private RenderedTextBlock maxTxt;
 
 	//values are expressed internally as ints, but they can easily be interpreted as something else externally.
-	private final int minVal;
-	private final int maxVal;
+	private int minVal;
+	private int maxVal;
 	private int selectedVal;
 
 	private NinePatch sliderNode;
 	private NinePatch BG;
 	private ColorBlock sliderBG;
-	private final ColorBlock[] sliderTicks;
+	private ColorBlock[] sliderTicks;
 	private float tickDist;
 
 

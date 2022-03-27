@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,6 +49,7 @@ public class WndGame extends Window {
 		
 		super();
 
+		//settings
 		RedButton curBtn;
 		addButton( curBtn = new RedButton( Messages.get(this, "settings") ) {
 			@Override
@@ -58,6 +59,7 @@ public class WndGame extends Window {
 			}
 		});
 		curBtn.icon(Icons.get(Icons.PREFS));
+
 
 
 		// Challenges window
@@ -97,41 +99,20 @@ public class WndGame extends Window {
 			curBtn.icon(Icons.get(Icons.RANKINGS));
 		}
 
-		addButtons(
-				// Main menu
-				new RedButton( Messages.get(this, "menu") ) {
-					@Override
-					protected void onClick() {
-						try {
-							Dungeon.saveAll();
-						} catch (IOException e) {
-							ShatteredPixelDungeon.reportException(e);
-						}
-						Game.switchScene(TitleScene.class);
-					}
-				},
-				// Quit
-				new RedButton( Messages.get(this, "exit") ) {
-					@Override
-					protected void onClick() {
-						try {
-							Dungeon.saveAll();
-						} catch (IOException e) {
-							ShatteredPixelDungeon.reportException(e);
-						}
-						Game.instance.finish();
-					}
-				}
-		);
-
-		// Cancel
-		addButton( new RedButton( Messages.get(this, "return") ) {
+		// Main menu
+		addButton(curBtn = new RedButton( Messages.get(this, "menu") ) {
 			@Override
 			protected void onClick() {
-				hide();
+				try {
+					Dungeon.saveAll();
+				} catch (IOException e) {
+					ShatteredPixelDungeon.reportException(e);
+				}
+				Game.switchScene(TitleScene.class);
 			}
 		} );
-		
+		curBtn.icon(Icons.get(Icons.DISPLAY));
+
 		resize( WIDTH, pos );
 	}
 	

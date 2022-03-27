@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,36 +40,39 @@ import com.watabou.noosa.BitmapText;
 import com.watabou.noosa.Camera;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Music;
-import com.watabou.noosa.ui.Button;
+import com.shatteredpixel.shatteredpixeldungeon.ui.Button;
 import com.watabou.utils.GameMath;
 
 public class RankingsScene extends PixelScene {
-	
+
 	private static final float ROW_HEIGHT_MAX	= 20;
 	private static final float ROW_HEIGHT_MIN	= 12;
 
 	private static final float MAX_ROW_WIDTH    = 160;
 
 	private static final float GAP	= 4;
-	
+
 	private Archs archs;
 
 	@Override
 	public void create() {
-		
+
 		super.create();
-		
-		Music.INSTANCE.play( Assets.Music.THEME, true );
+
+		Music.INSTANCE.playTracks(
+				new String[]{Assets.Music.THEME_1, Assets.Music.THEME_2},
+				new float[]{1, 1},
+				false);
 
 		uiCamera.visible = false;
-		
+
 		int w = Camera.main.width;
 		int h = Camera.main.height;
-		
+
 		archs = new Archs();
 		archs.setSize( w, h );
 		add( archs );
-		
+
 		Rankings.INSTANCE.load();
 
 		RenderedTextBlock title = PixelScene.renderTextBlock( Messages.get(this, "title"), 9);
@@ -80,7 +83,7 @@ public class RankingsScene extends PixelScene {
 		);
 		align(title);
 		add(title);
-		
+
 		if (Rankings.INSTANCE.records.size() > 0) {
 
 			//attempts to give each record as much space as possible, ideally as much space as portrait mode
@@ -88,9 +91,9 @@ public class RankingsScene extends PixelScene {
 
 			float left = (w - Math.min( MAX_ROW_WIDTH, w )) / 2 + GAP;
 			float top = (h - rowHeight  * Rankings.INSTANCE.records.size()) / 2;
-			
+
 			int pos = 0;
-			
+
 			for (Rankings.Record rec : Rankings.INSTANCE.records) {
 				Record row = new Record( pos, pos == Rankings.INSTANCE.lastRecord, rec );
 				float offset = 0;
@@ -99,18 +102,18 @@ public class RankingsScene extends PixelScene {
 				}
 				row.setRect( left+offset, top + pos * rowHeight, w - left * 2, rowHeight );
 				add(row);
-				
+
 				pos++;
 			}
-			
+
 			if (Rankings.INSTANCE.totalNumber >= Rankings.TABLE_SIZE) {
-				
+
 				RenderedTextBlock label = PixelScene.renderTextBlock( 8 );
 				label.hardlight( 0xCCCCCC );
 				label.setHightlighting(true, Window.SHPX_COLOR);
 				label.text( Messages.get(this, "total") + " _" + Rankings.INSTANCE.wonNumber + "_/" + Rankings.INSTANCE.totalNumber );
 				add( label );
-				
+
 				label.setPos(
 						(w - label.width()) / 2,
 						h - label.height() - 2*GAP
@@ -118,7 +121,7 @@ public class RankingsScene extends PixelScene {
 				align(label);
 
 			}
-			
+
 		} else {
 
 			RenderedTextBlock noRec = PixelScene.renderTextBlock(Messages.get(this, "no_games"), 8);
@@ -129,7 +132,7 @@ public class RankingsScene extends PixelScene {
 			);
 			align(noRec);
 			add(noRec);
-			
+
 		}
 
 		ExitButton btnExit = new ExitButton();
@@ -138,23 +141,23 @@ public class RankingsScene extends PixelScene {
 
 		fadeIn();
 	}
-	
+
 	@Override
 	protected void onBackPressed() {
 		ShatteredPixelDungeon.switchNoFade(TitleScene.class);
 	}
-	
+
 	public static class Record extends Button {
-		
+
 		private static final float GAP	= 4;
-		
+
 		private static final int[] TEXT_WIN	= {0xFFFF88, 0xB2B25F};
 		private static final int[] TEXT_LOSE= {0xDDDDDD, 0x888888};
 		private static final int FLARE_WIN	= 0x888866;
 		private static final int FLARE_LOSE	= 0x666666;
-		
-		private final Rankings.Record rec;
-		
+
+		private Rankings.Record rec;
+
 		protected ItemSprite shield;
 		private Flare flare;
 		private BitmapText position;
@@ -163,12 +166,12 @@ public class RankingsScene extends PixelScene {
 		private BitmapText depth;
 		private Image classIcon;
 		private BitmapText level;
-		
+
 		public Record( int pos, boolean latest, Rankings.Record rec ) {
 			super();
-			
+
 			this.rec = rec;
-			
+
 			if (latest) {
 				flare = new Flare( 6, 24 );
 				flare.angularSpeed = 90;
@@ -181,11 +184,11 @@ public class RankingsScene extends PixelScene {
 			} else
 				position.text(" ");
 			position.measure();
-			
+
 			desc.text( Messages.titleCase(rec.desc()) );
 
 			int odd = pos % 2;
-			
+
 			if (rec.win) {
 				shield.view( ItemSpriteSheet.AMULET, null );
 				position.hardlight( TEXT_WIN[odd] );
@@ -201,7 +204,7 @@ public class RankingsScene extends PixelScene {
 				if (rec.depth != 0){
 					depth.text( Integer.toString(rec.depth) );
 					depth.measure();
-					steps.copy(Icons.DEPTH.get());
+					steps.copy(Icons.STAIRS.get());
 
 					add(steps);
 					add(depth);
@@ -214,51 +217,51 @@ public class RankingsScene extends PixelScene {
 				level.measure();
 				add(level);
 			}
-			
+
 			classIcon.copy( Icons.get( rec.heroClass ) );
 			if (rec.heroClass == HeroClass.ROGUE){
 				//cloak of shadows needs to be brightened a bit
 				classIcon.brightness(2f);
 			}
 		}
-		
+
 		@Override
 		protected void createChildren() {
-			
+
 			super.createChildren();
-			
+
 			shield = new ItemSprite( ItemSpriteSheet.TOMB, null );
 			add( shield );
-			
+
 			position = new BitmapText( PixelScene.pixelFont);
 			add( position );
-			
+
 			desc = renderTextBlock( 7 );
 			add( desc );
 
 			depth = new BitmapText( PixelScene.pixelFont);
 
 			steps = new Image();
-			
+
 			classIcon = new Image();
 			add( classIcon );
 
 			level = new BitmapText( PixelScene.pixelFont);
 		}
-		
+
 		@Override
 		protected void layout() {
-			
+
 			super.layout();
-			
+
 			shield.x = x;
 			shield.y = y + (height - shield.height) / 2f;
 			align(shield);
-			
+
 			position.x = shield.x + (shield.width - position.width()) / 2f;
 			position.y = shield.y + (shield.height - position.height()) / 2f + 1;
 			align(position);
-			
+
 			if (flare != null) {
 				flare.point( shield.center() );
 			}
@@ -283,7 +286,7 @@ public class RankingsScene extends PixelScene {
 			desc.setPos(shield.x + shield.width + GAP, shield.y + (shield.height - desc.height()) / 2f + 1);
 			align(desc);
 		}
-		
+
 		@Override
 		protected void onClick() {
 			if (rec.gameData != null) {

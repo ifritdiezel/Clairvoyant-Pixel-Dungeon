@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,9 +28,9 @@ import com.watabou.utils.Random;
 
 public class RipperSprite extends MobSprite {
 
-	private final Animation stab;
-	private final Animation prep;
-	private final Animation leap;
+	private Animation stab;
+	private Animation prep;
+	private Animation leap;
 
 	private boolean alt = Random.Int(2) == 0;
 

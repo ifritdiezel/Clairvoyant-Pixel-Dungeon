@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -82,7 +82,15 @@ public abstract class Actor implements Bundlable {
 	public float cooldown() {
 		return time - now;
 	}
-	
+
+	public void clearTime() {
+		time = 0;
+	}
+
+	public void timeToNow() {
+		time = now;
+	}
+
 	protected void diactivate() {
 		time = Float.MAX_VALUE;
 	}
@@ -123,11 +131,11 @@ public abstract class Actor implements Bundlable {
 	// *** Static members ***
 	// **********************
 	
-	private static final HashSet<Actor> all = new HashSet<>();
-	private static final HashSet<Char> chars = new HashSet<>();
+	private static HashSet<Actor> all = new HashSet<>();
+	private static HashSet<Char> chars = new HashSet<>();
 	private static volatile Actor current;
 
-	private static final SparseArray<Actor> ids = new SparseArray<>();
+	private static SparseArray<Actor> ids = new SparseArray<>();
 	private static int nextID = 1;
 
 	private static float now = 0;

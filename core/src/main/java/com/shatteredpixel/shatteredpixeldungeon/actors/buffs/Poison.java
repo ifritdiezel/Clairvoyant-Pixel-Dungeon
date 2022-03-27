@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -74,6 +74,10 @@ public class Poison extends Buff implements Hero.Doom {
 	public void tintIcon(Image icon) {
 		icon.hardlight(0.6f, 0.2f, 0.6f);
 	}
+
+	public String iconTextDisplay(){
+		return Integer.toString((int) left);
+	}
 	
 	@Override
 	public String toString() {
@@ -103,7 +107,7 @@ public class Poison extends Buff implements Hero.Doom {
 	public boolean act() {
 		if (target.isAlive()) {
 			
-			target.damage( (int)(left / 6) + 1, this );
+			target.damage( (int)(left / 3) + 1, this );
 			spend( TICK );
 			
 			if ((left -= TICK) <= 0) {

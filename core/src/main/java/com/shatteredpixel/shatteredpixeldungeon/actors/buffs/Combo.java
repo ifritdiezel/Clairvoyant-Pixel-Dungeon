@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,12 +28,14 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
+import com.shatteredpixel.shatteredpixeldungeon.items.BrokenSeal;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfBlastWave;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ActionIndicator;
@@ -47,6 +49,7 @@ import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Callback;
 import com.watabou.utils.PathFinder;
+import com.watabou.utils.Random;
 
 public class Combo extends Buff implements ActionIndicator.Action {
 	
@@ -75,6 +78,11 @@ public class Combo extends Buff implements ActionIndicator.Action {
 	}
 
 	@Override
+	public String iconTextDisplay() {
+		return Integer.toString((int)comboTime);
+	}
+
+	@Override
 	public String toString() {
 		return Messages.get(this, "name");
 	}
@@ -85,7 +93,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		comboTime = 5f;
 
 		if (!enemy.isAlive() || (enemy.buff(Corruption.class) != null && enemy.HP == enemy.HT)){
-			comboTime = 0;
+			comboTime = Math.max(comboTime, 0);
 		}
 
 		initialComboTime = comboTime;
@@ -152,9 +160,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		count = bundle.getInt( COUNT );
 		comboTime = bundle.getFloat( TIME );
 
-		//pre-0.9.2
-		if (bundle.contains(INITIAL_TIME))  initialComboTime = bundle.getFloat( INITIAL_TIME );
-		else                                initialComboTime = 5;
+		initialComboTime = bundle.getFloat( INITIAL_TIME );
 
 		clobberUsed = bundle.getBoolean(CLOBBER_USED);
 		parryUsed = bundle.getBoolean(PARRY_USED);
@@ -163,10 +169,15 @@ public class Combo extends Buff implements ActionIndicator.Action {
 	}
 
 	@Override
-	public Image getIcon() {
+	public String actionName() {
+		return Messages.get(this, "action_name");
+	}
+
+	@Override
+	public Image actionIcon() {
 		Image icon;
-		if (((Hero)target).belongings.weapon != null){
-			icon = new ItemSprite(((Hero)target).belongings.weapon.image, null);
+		if (((Hero)target).belongings.weapon() != null){
+			icon = new ItemSprite(((Hero)target).belongings.weapon().image, null);
 		} else {
 			icon = new ItemSprite(new Item(){ {image = ItemSpriteSheet.WEAPON_HOLDER; }});
 		}
@@ -235,6 +246,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		if (move == ComboMove.PARRY){
 			parryUsed = true;
 			comboTime = 5f;
+			Invisibility.dispel();
 			Buff.affect(target, ParryTracker.class, Actor.TICK);
 			((Hero)target).spendAndNext(Actor.TICK);
 			Dungeon.hero.busy();
@@ -302,7 +314,7 @@ public class Combo extends Buff implements ActionIndicator.Action {
 				dmgBonus = Math.round(target.drRoll() * count / 5f);
 				break;
 			case CRUSH:
-				dmgMulti = 1f + (0.25f * count);
+				dmgMulti = 0.25f * count;
 				break;
 			case FURY:
 				dmgMulti = 0.6f;
@@ -349,6 +361,10 @@ public class Combo extends Buff implements ActionIndicator.Action {
 							ch.sprite.flash();
 
 							if (!ch.isAlive()) {
+								if (hero.hasTalent(Talent.LETHAL_DEFENSE) && hero.buff(BrokenSeal.WarriorShield.class) != null) {
+									BrokenSeal.WarriorShield shield = hero.buff(BrokenSeal.WarriorShield.class);
+									shield.supercharge(Math.round(shield.maxShield() * hero.pointsInTalent(Talent.LETHAL_DEFENSE) / 3f));
+								}
 							}
 						}
 					}
@@ -400,12 +416,15 @@ public class Combo extends Buff implements ActionIndicator.Action {
 		}
 
 		if (!enemy.isAlive() || (!wasAlly && enemy.alignment == target.alignment)) {
-
+			if (hero.hasTalent(Talent.LETHAL_DEFENSE) && hero.buff(BrokenSeal.WarriorShield.class) != null){
+				BrokenSeal.WarriorShield shield = hero.buff(BrokenSeal.WarriorShield.class);
+				shield.supercharge(Math.round(shield.maxShield() * hero.pointsInTalent(Talent.LETHAL_DEFENSE)/3f));
+			}
 		}
 
 	}
 
-	private final CellSelector.Listener listener = new CellSelector.Listener() {
+	private CellSelector.Listener listener = new CellSelector.Listener() {
 
 		@Override
 		public void onSelect(Integer cell) {

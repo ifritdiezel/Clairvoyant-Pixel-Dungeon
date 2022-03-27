@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,9 +31,11 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
+import com.shatteredpixel.shatteredpixeldungeon.items.wands.CursedWand;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.Wand;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
+import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
@@ -43,7 +45,7 @@ import java.util.ArrayList;
 public class WildMagic extends ArmorAbility {
 
 	{
-		baseChargeUse = 35f;
+		baseChargeUse = 25f;
 	}
 
 	@Override
@@ -62,12 +64,10 @@ public class WildMagic extends ArmorAbility {
 			return;
 		}
 
-		hero.busy();
-
 		ArrayList<Wand> wands = hero.belongings.getAllItems(Wand.class);
 		Random.shuffle(wands);
 
-		float chargeUsePerShot = (float)Math.pow(0.563f, hero.pointsInTalent(Talent.CONSERVED_MAGIC));
+		float chargeUsePerShot = (float)Math.pow(0.67f, hero.pointsInTalent(Talent.CONSERVED_MAGIC));
 
 		for (Wand w : wands.toArray(new Wand[0])){
 			if (w.curCharges < 1 && w.partialCharge < chargeUsePerShot){
@@ -77,19 +77,30 @@ public class WildMagic extends ArmorAbility {
 
 		int maxWands = 4 + Dungeon.hero.pointsInTalent(Talent.FIRE_EVERYTHING);
 
+		//second and third shots
 		if (wands.size() < maxWands){
-			ArrayList<Wand> dupes = new ArrayList<>(wands);
+			ArrayList<Wand> seconds = new ArrayList<>(wands);
+			ArrayList<Wand> thirds = new ArrayList<>(wands);
 
-			for (Wand w : dupes.toArray(new Wand[0])){
+			for (Wand w : wands){
 				float totalCharge = w.curCharges + w.partialCharge;
 				if (totalCharge < 2*chargeUsePerShot){
-					dupes.remove(w);
+					seconds.remove(w);
+				}
+				if (totalCharge < 3*chargeUsePerShot
+					|| Random.Int(4) > Dungeon.hero.pointsInTalent(Talent.CONSERVED_MAGIC)){
+					thirds.remove(w);
 				}
 			}
 
-			Random.shuffle(dupes);
-			while (!dupes.isEmpty() && wands.size() < maxWands){
-				wands.add(dupes.remove(0));
+			Random.shuffle(seconds);
+			while (!seconds.isEmpty() && wands.size() < maxWands){
+				wands.add(seconds.remove(0));
+			}
+
+			Random.shuffle(thirds);
+			while (!thirds.isEmpty() && wands.size() < maxWands){
+				wands.add(thirds.remove(0));
 			}
 		}
 
@@ -98,18 +109,20 @@ public class WildMagic extends ArmorAbility {
 			return;
 		}
 
+		hero.busy();
+
 		Random.shuffle(wands);
 
 		Buff.affect(hero, WildMagicTracker.class, 0f);
 
 		armor.charge -= chargeUse(hero);
-		Item.updateQuickslot();
+		armor.updateQuickslot();
 
 		zapWand(wands, hero, target);
 
 	}
 
-	public static class WildMagicTracker extends FlavourBuff{}
+	public static class WildMagicTracker extends FlavourBuff{};
 
 	private void zapWand( ArrayList<Wand> wands, Hero hero, int target){
 		Wand cur = wands.remove(0);
@@ -117,27 +130,49 @@ public class WildMagic extends ArmorAbility {
 		Ballistica aim = new Ballistica(hero.pos, target, cur.collisionProperties(target));
 
 		hero.sprite.zap(target);
-		cur.fx(aim, new Callback() {
-			@Override
-			public void call() {
-				cur.onZap(aim);
-				cur.partialCharge -= (float)Math.pow(0.563f, hero.pointsInTalent(Talent.CONSERVED_MAGIC));
-				if (cur.partialCharge < 0){
-					cur.partialCharge++;
-					cur.curCharges--;
+
+		if (!cur.cursed) {
+			cur.fx(aim, new Callback() {
+				@Override
+				public void call() {
+					cur.onZap(aim);
+					afterZap(cur, wands, hero, target);
 				}
-				if (!wands.isEmpty()){
-					zapWand(wands, hero, target);
-				} else {
-					if (hero.buff(WildMagicTracker.class) != null){
-						hero.buff(WildMagicTracker.class).detach();
-					}
-					Item.updateQuickslot();
-					Invisibility.dispel();
-					hero.spendAndNext(Actor.TICK);
-				}
+			});
+		} else {
+			CursedWand.cursedZap(cur,
+					hero,
+					new Ballistica(hero.pos, target, Ballistica.MAGIC_BOLT),
+					new Callback() {
+						@Override
+						public void call() {
+							afterZap(cur, wands, hero, target);
+						}
+					});
+		}
+	}
+
+	private void afterZap( Wand cur, ArrayList<Wand> wands, Hero hero, int target){
+		cur.partialCharge -= (float) Math.pow(0.67f, hero.pointsInTalent(Talent.CONSERVED_MAGIC));
+		if (cur.partialCharge < 0) {
+			cur.partialCharge++;
+			cur.curCharges--;
+		}
+		if (!wands.isEmpty() && hero.isAlive()) {
+			zapWand(wands, hero, target);
+		} else {
+			if (hero.buff(WildMagicTracker.class) != null) {
+				hero.buff(WildMagicTracker.class).detach();
 			}
-		});
+			Item.updateQuickslot();
+			Invisibility.dispel();
+			hero.spendAndNext(Actor.TICK);
+		}
+	}
+
+	@Override
+	public int icon() {
+		return HeroIcon.WILD_MAGIC;
 	}
 
 	@Override

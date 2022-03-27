@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -96,8 +96,11 @@ public abstract class KindofMisc extends EquipableItem {
 						protected void onSelect(int index) {
 
 							KindofMisc equipped = miscs[index];
+							//we directly remove the item because we want to have inventory capacity
+							// to unequip the equipped one, but don't want to trigger any other
+							// item detaching logic
 							int slot = Dungeon.quickslot.getSlot(KindofMisc.this);
-							detach(hero.belongings.backpack);
+							Dungeon.hero.belongings.backpack.items.remove(KindofMisc.this);
 							if (equipped.doUnequip(hero, true, false)) {
 								//swap out equip in misc slot if needed
 								if (index == 0 && KindofMisc.this instanceof Ring){
@@ -107,9 +110,10 @@ public abstract class KindofMisc extends EquipableItem {
 									hero.belongings.ring = (Ring) hero.belongings.misc;
 									hero.belongings.misc = null;
 								}
+								Dungeon.hero.belongings.backpack.items.add(KindofMisc.this);
 								doEquip(hero);
 							} else {
-								collect();
+								Dungeon.hero.belongings.backpack.items.add(KindofMisc.this);
 							}
 							if (slot != -1) Dungeon.quickslot.setSlot(slot, KindofMisc.this);
 							updateQuickslot();
@@ -127,10 +131,10 @@ public abstract class KindofMisc extends EquipableItem {
 
 			if (this instanceof Artifact){
 				if (hero.belongings.artifact == null)   hero.belongings.artifact = (Artifact) this;
-				else                                    hero.belongings.misc = this;
+				else                                    hero.belongings.misc = (Artifact) this;
 			} else if (this instanceof Ring){
 				if (hero.belongings.ring == null)   hero.belongings.ring = (Ring) this;
-				else                                hero.belongings.misc = this;
+				else                                hero.belongings.misc = (Ring) this;
 			}
 
 			detach( hero.belongings.backpack );
@@ -174,9 +178,9 @@ public abstract class KindofMisc extends EquipableItem {
 
 	@Override
 	public boolean isEquipped( Hero hero ) {
-		return hero.belongings.artifact == this
-				|| hero.belongings.misc == this
-				|| hero.belongings.ring == this;
+		return hero.belongings.artifact() == this
+				|| hero.belongings.misc() == this
+				|| hero.belongings.ring() == this;
 	}
 
 }

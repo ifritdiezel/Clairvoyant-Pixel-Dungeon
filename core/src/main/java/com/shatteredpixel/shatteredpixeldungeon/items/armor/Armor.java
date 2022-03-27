@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Challenges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Momentum;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
@@ -55,6 +56,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Stone;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Swiftness;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Thorns;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.glyphs.Viscosity;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.Weapon;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.HeroSprite;
@@ -80,8 +82,8 @@ public class Armor extends EquipableItem {
 		DEFENSE (-2f, 1f),
 		NONE	(0f   ,  0f);
 		
-		private final float evasionFactor;
-		private final float defenceFactor;
+		private float evasionFactor;
+		private float defenceFactor;
 		
 		Augment(float eva, float df){
 			evasionFactor = eva;
@@ -101,6 +103,7 @@ public class Armor extends EquipableItem {
 	
 	public Glyph glyph;
 	public boolean curseInfusionBonus = false;
+	public boolean masteryPotionBonus = false;
 	
 	private BrokenSeal seal;
 	
@@ -118,6 +121,7 @@ public class Armor extends EquipableItem {
 	private static final String AVAILABLE_USES  = "available_uses";
 	private static final String GLYPH			= "glyph";
 	private static final String CURSE_INFUSION_BONUS = "curse_infusion_bonus";
+	private static final String MASTERY_POTION_BONUS = "mastery_potion_bonus";
 	private static final String SEAL            = "seal";
 	private static final String AUGMENT			= "augment";
 
@@ -128,6 +132,7 @@ public class Armor extends EquipableItem {
 		bundle.put( AVAILABLE_USES, availableUsesToID );
 		bundle.put( GLYPH, glyph );
 		bundle.put( CURSE_INFUSION_BONUS, curseInfusionBonus );
+		bundle.put( MASTERY_POTION_BONUS, masteryPotionBonus );
 		bundle.put( SEAL, seal);
 		bundle.put( AUGMENT, augment);
 	}
@@ -139,6 +144,7 @@ public class Armor extends EquipableItem {
 		availableUsesToID = bundle.getInt( AVAILABLE_USES );
 		inscribe((Glyph) bundle.get(GLYPH));
 		curseInfusionBonus = bundle.getBoolean( CURSE_INFUSION_BONUS );
+		masteryPotionBonus = bundle.getBoolean( MASTERY_POTION_BONUS );
 		seal = (BrokenSeal)bundle.get(SEAL);
 		
 		augment = bundle.getEnum(AUGMENT, Augment.class);
@@ -164,6 +170,26 @@ public class Armor extends EquipableItem {
 	public void execute(Hero hero, String action) {
 
 		super.execute(hero, action);
+
+		if (action.equals(AC_DETACH) && seal != null){
+			BrokenSeal.WarriorShield sealBuff = hero.buff(BrokenSeal.WarriorShield.class);
+			if (sealBuff != null) sealBuff.setArmor(null);
+
+			BrokenSeal detaching = seal;
+			seal = null;
+
+			if (detaching.level() > 0){
+				degrade();
+			}
+			if (detaching.getGlyph() != null){
+					detaching.setGlyph(null);
+			}
+			GLog.i( Messages.get(Armor.class, "detach_seal") );
+			hero.sprite.operate(hero.pos);
+			if (!detaching.collect()){
+				Dungeon.level.drop(detaching, hero.pos);
+			}
+		}
 	}
 
 	@Override
@@ -197,8 +223,24 @@ public class Armor extends EquipableItem {
 
 	@Override
 	public void activate(Char ch) {
+		if (seal != null) Buff.affect(ch, BrokenSeal.WarriorShield.class).setArmor(this);
 	}
 
+	public void affixSeal(BrokenSeal seal){
+		this.seal = seal;
+		if (seal.level() > 0){
+			//doesn't trigger upgrading logic such as affecting curses/glyphs
+			int newLevel = trueLevel()+1;
+			level(newLevel);
+			Badges.validateItemLevelAquired(this);
+		}
+		if (seal.getGlyph() != null){
+			inscribe(seal.getGlyph());
+		}
+		if (isEquipped(Dungeon.hero)){
+			Buff.affect(Dungeon.hero, BrokenSeal.WarriorShield.class).setArmor(this);
+		}
+	}
 
 	public BrokenSeal checkSeal(){
 		return seal;
@@ -216,6 +258,8 @@ public class Armor extends EquipableItem {
 			hero.belongings.armor = null;
 			((HeroSprite)hero.sprite).updateArmor();
 
+			BrokenSeal.WarriorShield sealBuff = hero.buff(BrokenSeal.WarriorShield.class);
+			if (sealBuff != null) sealBuff.setArmor(null);
 
 			return true;
 
@@ -228,7 +272,7 @@ public class Armor extends EquipableItem {
 	
 	@Override
 	public boolean isEquipped( Hero hero ) {
-		return hero.belongings.armor == this;
+		return hero.belongings.armor() == this;
 	}
 
 	public final int DRMax(){
@@ -326,7 +370,9 @@ public class Armor extends EquipableItem {
 	
 	@Override
 	public int level() {
-		return super.level() + (curseInfusionBonus ? 1 : 0);
+		int level = super.level();
+		if (curseInfusionBonus) level += 1 + level/6;
+		return level;
 	}
 	
 	//other things can equip these, for now we assume only the hero can be affected by levelling debuffs
@@ -346,10 +392,16 @@ public class Armor extends EquipableItem {
 	
 	public Item upgrade( boolean inscribe ) {
 
-		if (inscribe && (glyph == null || glyph.curse())){
-			inscribe( Glyph.random() );
-		} else if (!inscribe && level() >= 4 && Random.Float(10) < Math.pow(2, level()-4)){
-			inscribe(null);
+		if (inscribe){
+			if (glyph == null){
+				inscribe( Glyph.random() );
+			}
+		} else {
+			if (hasCurseGlyph()){
+				if (Random.Int(3) == 0) inscribe(null);
+			} else if (level() >= 4 && Random.Float(10) < Math.pow(2, level()-4)){
+				inscribe(null);
+			}
 		}
 		
 		cursed = false;
@@ -432,7 +484,7 @@ public class Armor extends EquipableItem {
 		} else if (cursedKnown && cursed) {
 			info += "\n\n" + Messages.get(Armor.class, "cursed");
 		} else if (seal != null) {
-			info += "\n\n" + Messages.get(Armor.class, "seal_attached");
+			info += "\n\n" + Messages.get(Armor.class, "seal_attached", seal.maxShield(tier, level()));
 		} else if (!isIdentified() && cursedKnown){
 			info += "\n\n" + Messages.get(Armor.class, "not_cursed");
 		}
@@ -478,7 +530,11 @@ public class Armor extends EquipableItem {
 	}
 
 	public int STRReq(){
-		return STRReq(level());
+		int req = STRReq(level());
+		if (masteryPotionBonus){
+			req -= 2;
+		}
+		return req;
 	}
 
 	public int STRReq(int lvl){

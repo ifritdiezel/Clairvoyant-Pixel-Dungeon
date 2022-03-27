@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -89,7 +89,7 @@ public class RenderedText extends Image {
 			visible = true;
 		}
 		
-		font = Game.platform.getFont(size, text);
+		font = Game.platform.getFont(size, text, true, true);
 		
 		if (font != null){
 			GlyphLayout glyphs = new GlyphLayout( font, text);
@@ -97,7 +97,11 @@ public class RenderedText extends Image {
 			for (char c : text.toCharArray()) {
 				BitmapFont.Glyph g = font.getData().getGlyph(c);
 				if (g == null || (g.id != c)){
-					Game.reportException(new Throwable("font file " + font.toString() + " could not render " + c));
+					String toException = text;
+					if (toException.length() > 30){
+						toException = toException.substring(0, 30) + "...";
+					}
+					Game.reportException(new Throwable("font file " + font.toString() + " could not render " + c + " from string: " + toException));
 				}
 			}
 			
@@ -127,7 +131,7 @@ public class RenderedText extends Image {
 		}
 	}
 	
-	private static final TextRenderBatch textRenderer = new TextRenderBatch();
+	private static TextRenderBatch textRenderer = new TextRenderBatch();
 	
 	@Override
 	public synchronized void draw() {
@@ -146,8 +150,8 @@ public class RenderedText extends Image {
 		//this isn't as good as only updating once, like with BitmapText
 		// but it skips almost all allocations, which is almost as good
 		private static RenderedText textBeingRendered = null;
-		private static final float[] vertices = new float[16];
-		private static final HashMap<Integer, FloatBuffer> buffers = new HashMap<>();
+		private static float[] vertices = new float[16];
+		private static HashMap<Integer, FloatBuffer> buffers = new HashMap<>();
 
 		@Override
 		public void draw(Texture texture, float[] spriteVertices, int offset, int count) {

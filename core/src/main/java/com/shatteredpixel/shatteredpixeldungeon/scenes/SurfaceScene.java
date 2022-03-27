@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,8 +49,8 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.NoosaScript;
-import com.watabou.noosa.PointerArea;
 import com.watabou.noosa.TextureFilm;
+import com.watabou.noosa.PointerArea;
 import com.watabou.noosa.Visual;
 import com.watabou.noosa.audio.Music;
 import com.watabou.utils.Point;
@@ -84,8 +84,11 @@ public class SurfaceScene extends PixelScene {
 	public void create() {
 		
 		super.create();
-		
-		Music.INSTANCE.play( Assets.Music.SURFACE, true );
+
+		Music.INSTANCE.playTracks(
+				new String[]{Assets.Music.THEME_2, Assets.Music.THEME_1},
+				new float[]{1, 1},
+				false);
 		
 		uiCamera.visible = false;
 		
@@ -288,8 +291,8 @@ public class SurfaceScene extends PixelScene {
 		private static final int[] day		= {0xFF4488FF, 0xFFCCEEFF};
 		private static final int[] night	= {0xFF001155, 0xFF335980};
 		
-		private final SmartTexture texture;
-		private final FloatBuffer verticesBuffer;
+		private SmartTexture texture;
+		private FloatBuffer verticesBuffer;
 		
 		public Sky( boolean dayTime ) {
 			super( 0, 0, 1, 1 );
@@ -427,13 +430,13 @@ public class SurfaceScene extends PixelScene {
 		public static final int WIDTH	= 16;
 		public static final int HEIGHT	= 14;
 		
-		private final float tx;
-		private final float ty;
+		private float tx;
+		private float ty;
 		
 		private double a = Random.Float( 5 );
 		private double angle;
 		
-		private final boolean forward;
+		private boolean forward;
 		
 		public GrassPatch( float tx, float ty, boolean forward ) {
 			

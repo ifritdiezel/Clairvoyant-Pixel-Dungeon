@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,10 +22,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.items.spells;
 
 
-import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicImmune;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -46,17 +44,6 @@ public abstract class Spell extends Item {
 		ArrayList<String> actions = super.actions( hero );
 		actions.add( AC_CAST );
 		return actions;
-	}
-
-	@Override
-	public String desc() {
-		String desc = Messages.get(this, "desc");
-		if (Dungeon.hero.hasTalent(Talent.OPTIMIZED_TRANSMUTATION)){
-			if (Dungeon.hero.pointsInTalent(Talent.OPTIMIZED_TRANSMUTATION) == 1){
-			desc +=  Messages.get(this, "optimized_transmutation_desc1");}
-			else { desc +=  Messages.get(this, "optimized_transmutation_desc2");}
-		}
-		return desc;
 	}
 	
 	@Override
@@ -80,7 +67,6 @@ public abstract class Spell extends Item {
 	public boolean isIdentified() {
 		return true;
 	}
-
 	
 	@Override
 	public boolean isUpgradable() {

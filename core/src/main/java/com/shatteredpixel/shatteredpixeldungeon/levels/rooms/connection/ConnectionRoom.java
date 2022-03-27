@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,14 +45,8 @@ public abstract class ConnectionRoom extends Room {
 		else                    return 0;
 	}
 	
-	@Override
-	public boolean canPlaceTrap(Point p) {
-		//traps cannot appear in connection rooms on floor 1
-		return super.canPlaceTrap(p) && Dungeon.depth > 1;
-	}
-	
 	//FIXME this is a very messy way of handing variable connection rooms
-	private static final ArrayList<Class<?extends ConnectionRoom>> rooms = new ArrayList<>();
+	private static ArrayList<Class<?extends ConnectionRoom>> rooms = new ArrayList<>();
 	static {
 		rooms.add(TunnelRoom.class);
 		rooms.add(BridgeRoom.class);
@@ -64,7 +58,7 @@ public abstract class ConnectionRoom extends Room {
 		rooms.add(RingBridgeRoom.class);
 	}
 	
-	private static final float[][] chances = new float[27][];
+	private static float[][] chances = new float[27][];
 	static {
 		chances[1] =  new float[]{20, 1,    0, 2,       2, 1};
 		chances[4] =  chances[3] = chances[2] = chances[1];

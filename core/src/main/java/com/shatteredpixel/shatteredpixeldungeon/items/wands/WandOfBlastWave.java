@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -125,7 +125,9 @@ public class WandOfBlastWave extends DamageWand {
 
 		boolean collided = dist == trajectory.dist;
 
-		if (dist == 0 || ch.properties().contains(Char.Property.IMMOVABLE)) return;
+		if (dist == 0
+				|| ch.rooted
+				|| ch.properties().contains(Char.Property.IMMOVABLE)) return;
 
 		//large characters cannot be moved into non-open space
 		if (Char.hasProp(ch, Char.Property.LARGE)) {

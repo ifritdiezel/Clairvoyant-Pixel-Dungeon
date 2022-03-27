@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
-import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
@@ -65,7 +64,7 @@ public class FireImbue extends Buff {
 	@Override
 	public boolean act() {
 		if (Dungeon.level.map[target.pos] == Terrain.GRASS) {
-			Level.set(target.pos, Terrain.EMBERS);
+			Dungeon.level.set(target.pos, Terrain.EMBERS);
 			GameScene.updateMap(target.pos);
 		}
 
@@ -92,7 +91,12 @@ public class FireImbue extends Buff {
 
 	@Override
 	public float iconFadePercent() {
-		return Math.max(0, (DURATION - left+1) / DURATION);
+		return Math.max(0, (DURATION - left) / DURATION);
+	}
+
+	@Override
+	public String iconTextDisplay() {
+		return Integer.toString((int)left);
 	}
 
 	@Override

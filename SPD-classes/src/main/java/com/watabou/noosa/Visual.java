@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,8 +53,7 @@ public class Visual extends Gizmo {
 	public float angularSpeed;
 
 	private float lastX, lastY, lastW, lastH, lastA;
-	private final PointF lastScale = new PointF();
-    private final PointF lastOrigin = new PointF();
+	private PointF lastScale = new PointF(), lastOrigin = new PointF();
 	
 	public Visual( float x, float y, float width, float height ) {
 		this.x = x;
@@ -154,6 +153,10 @@ public class Visual extends Gizmo {
 				x + (width() - v.width())/2f,
 				y + (height() - v.height())/2f
 		);
+	}
+
+	public void originToCenter() {
+		origin.set(width / 2, height / 2);
 	}
 	
 	public float width() {
@@ -286,6 +289,9 @@ public class Visual extends Gizmo {
 		//y coord
 		if (y > c.scroll.y + c.height)
 			return false;
-		else return y >= c.scroll.y || y + height() >= c.scroll.y;
+		else if (!(y >= c.scroll.y || y + height() >= c.scroll.y))
+			return false;
+
+		return true;
 	}
 }

@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,10 +42,11 @@ public class PoisonDartTrap extends Trap {
 		shape = CROSSHAIR;
 		
 		canBeHidden = false;
+		avoidsHallways = true;
 	}
 	
 	protected int poisonAmount(){
-		return 14 + Math.round(2*Dungeon.depth / 3f);
+		return 8 + Math.round(2*Dungeon.depth / 3f);
 	}
 	
 	protected boolean canTarget( Char ch ){

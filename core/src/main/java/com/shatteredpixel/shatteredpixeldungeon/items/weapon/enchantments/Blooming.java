@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ import java.util.ArrayList;
 
 public class Blooming extends Weapon.Enchantment {
 	
-	private static final ItemSprite.Glowing DARK_GREEN = new ItemSprite.Glowing( 0x008800 );
+	private static ItemSprite.Glowing DARK_GREEN = new ItemSprite.Glowing( 0x008800 );
 	
 	@Override
 	public int proc(Weapon weapon, Char attacker, Char defender, int damage) {

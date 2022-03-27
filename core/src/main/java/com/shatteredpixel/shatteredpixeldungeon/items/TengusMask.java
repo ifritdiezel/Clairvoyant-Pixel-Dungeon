@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,12 +40,14 @@ import java.util.ArrayList;
 
 public class TengusMask extends Item {
 	
-	public static final String AC_WEAR	= "WEAR";
+	private static final String AC_WEAR	= "WEAR";
 	
 	{
 		stackable = false;
 		image = ItemSpriteSheet.MASK;
-		
+
+		defaultAction = AC_WEAR;
+
 		unique = true;
 	}
 	
@@ -71,9 +73,9 @@ public class TengusMask extends Item {
 	}
 	
 	@Override
-	public boolean doPickUp( Hero hero ) {
+	public boolean doPickUp(Hero hero, int pos) {
 		Badges.validateMastery();
-		return super.doPickUp( hero );
+		return super.doPickUp( hero, pos );
 	}
 	
 	@Override

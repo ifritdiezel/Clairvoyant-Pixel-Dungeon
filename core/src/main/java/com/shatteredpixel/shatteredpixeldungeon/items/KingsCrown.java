@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,7 +46,9 @@ public class KingsCrown extends Item {
 	
 	{
 		image = ItemSpriteSheet.CROWN;
-		
+
+		defaultAction = AC_WEAR;
+
 		unique = true;
 	}
 	
@@ -65,8 +67,8 @@ public class KingsCrown extends Item {
 		if (action.equals(AC_WEAR)) {
 
 			curUser = hero;
-			if (hero.belongings.armor != null){
-				GameScene.show( new WndChooseAbility(this, hero.belongings.armor, hero));
+			if (hero.belongings.armor() != null){
+				GameScene.show( new WndChooseAbility(this, hero.belongings.armor(), hero));
 			} else {
 				GLog.w( Messages.get(this, "naked"));
 			}

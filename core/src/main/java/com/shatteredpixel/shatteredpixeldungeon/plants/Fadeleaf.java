@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,16 +53,16 @@ public class Fadeleaf extends Plant {
 			
 			if (((Hero) ch).subClass == HeroSubClass.WARDEN){
 				
-				if (Dungeon.bossLevel()) {
+				if (Dungeon.level.locked) {
 					GLog.w( Messages.get(ScrollOfTeleportation.class, "no_tele") );
 					return;
 					
 				}
-				
-				Buff buff = Dungeon.hero.buff(TimekeepersHourglass.timeFreeze.class);
-				if (buff != null) buff.detach();
-				buff = Dungeon.hero.buff(Swiftthistle.TimeBubble.class);
-				if (buff != null) buff.detach();
+
+				TimekeepersHourglass.timeFreeze timeFreeze = Dungeon.hero.buff(TimekeepersHourglass.timeFreeze.class);
+				if (timeFreeze != null) timeFreeze.disarmPressedTraps();
+				Swiftthistle.TimeBubble timeBubble = Dungeon.hero.buff(Swiftthistle.TimeBubble.class);
+				if (timeBubble != null) timeBubble.disarmPressedTraps();
 				
 				InterlevelScene.mode = InterlevelScene.Mode.RETURN;
 				InterlevelScene.returnDepth = Math.max(1, (Dungeon.depth - 1));
@@ -70,32 +70,12 @@ public class Fadeleaf extends Plant {
 				Game.switchScene( InterlevelScene.class );
 				
 			} else {
-				ScrollOfTeleportation.teleportHero((Hero) ch);
+				ScrollOfTeleportation.teleportChar((Hero) ch);
 			}
 			
 		} else if (ch instanceof Mob && !ch.properties().contains(Char.Property.IMMOVABLE)) {
 
-			if (!Dungeon.bossLevel()) {
-
-				int count = 20;
-				int newPos;
-				do {
-					newPos = Dungeon.level.randomRespawnCell(ch);
-					if (count-- <= 0) {
-						break;
-					}
-				} while (newPos == -1 || Dungeon.level.secret[newPos]);
-
-				if (newPos != -1) {
-
-					ch.pos = newPos;
-					if (((Mob) ch).state == ((Mob) ch).HUNTING)
-						((Mob) ch).state = ((Mob) ch).WANDERING;
-					ch.sprite.place(ch.pos);
-					ch.sprite.visible = Dungeon.level.heroFOV[ch.pos];
-
-				}
-			}
+			ScrollOfTeleportation.teleportChar(ch);
 
 		}
 		

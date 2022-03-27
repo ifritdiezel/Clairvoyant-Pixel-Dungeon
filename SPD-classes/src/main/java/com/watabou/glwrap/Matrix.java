@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ public class Matrix {
 
 	}
 
-	private static final float[] identity = new float[]{
+	private static float[] identity = new float[]{
 			1, 0, 0, 0,
 			0, 1, 0, 0,
 			0, 0, 1, 0,
@@ -100,7 +100,7 @@ public class Matrix {
 		m[13] += m[1] * x + m[5] * y;
 	}
 	
-	public static void multiply(float[] left, float[] right, float[] result ) {
+	public static void multiply( float[] left, float right[], float[] result ) {
 		final float ax1 = left[0];
 		final float ay1 = left[1];
 		final float az1 = left[2];

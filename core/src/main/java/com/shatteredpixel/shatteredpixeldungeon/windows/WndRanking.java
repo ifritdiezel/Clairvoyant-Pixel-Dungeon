@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,6 +38,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.Icons;
 import com.shatteredpixel.shatteredpixeldungeon.ui.ItemSlot;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RedButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.RenderedTextBlock;
+import com.shatteredpixel.shatteredpixeldungeon.ui.TalentButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.TalentsPane;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.watabou.noosa.ColorBlock;
@@ -45,7 +46,7 @@ import com.watabou.noosa.Game;
 import com.watabou.noosa.Group;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.noosa.ui.Button;
+import com.shatteredpixel.shatteredpixeldungeon.ui.Button;
 import com.watabou.noosa.ui.Component;
 
 import java.util.Locale;
@@ -120,8 +121,8 @@ public class WndRanking extends WndTabbed {
 	
 	private void createControls() {
 		
-		String[] labels =
-			{Messages.get(this, "stats"), Messages.get(this, "items"), Messages.get(this, "badges")};
+		Icons[] icons =
+			{Icons.RANKINGS, Icons.BACKPACK_LRG, Icons.BADGES};
 		Group[] pages =
 			{new StatsTab(), new ItemsTab(), new BadgesTab()};
 		
@@ -129,7 +130,7 @@ public class WndRanking extends WndTabbed {
 			
 			add( pages[i] );
 			
-			Tab tab = new RankingTab( labels[i], pages[i] );
+			Tab tab = new RankingTab( icons[i], pages[i] );
 			add( tab );
 		}
 
@@ -138,12 +139,12 @@ public class WndRanking extends WndTabbed {
 		select( 0 );
 	}
 
-	private class RankingTab extends LabeledTab {
+	private class RankingTab extends IconTab {
 		
-		private final Group page;
+		private Group page;
 		
-		public RankingTab( String label, Group page ) {
-			super( label );
+		public RankingTab( Icons icon, Group page ) {
+			super( Icons.get(icon) );
 			this.page = page;
 		}
 		
@@ -158,7 +159,7 @@ public class WndRanking extends WndTabbed {
 	
 	private class StatsTab extends Group {
 
-		private final int GAP	= 4;
+		private int GAP	= 4;
 		
 		public StatsTab() {
 			super();
@@ -187,7 +188,7 @@ public class WndRanking extends WndTabbed {
 					}
 					Game.scene().addToFront( new Window(){
 						{
-							TalentsPane p = new TalentsPane(false);
+							TalentsPane p = new TalentsPane(TalentButton.Mode.INFO);
 							add(p);
 							p.setPos(0, 0);
 							p.setSize(120, p.content().height());
@@ -222,8 +223,11 @@ public class WndRanking extends WndTabbed {
 			}
 
 			pos += GAP;
-			
-			pos = statSlot( this, Messages.get(this, "str"), Integer.toString( Dungeon.hero.STR() ), pos );
+
+			int strBonus = Dungeon.hero.STR() - Dungeon.hero.STR;
+			if (strBonus > 0)       pos = statSlot(this, Messages.get(this, "str"), Dungeon.hero.STR + " + " + strBonus, pos);
+			else if (strBonus < 0)  pos = statSlot(this, Messages.get(this, "str"), Dungeon.hero.STR + " - " + -strBonus, pos );
+			else                    pos = statSlot(this, Messages.get(this, "str"), Integer.toString(Dungeon.hero.STR), pos);
 			pos = statSlot( this, Messages.get(this, "health"), Integer.toString( Dungeon.hero.HT ), pos );
 			
 			pos += GAP;
@@ -239,7 +243,7 @@ public class WndRanking extends WndTabbed {
 			pos += GAP;
 			
 			pos = statSlot( this, Messages.get(this, "food"), Integer.toString( Statistics.foodEaten ), pos );
-			pos = statSlot( this, Messages.get(this, "alchemy"), Integer.toString( Statistics.potionsCooked ), pos );
+			pos = statSlot( this, Messages.get(this, "alchemy"), Integer.toString( Statistics.itemsCrafted ), pos );
 			pos = statSlot( this, Messages.get(this, "ankhs"), Integer.toString( Statistics.ankhsUsed ), pos );
 		}
 		
@@ -332,7 +336,7 @@ public class WndRanking extends WndTabbed {
 		
 		public static final int HEIGHT	= 23;
 		
-		private final Item item;
+		private Item item;
 		
 		private ItemSlot slot;
 		private ColorBlock bg;
@@ -408,7 +412,7 @@ public class WndRanking extends WndTabbed {
 
 		public static final int HEIGHT	= 23;
 
-		private final Item item;
+		private Item item;
 		private ColorBlock bg;
 
 		QuickSlotButton(Item item){

@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.Armor.Glyph;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.MissileWeapon;
@@ -40,7 +41,7 @@ import com.watabou.utils.Bundle;
 
 public class Viscosity extends Glyph {
 	
-	private static final ItemSprite.Glowing PURPLE = new ItemSprite.Glowing( 0x8844CC );
+	private static ItemSprite.Glowing PURPLE = new ItemSprite.Glowing( 0x8844CC );
 	
 	@Override
 	public int proc( Armor armor, Char attacker, Char defender, int damage ) {
@@ -49,9 +50,12 @@ public class Viscosity extends Glyph {
 		//should build in functionality for that, but this works for now
 		int realDamage = damage - defender.drRoll();
 
+		//account for icon stomach (just skip the glyph)
+
+
 		//account for huntress armor piercing
 		if (attacker instanceof Hero
-				&& ((Hero) attacker).belongings.weapon instanceof MissileWeapon
+				&& ((Hero) attacker).belongings.weapon() instanceof MissileWeapon
 				&& ((Hero) attacker).subClass == HeroSubClass.SNIPER
 				&& !Dungeon.level.adjacent(attacker.pos, defender.pos)){
 			realDamage = damage;
@@ -120,6 +124,11 @@ public class Viscosity extends Glyph {
 		@Override
 		public int icon() {
 			return BuffIndicator.DEFERRED;
+		}
+
+		@Override
+		public String iconTextDisplay() {
+			return Integer.toString(damage);
 		}
 		
 		@Override

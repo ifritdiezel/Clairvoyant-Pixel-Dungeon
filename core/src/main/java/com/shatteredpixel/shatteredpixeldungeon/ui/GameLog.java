@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.ui;
 
+import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
@@ -39,7 +40,7 @@ public class GameLog extends Component implements Signal.Listener<String> {
 	private RenderedTextBlock lastEntry;
 	private int lastColor;
 
-	private static final ArrayList<Entry> entries = new ArrayList<>();
+	private static ArrayList<Entry> entries = new ArrayList<>();
 
 	public GameLog() {
 		super();
@@ -48,10 +49,11 @@ public class GameLog extends Component implements Signal.Listener<String> {
 		recreateLines();
 	}
 	
-	private static final ArrayList<String> textsToAdd = new ArrayList<>();
+	private static ArrayList<String> textsToAdd = new ArrayList<>();
 	
 	@Override
 	public synchronized void update() {
+		int maxLines = SPDSettings.interfaceSize() > 0 ? 5 : 3;
 		for (String text : textsToAdd){
 			if (length != entries.size()){
 				clear();
@@ -79,12 +81,9 @@ public class GameLog extends Component implements Signal.Listener<String> {
 			if (text.startsWith( GLog.HIGHLIGHT )) {
 				text = text.substring( GLog.HIGHLIGHT.length() );
 				color = CharSprite.NEUTRAL;
-			} else
-			if (text.startsWith( GLog.DEBUG )) {
-				text = text.substring( GLog.DEBUG.length() );
-				color = CharSprite.DEBUG;}
+			}
 			
-			if (lastEntry != null && color == lastColor && lastEntry.nLines < MAX_LINES) {
+			if (lastEntry != null && color == lastColor && lastEntry.nLines < maxLines) {
 				
 				String lastMessage = lastEntry.text();
 				lastEntry.text( lastMessage.length() == 0 ? text : lastMessage + " " + text );
@@ -111,14 +110,14 @@ public class GameLog extends Component implements Signal.Listener<String> {
 						nLines += ((RenderedTextBlock) members.get(i)).nLines;
 					}
 					
-					if (nLines > MAX_LINES) {
+					if (nLines > maxLines) {
 						RenderedTextBlock r = ((RenderedTextBlock) members.get(0));
 						remove(r);
 						r.destroy();
 						
 						entries.remove( 0 );
 					}
-				} while (nLines > MAX_LINES);
+				} while (nLines > maxLines);
 				if (entries.isEmpty()) {
 					lastEntry = null;
 				}

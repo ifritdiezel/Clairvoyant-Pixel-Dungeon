@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ public class KeyEvent {
 	// *** Static members ***
 	// **********************
 	
-	private static final Signal<KeyEvent> keySignal = new Signal<>( true );
+	private static Signal<KeyEvent> keySignal = new Signal<>( true );
 	
 	public static void addKeyListener( Signal.Listener<KeyEvent> listener ){
 		keySignal.add(listener);
@@ -54,7 +54,7 @@ public class KeyEvent {
 	}
 	
 	//Accumulated key events
-	private static final ArrayList<KeyEvent> keyEvents = new ArrayList<>();
+	private static ArrayList<KeyEvent> keyEvents = new ArrayList<>();
 	
 	public static synchronized void addKeyEvent( KeyEvent event ){
 		keyEvents.add( event );
@@ -62,7 +62,18 @@ public class KeyEvent {
 	
 	public static synchronized void processKeyEvents(){
 		for (KeyEvent k : keyEvents){
-			keySignal.dispatch(k);
+			if (KeyBindings.getActionForKey(k) == GameAction.LEFT_CLICK){
+				PointerEvent.emulateMouseButton(PointerEvent.LEFT, k.pressed);
+				if (KeyBindings.bindingKey) keySignal.dispatch(k);
+			} else if (KeyBindings.getActionForKey(k) == GameAction.RIGHT_CLICK){
+				PointerEvent.emulateMouseButton(PointerEvent.RIGHT, k.pressed);
+				if (KeyBindings.bindingKey) keySignal.dispatch(k);
+			} else if (KeyBindings.getActionForKey(k) == GameAction.MIDDLE_CLICK){
+				PointerEvent.emulateMouseButton(PointerEvent.MIDDLE, k.pressed);
+				if (KeyBindings.bindingKey) keySignal.dispatch(k);
+			} else {
+				keySignal.dispatch(k);
+			}
 		}
 		keyEvents.clear();
 	}

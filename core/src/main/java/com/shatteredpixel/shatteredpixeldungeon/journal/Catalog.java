@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ package com.shatteredpixel.shatteredpixeldungeon.journal;
 
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.armor.ApprenticeArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.HuntressArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.LeatherArmor;
@@ -32,6 +31,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.armor.MailArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.PlateArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.RogueArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ScaleArmor;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.WarriorArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.AlchemistsToolkit;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.ChaliceOfBlood;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
@@ -136,7 +136,7 @@ public enum Catalog {
 	POTIONS,
 	SCROLLS;
 	
-	private final LinkedHashMap<Class<? extends Item>, Boolean> seen = new LinkedHashMap<>();
+	private LinkedHashMap<Class<? extends Item>, Boolean> seen = new LinkedHashMap<>();
 	
 	public Collection<Class<? extends Item>> items(){
 		return seen.keySet();
@@ -185,7 +185,7 @@ public enum Catalog {
 		ARMOR.seen.put( MailArmor.class,                    false);
 		ARMOR.seen.put( ScaleArmor.class,                   false);
 		ARMOR.seen.put( PlateArmor.class,                   false);
-		ARMOR.seen.put( ApprenticeArmor.class,                 false);
+		ARMOR.seen.put( WarriorArmor.class,                 false);
 		ARMOR.seen.put( MageArmor.class,                    false);
 		ARMOR.seen.put( RogueArmor.class,                   false);
 		ARMOR.seen.put( HuntressArmor.class,                false);
@@ -334,21 +334,15 @@ public enum Catalog {
 		}
 		
 		//general save/load
-		//includes "catalogs" for pre-0.8.2 saves
-		if (bundle.contains("catalogs") || bundle.contains(CATALOG_ITEMS)) {
+		if (bundle.contains(CATALOG_ITEMS)) {
 			List<Class> seenClasses = new ArrayList<>();
 			if (bundle.contains(CATALOG_ITEMS)) {
 				seenClasses = Arrays.asList(bundle.getClassArray(CATALOG_ITEMS));
 			}
-			List<String> seenItems = new ArrayList<>();
-			if (bundle.contains("catalogs")) {
-				Journal.saveNeeded = true; //we want to overwrite with the newer storage format
-				seenItems = Arrays.asList(bundle.getStringArray("catalogs"));
-			}
 			
 			for (Catalog cat : values()) {
 				for (Class<? extends Item> item : cat.items()) {
-					if (seenClasses.contains(item) || seenItems.contains(item.getSimpleName())) {
+					if (seenClasses.contains(item)) {
 						cat.seen.put(item, true);
 					}
 				}

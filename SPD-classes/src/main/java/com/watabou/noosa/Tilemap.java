@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,14 +42,14 @@ public class Tilemap extends Visual {
 	protected int mapHeight;
 	protected int size;
 
-	private final float cellW;
-	private final float cellH;
+	private float cellW;
+	private float cellH;
 
 	protected float[] vertices;
 	protected FloatBuffer quads;
 	protected Vertexbuffer buffer;
 
-	private final Rect updated;
+	private volatile Rect updated;
 	private boolean fullUpdate;
 	private Rect updating;
 	private int topLeftUpdating;

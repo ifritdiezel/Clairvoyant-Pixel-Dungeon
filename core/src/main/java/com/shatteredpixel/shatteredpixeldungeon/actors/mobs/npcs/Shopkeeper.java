@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -104,17 +104,28 @@ public class Shopkeeper extends NPC {
 	}
 	
 	public static WndBag sell() {
-		return GameScene.selectItem( itemSelector, WndBag.Mode.FOR_SALE, Messages.get(Shopkeeper.class, "sell"));
+		return GameScene.selectItem( itemSelector );
 	}
 
-	public static boolean willBuyItem( Item item ){
-		if (item.value() <= 0)                                               return false;
+	public static boolean canSell(Item item){
+		if (item.value() <= 0)                                              return false;
 		if (item.unique && !item.stackable)                                 return false;
 		if (item instanceof Armor && ((Armor) item).checkSeal() != null)    return false;
-		return !item.isEquipped(Dungeon.hero) || !item.cursed;
+		if (item.isEquipped(Dungeon.hero) && item.cursed)                   return false;
+		return true;
 	}
-	
-	private static final WndBag.Listener itemSelector = new WndBag.Listener() {
+
+	private static WndBag.ItemSelector itemSelector = new WndBag.ItemSelector() {
+		@Override
+		public String textPrompt() {
+			return Messages.get(Shopkeeper.class, "sell");
+		}
+
+		@Override
+		public boolean itemSelectable(Item item) {
+			return Shopkeeper.canSell(item);
+		}
+
 		@Override
 		public void onSelect( Item item ) {
 			if (item != null) {

@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ import java.util.HashMap;
 
 public class TextureCache {
 	
-	private static final HashMap<Object,SmartTexture> all = new HashMap<>();
+	private static HashMap<Object,SmartTexture> all = new HashMap<>();
 
 	public synchronized static SmartTexture createSolid( int color ) {
 		final String key = "1x1:" + color;
@@ -78,9 +78,26 @@ public class TextureCache {
 		}
 		
 	}
-	
-	public synchronized static void add( Object key, SmartTexture tx ) {
-		all.put( key, tx );
+
+	//texture is created at given size, but size is not enforced if it already exists
+	//texture contents are also not enforced, make sure you know the texture's state!
+	public synchronized static SmartTexture create( Object key, int width, int height ) {
+
+		if (all.containsKey( key )) {
+
+			return all.get( key );
+
+		} else {
+
+			SmartTexture tx = new SmartTexture(new Pixmap( width, height, Pixmap.Format.RGBA8888 ));
+
+			tx.filter( Texture.LINEAR, Texture.LINEAR );
+			tx.wrap( Texture.CLAMP, Texture.CLAMP );
+
+			all.put( key, tx );
+
+			return tx;
+		}
 	}
 	
 	public synchronized static void remove( Object key ){

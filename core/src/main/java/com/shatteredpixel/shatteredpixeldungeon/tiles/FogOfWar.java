@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,9 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.tiles;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDSettings;
-import com.watabou.gltextures.SmartTexture;
 import com.watabou.gltextures.TextureCache;
-import com.watabou.glwrap.Texture;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.NoosaScript;
 import com.watabou.noosa.NoosaScriptNoLighting;
@@ -37,7 +35,7 @@ import java.util.ArrayList;
 public class FogOfWar extends Image {
 
 	//first index is visibility type, second is brightness level
-	private static final int[][] FOG_COLORS = new int[][]{{
+	private static final int FOG_COLORS[][] = new int[][]{{
 			//visible
 			0x00000000, //-1 brightness
 			0x00000000, //0  brightness
@@ -64,12 +62,12 @@ public class FogOfWar extends Image {
 	private static final int MAPPED     =   2;
 	private static final int INVISIBLE  =   3;
 
-	private final int mapWidth;
-	private final int mapHeight;
-	private final int mapLength;
+	private int mapWidth;
+	private int mapHeight;
+	private int mapLength;
 	
-	private final int pWidth;
-	private final int pHeight;
+	private int pWidth;
+	private int pHeight;
 	
 	private int width2;
 	private int height2;
@@ -88,39 +86,39 @@ public class FogOfWar extends Image {
 	*/
 	
 	public FogOfWar( int mapWidth, int mapHeight ) {
-		
+
 		super();
 
 		this.mapWidth = mapWidth;
 		this.mapHeight = mapHeight;
 		mapLength = mapHeight * mapWidth;
-		
+
 		pWidth = mapWidth * PIX_PER_TILE;
 		pHeight = mapHeight * PIX_PER_TILE;
-		
+
 		width2 = 1;
 		while (width2 < pWidth) {
 			width2 <<= 1;
 		}
-		
+
 		height2 = 1;
 		while (height2 < pHeight) {
 			height2 <<= 1;
 		}
-		
+
 		float size = DungeonTilemap.SIZE / PIX_PER_TILE;
 		width = width2 * size;
 		height = height2 * size;
 
-		//TODO might be nice to compartmentalize the pixmap access and modification into texture/texturecache
-		Pixmap px = new Pixmap(width2, height2, Pixmap.Format.RGBA8888);
-		px.setBlending(Pixmap.Blending.None);
-		px.setColor(0x000000FF);
-		px.fill();
-		SmartTexture tx = new SmartTexture(px, Texture.LINEAR, Texture.CLAMP, false);
-		TextureCache.add(FogOfWar.class, tx);
-		texture( tx );
-		
+		String key = "FogOfWar" + width2 + "x" + height2;
+		texture(TextureCache.create(key, width2, height2));
+
+		//sets contents to all black
+		texture.bitmap.setColor( 0x000000FF );
+		texture.bitmap.fill();
+
+		texture.bind();
+
 		scale.set( size, size );
 
 		toUpdate = new ArrayList<>();
@@ -188,6 +186,7 @@ public class FogOfWar extends Image {
 		}
 
 		Pixmap fog = texture.bitmap;
+		fog.setBlending(Pixmap.Blending.None);
 
 		int cell;
 		

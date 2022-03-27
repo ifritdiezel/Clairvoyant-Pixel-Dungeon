@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,9 +39,9 @@ public class Lightning extends Group {
 	
 	private float life;
 
-	private final List<Arc> arcs;
+	private List<Arc> arcs;
 	
-	private final Callback callback;
+	private Callback callback;
 
 	public Lightning(int from, int to, Callback callback){
 		this(Arrays.asList(new Arc(from, to)), callback);
@@ -106,12 +106,10 @@ public class Lightning extends Group {
 	//these act as a means of easily expressing lighting between two points.
 	public static class Arc extends Group {
 
-		private final Image arc1;
-		private final Image arc2;
+		private Image arc1, arc2;
 
 		//starting and ending x/y values
-		private final PointF start;
-		private final PointF end;
+		private PointF start, end;
 
 		public Arc(int from, int to){
 			this( DungeonTilemap.tileCenterToWorld(from),

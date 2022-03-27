@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,7 +73,7 @@ public class CryptRoom extends SpecialRoom {
 	
 	private static Item prize( Level level ) {
 		
-		//1 floor set higher than normal
+		//2 floor set higher than normal
 		Armor prize = Generator.randomArmor( (Dungeon.depth / 5) + 2);
 		
 		if (Challenges.isItemBlocked(prize)){

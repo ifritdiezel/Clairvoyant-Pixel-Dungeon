@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,7 +59,8 @@ public class BeaconOfReturning extends Spell {
 		if (returnDepth == -1){
 			setBeacon(hero);
 		} else {
-			GameScene.show(new WndOptions(Messages.titleCase(name()),
+			GameScene.show(new WndOptions(new ItemSprite(this),
+					Messages.titleCase(name()),
 					Messages.get(BeaconOfReturning.class, "wnd_body"),
 					Messages.get(BeaconOfReturning.class, "wnd_set"),
 					Messages.get(BeaconOfReturning.class, "wnd_return")){
@@ -106,7 +107,7 @@ public class BeaconOfReturning extends Spell {
 	}
 	
 	private void returnBeacon( Hero hero ){
-		if (Dungeon.bossLevel()) {
+		if (Dungeon.level.locked) {
 			GLog.w( Messages.get(this, "preventing") );
 			return;
 		}
@@ -140,11 +141,11 @@ public class BeaconOfReturning extends Spell {
 			Dungeon.observe();
 			GameScene.updateFog();
 		} else {
-			
-			Buff buff = Dungeon.hero.buff(TimekeepersHourglass.timeFreeze.class);
-			if (buff != null) buff.detach();
-			buff = Dungeon.hero.buff(Swiftthistle.TimeBubble.class);
-			if (buff != null) buff.detach();
+
+			TimekeepersHourglass.timeFreeze timeFreeze = Dungeon.hero.buff(TimekeepersHourglass.timeFreeze.class);
+			if (timeFreeze != null) timeFreeze.disarmPressedTraps();
+			Swiftthistle.TimeBubble timeBubble = Dungeon.hero.buff(Swiftthistle.TimeBubble.class);
+			if (timeBubble != null) timeBubble.disarmPressedTraps();
 			
 			InterlevelScene.mode = InterlevelScene.Mode.RETURN;
 			InterlevelScene.returnDepth = returnDepth;
@@ -201,7 +202,7 @@ public class BeaconOfReturning extends Spell {
 			inputs =  new Class[]{ScrollOfPassage.class, ArcaneCatalyst.class};
 			inQuantity = new int[]{1, 1};
 			
-			cost = 10;
+			cost = 6;
 			
 			output = BeaconOfReturning.class;
 			outQuantity = 5;

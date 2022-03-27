@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,8 +22,12 @@
 package com.shatteredpixel.shatteredpixeldungeon.items;
 
 import com.watabou.utils.Bundle;
+import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.Random;
 
+import org.graalvm.compiler.replacements.Log;
+
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,13 +35,14 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.logging.ConsoleHandler;
 
 public class ItemStatusHandler<T extends Item> {
 
-	private final Class<? extends T>[] items;
-	private final LinkedHashMap<Class<? extends T>, String> itemLabels;
-	private final LinkedHashMap<String, Integer> labelImages;
-	private final LinkedHashSet<Class<? extends T>> known;
+	private Class<? extends T>[] items;
+	private LinkedHashMap<Class<? extends T>, String> itemLabels;
+	private LinkedHashMap<String, Integer> labelImages;
+	private LinkedHashSet<Class<? extends T>> known;
 
 	public ItemStatusHandler( Class<? extends T>[] items, HashMap<String, Integer> labelImages ) {
 
@@ -54,8 +59,8 @@ public class ItemStatusHandler<T extends Item> {
 			Class<? extends T> item = items[i];
 
 			int index = Random.Int( labelsLeft.size() );
-
 			itemLabels.put( item, labelsLeft.get( index ) );
+
 			labelsLeft.remove( index );
 
 		}
@@ -76,7 +81,7 @@ public class ItemStatusHandler<T extends Item> {
 
 	private static final String PFX_LABEL	= "_label";
 	private static final String PFX_KNOWN	= "_known";
-	
+
 	public void save( Bundle bundle ) {
 		for (int i=0; i < items.length; i++) {
 			String itemName = items[i].toString();
@@ -96,7 +101,7 @@ public class ItemStatusHandler<T extends Item> {
 			}
 		}
 	}
-	
+
 	public void saveClassesSelectively( Bundle bundle, ArrayList<Class<?extends Item>> clsToSave ){
 		List<Class<? extends T>> items = Arrays.asList(this.items);
 		for (Class<?extends Item> cls : clsToSave){
@@ -149,7 +154,7 @@ public class ItemStatusHandler<T extends Item> {
 			}
 		}
 	}
-	
+
 	public boolean contains( T item ){
 		for (Class<?extends Item> i : items){
 			if (item.getClass().equals(i)){
@@ -158,7 +163,7 @@ public class ItemStatusHandler<T extends Item> {
 		}
 		return false;
 	}
-	
+
 	public boolean contains( Class<?extends T> itemCls ){
 		for (Class<?extends Item> i : items){
 			if (itemCls.equals(i)){
@@ -167,43 +172,43 @@ public class ItemStatusHandler<T extends Item> {
 		}
 		return false;
 	}
-	
+
 	public int image( T item ) {
 		return labelImages.get(label(item));
 	}
-	
+
 	public int image( Class<?extends T> itemCls ) {
 		return labelImages.get(label(itemCls));
 	}
-	
+
 	public String label( T item ) {
 		return itemLabels.get(item.getClass());
 	}
-	
+
 	public String label( Class<?extends T> itemCls ){
 		return itemLabels.get( itemCls );
 	}
-	
+
 	public boolean isKnown( T item ) {
 		return known.contains( item.getClass() );
 	}
-	
+
 	public boolean isKnown( Class<?extends T> itemCls ){
 		return known.contains( itemCls );
 	}
-	
+
 	public void know( T item ) {
 		known.add( (Class<? extends T>)item.getClass() );
 	}
-	
+
 	public void know( Class<?extends T> itemCls ){
 		known.add( itemCls );
 	}
-	
+
 	public HashSet<Class<? extends T>> known() {
 		return known;
 	}
-	
+
 	public HashSet<Class<? extends T>> unknown() {
 		LinkedHashSet<Class<? extends T>> result = new LinkedHashSet<>();
 		for (Class<? extends T> i : items) {

@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FireImbue;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FlavourBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FrostImbue;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Motivation;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Recharging;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.RevealedArea;
@@ -160,35 +161,28 @@ public enum Talent {
 		public float iconFadePercent() { return Math.max(0, visualcooldown() / 50); }
 		public String toString() { return Messages.get(this, "name"); }
 		public String desc() { return Messages.get(this, "desc", dispTurns(visualcooldown())); }
-	}
-
-	public static class LethalMomentumTracker extends FlavourBuff{}
-
-	public static class WandPreservationCounter extends CounterBuff{}
-
-	public static class EmpoweredStrikeTracker extends FlavourBuff{}
-
-	public static class BountyHunterTracker extends FlavourBuff{}
-
+	};
+	public static class LethalMomentumTracker extends FlavourBuff{};
+	public static class StrikingWaveTracker extends FlavourBuff{};
+	public static class WandPreservationCounter extends CounterBuff{{revivePersists = true;}};
+	public static class EmpoweredStrikeTracker extends FlavourBuff{};
+	public static class BountyHunterTracker extends FlavourBuff{};
 	public static class RejuvenatingStepsCooldown extends FlavourBuff{
 		public int icon() { return BuffIndicator.TIME; }
 		public void tintIcon(Image icon) { icon.hardlight(0f, 0.35f, 0.15f); }
 		public float iconFadePercent() { return Math.max(0, visualcooldown() / (15 - 5*Dungeon.hero.pointsInTalent(REJUVENATING_STEPS))); }
 		public String toString() { return Messages.get(this, "name"); }
 		public String desc() { return Messages.get(this, "desc", dispTurns(visualcooldown())); }
-	}
-
-	public static class RejuvenatingStepsFurrow extends CounterBuff{}
-
+	};
+	public static class RejuvenatingStepsFurrow extends CounterBuff{{revivePersists = true;}};
 	public static class SeerShotCooldown extends FlavourBuff{
 		public int icon() { return target.buff(RevealedArea.class) != null ? BuffIndicator.NONE : BuffIndicator.TIME; }
 		public void tintIcon(Image icon) { icon.hardlight(0.7f, 0.4f, 0.7f); }
 		public float iconFadePercent() { return Math.max(0, visualcooldown() / 20); }
 		public String toString() { return Messages.get(this, "name"); }
 		public String desc() { return Messages.get(this, "desc", dispTurns(visualcooldown())); }
-	}
-
-	public static class SpiritBladesTracker extends FlavourBuff{}
+	};
+	public static class SpiritBladesTracker extends FlavourBuff{};
 
 	int icon;
 	int maxPoints;
@@ -231,12 +225,10 @@ public enum Talent {
 	}
 
 	public String title(){
-		//TODO translate this
-		if (this == HEROIC_ENERGY &&
-				Messages.lang() == Languages.ENGLISH
+		if (this == HEROIC_ENERGY
 				&& Dungeon.hero != null
 				&& Dungeon.hero.armorAbility instanceof Ratmogrify){
-			return "ratroic energy";
+			return Messages.get(this, name() + ".rat_title");
 		}
 		return Messages.get(this, name() + ".title");
 	}
@@ -272,19 +264,20 @@ public enum Talent {
 		if (talent == LIGHT_CLOAK && hero.pointsInTalent(LIGHT_CLOAK) == 1){
 			for (Item item : Dungeon.hero.belongings.backpack){
 				if (item instanceof CloakOfShadows){
-					((CloakOfShadows) item).activate(Dungeon.hero);
+					if (hero.buff(LostInventory.class) == null || item.keptThoughLostInvent) {
+						((CloakOfShadows) item).activate(Dungeon.hero);
+					}
 				}
 			}
 		}
 
-		if (talent == FARSIGHT){
+		if (talent == HEIGHTENED_SENSES || talent == FARSIGHT){
 			Dungeon.observe();
 		}
 	}
 
-	public static class CachedRationsDropped extends CounterBuff{}
-
-	public static class NatureBerriesAvailable extends CounterBuff{}
+	public static class CachedRationsDropped extends CounterBuff{{revivePersists = true;}};
+	public static class NatureBerriesAvailable extends CounterBuff{{revivePersists = true;}};
 
 	public static void onFoodEaten( Hero hero, float foodVal, Item foodSource ){
 		if (hero.hasTalent(SNACK_SAVING) && (foodVal >= 300 ))  {
@@ -312,7 +305,10 @@ public enum Talent {
 		}
 		if (hero.hasTalent(MYSTICAL_MEAL)){
 			//3/5 turns of recharging
-			Buff.affect( hero, ArtifactRecharge.class).set(1 + 2*(hero.pointsInTalent(MYSTICAL_MEAL))).ignoreHornOfPlenty = foodSource instanceof HornOfPlenty;
+			ArtifactRecharge buff = Buff.affect( hero, ArtifactRecharge.class);
+			if (buff.left() < 1 + 2*(hero.pointsInTalent(MYSTICAL_MEAL))){
+				Buff.affect( hero, ArtifactRecharge.class).set(1 + 2*(hero.pointsInTalent(MYSTICAL_MEAL))).ignoreHornOfPlenty = foodSource instanceof HornOfPlenty;
+			}
 			ScrollOfRecharging.charge( hero );
 		}
 		if (hero.hasTalent(INVIGORATING_MEAL)){
@@ -391,7 +387,7 @@ public enum Talent {
 		if (hero.hasTalent(ENERGIZING_UPGRADE)){
 			MagesStaff staff = hero.belongings.getItem(MagesStaff.class);
 			if (staff != null){
-				staff.gainCharge(1 + 2*hero.pointsInTalent(ENERGIZING_UPGRADE), true);
+				staff.gainCharge(2 + 2*hero.pointsInTalent(ENERGIZING_UPGRADE), true);
 				ScrollOfRecharging.charge( Dungeon.hero );
 				SpellSprite.show( hero, SpellSprite.CHARGE );
 			}
@@ -438,7 +434,7 @@ public enum Talent {
 	}
 
 	//note that IDing can happen in alchemy scene, so be careful with VFX here
-	public static void onItemIdentified(Hero hero){
+	public static void onItemIdentified(Hero hero, Item item){
 		if (hero.hasTalent(PHILOSOPHILE)){
 			Buff.prolong(hero, Motivation.class, 5f + hero.pointsInTalent(PHILOSOPHILE)*hero.pointsInTalent(PHILOSOPHILE)*5);
 
@@ -461,7 +457,7 @@ public enum Talent {
 		}
 
 		if (hero.hasTalent(Talent.FOLLOWUP_STRIKE)) {
-			if (hero.belongings.weapon instanceof MissileWeapon) {
+			if (hero.belongings.weapon() instanceof MissileWeapon) {
 				Buff.affect(enemy, FollowupStrikeTracker.class);
 			} else if (enemy.buff(FollowupStrikeTracker.class) != null){
 				dmg += 1 + hero.pointsInTalent(FOLLOWUP_STRIKE);
@@ -475,17 +471,20 @@ public enum Talent {
 		return dmg;
 	}
 
-	public static class SuckerPunchTracker extends Buff{}
-
-	public static class FollowupStrikeTracker extends Buff{}
+	public static class SuckerPunchTracker extends Buff{};
+	public static class FollowupStrikeTracker extends Buff{};
 
 	public static final int MAX_TALENT_TIERS = 4;
 
 	public static void initClassTalents( Hero hero ){
-		initClassTalents( hero.heroClass, hero.talents );
+		initClassTalents( hero.heroClass, hero.talents, hero.metamorphedTalents );
 	}
 
-	public static void initClassTalents( HeroClass cls, ArrayList<LinkedHashMap<Talent, Integer>> talents ){
+	public static void initClassTalents( HeroClass cls, ArrayList<LinkedHashMap<Talent, Integer>> talents){
+		initClassTalents( cls, talents, new LinkedHashMap<>());
+	}
+
+	public static void initClassTalents( HeroClass cls, ArrayList<LinkedHashMap<Talent, Integer>> talents, LinkedHashMap<Talent, Talent> replacements ){
 		while (talents.size() < MAX_TALENT_TIERS){
 			talents.add(new LinkedHashMap<>());
 		}
@@ -508,6 +507,9 @@ public enum Talent {
 				break;
 		}
 		for (Talent talent : tierTalents){
+			if (replacements.containsKey(talent)){
+				talent = replacements.get(talent);
+			}
 			talents.get(0).put(talent, 0);
 		}
 		tierTalents.clear();
@@ -528,6 +530,9 @@ public enum Talent {
 				break;
 		}
 		for (Talent talent : tierTalents){
+			if (replacements.containsKey(talent)){
+				talent = replacements.get(talent);
+			}
 			talents.get(1).put(talent, 0);
 		}
 		tierTalents.clear();
@@ -548,6 +553,9 @@ public enum Talent {
 				break;
 		}
 		for (Talent talent : tierTalents){
+			if (replacements.containsKey(talent)){
+				talent = replacements.get(talent);
+			}
 			talents.get(2).put(talent, 0);
 		}
 		tierTalents.clear();
@@ -633,9 +641,23 @@ public enum Talent {
 			}
 			bundle.put(TALENT_TIER+(i+1), tierBundle);
 		}
+
+		Bundle replacementsBundle = new Bundle();
+		for (Talent t : hero.metamorphedTalents.keySet()){
+			replacementsBundle.put(t.name(), hero.metamorphedTalents.get(t));
+		}
+		bundle.put("replacements", replacementsBundle);
 	}
 
 	public static void restoreTalentsFromBundle( Bundle bundle, Hero hero ){
+		//TODO restore replacements
+		if (bundle.contains("replacements")){
+			Bundle replacements = bundle.getBundle("replacements");
+			for (String key : replacements.getKeys()){
+				hero.metamorphedTalents.put(Talent.valueOf(key), replacements.getEnum(key, Talent.class));
+			}
+		}
+
 		if (hero.heroClass != null)     initClassTalents(hero);
 		if (hero.subClass != null)      initSubclassTalents(hero);
 		if (hero.armorAbility != null)  initArmorTalents(hero);
@@ -643,10 +665,6 @@ public enum Talent {
 		for (int i = 0; i < MAX_TALENT_TIERS; i++){
 			LinkedHashMap<Talent, Integer> tier = hero.talents.get(i);
 			Bundle tierBundle = bundle.contains(TALENT_TIER+(i+1)) ? bundle.getBundle(TALENT_TIER+(i+1)) : null;
-			//pre-0.9.1 saves
-			if (tierBundle == null && i == 0 && bundle.contains("talents")){
-				tierBundle = bundle.getBundle("talents");
-			}
 
 			if (tierBundle != null){
 				for (Talent talent : tier.keySet()){

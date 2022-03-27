@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,11 +73,17 @@ public class PitfallTrap extends Trap {
 
 	public static class DelayedPit extends FlavourBuff {
 
+		{
+			revivePersists = true;
+		}
+
 		int pos;
 		int depth;
 
 		@Override
 		public boolean act() {
+
+			boolean herofell = false;
 			if (depth == Dungeon.depth) {
 				for (int i : PathFinder.NEIGHBOURS9) {
 
@@ -109,6 +115,7 @@ public class PitfallTrap extends Trap {
 						&& !(ch.alignment == Char.Alignment.NEUTRAL && Char.hasProp(ch, Char.Property.IMMOVABLE))) {
 						if (ch == Dungeon.hero) {
 							Chasm.heroFall(cell);
+							herofell = true;
 						} else {
 							Chasm.mobFall((Mob) ch);
 						}
@@ -118,7 +125,7 @@ public class PitfallTrap extends Trap {
 			}
 
 			detach();
-			return true;
+			return !herofell;
 		}
 
 		private static final String POS = "pos";

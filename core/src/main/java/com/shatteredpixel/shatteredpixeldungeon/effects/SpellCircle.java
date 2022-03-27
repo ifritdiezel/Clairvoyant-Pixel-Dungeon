@@ -37,8 +37,10 @@ public class SpellCircle extends Image {
 
     @Override
     public void update() {
+
         super.update();
         color(color, color, color);
+        color = color % 0xFFFFFF;
         color += 1;
         
         //following the owner

@@ -29,7 +29,6 @@ import com.shatteredpixel.shatteredpixeldungeon.windows.WndBadge;
 import com.watabou.noosa.Game;
 import com.watabou.noosa.Image;
 import com.watabou.noosa.audio.Sample;
-import com.watabou.noosa.ui.Button;
 import com.watabou.noosa.ui.Component;
 import com.watabou.utils.Random;
 
@@ -110,10 +109,10 @@ public class BadgesGrid extends Component {
 
 	private static class BadgeButton extends Button {
 
-		private final Badges.Badge badge;
-		private final boolean unlocked;
+		private Badges.Badge badge;
+		private boolean unlocked;
 
-		private final Image icon;
+		private Image icon;
 
 		public BadgeButton( Badges.Badge badge, boolean unlocked ) {
 			super();
@@ -151,6 +150,11 @@ public class BadgesGrid extends Component {
 		protected void onClick() {
 			Sample.INSTANCE.play( Assets.Sounds.CLICK, 0.7f, 0.7f, 1.2f );
 			Game.scene().add( new WndBadge( badge, unlocked ) );
+		}
+
+		@Override
+		protected String hoverText() {
+			return badge.title();
 		}
 	}
 

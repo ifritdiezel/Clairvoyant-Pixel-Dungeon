@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -88,24 +88,25 @@ public class EtherealChains extends Artifact {
 
 			if (!isEquipped( hero )) {
 				GLog.i( Messages.get(Artifact.class, "need_to_equip") );
-				QuickSlotButton.cancel();
+				usesTargeting = false;
 
 			} else if (charge < 1) {
 				GLog.i( Messages.get(this, "no_charge") );
-				QuickSlotButton.cancel();
+				usesTargeting = false;
 
 			} else if (cursed) {
 				GLog.w( Messages.get(this, "cursed") );
-				QuickSlotButton.cancel();
+				usesTargeting = false;
 
 			} else {
+				usesTargeting = true;
 				GameScene.selectCell(caster);
 			}
 
 		}
 	}
 
-	private final CellSelector.Listener caster = new CellSelector.Listener(){
+	private CellSelector.Listener caster = new CellSelector.Listener(){
 
 		@Override
 		public void onSelect(Integer target) {
@@ -201,7 +202,8 @@ public class EtherealChains extends Artifact {
 		}
 
 		//don't pull if the collision spot is in a wall
-		if (Dungeon.level.solid[chain.collisionPos]){
+		if (Dungeon.level.solid[chain.collisionPos]
+			|| !(Dungeon.level.passable[chain.collisionPos] || Dungeon.level.avoid[chain.collisionPos])){
 			GLog.i( Messages.get(this, "inside_wall"));
 			return;
 		}

@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ import com.watabou.utils.Bundle;
 
 public class Kinetic extends Weapon.Enchantment {
 	
-	private static final ItemSprite.Glowing YELLOW = new ItemSprite.Glowing( 0xFFFF00 );
+	private static ItemSprite.Glowing YELLOW = new ItemSprite.Glowing( 0xFFFF00 );
 	
 	@Override
 	public int proc(Weapon weapon, Char attacker, Char defender, int damage) {
@@ -73,6 +73,11 @@ public class Kinetic extends Weapon.Enchantment {
 			} else {
 				icon.hardlight(1f, 1f, 1f - preservedDamage*.2f);
 			}
+		}
+
+		@Override
+		public String iconTextDisplay() {
+			return Integer.toString(damageBonus());
 		}
 		
 		private float preservedDamage;

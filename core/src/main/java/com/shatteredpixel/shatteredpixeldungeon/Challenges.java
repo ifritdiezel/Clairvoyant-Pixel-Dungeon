@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,8 +65,12 @@ public class Challenges {
 
 	public static boolean isItemBlocked( Item item ){
 
-        return Dungeon.isChallenged(NO_HERBALISM) && item instanceof Dewdrop;
+		if (Dungeon.isChallenged(NO_HERBALISM) && item instanceof Dewdrop){
+			return true;
+		}
 
-    }
+		return false;
+
+	}
 
 }

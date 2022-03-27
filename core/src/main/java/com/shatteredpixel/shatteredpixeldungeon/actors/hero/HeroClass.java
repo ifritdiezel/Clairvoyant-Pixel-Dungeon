@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,12 +38,14 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.rogue.Shad
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.rogue.SmokeBomb;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.warrior.Endure;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.warrior.Shockwave;
+import com.shatteredpixel.shatteredpixeldungeon.items.Amulet;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.KingsCrown;
 import com.shatteredpixel.shatteredpixeldungeon.items.Waterskin;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClothArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.PlateArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.CloakOfShadows;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.Grimoire;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.ScrollHolder;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
@@ -59,10 +61,12 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfGoDown;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfIdentify;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfLullaby;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMirrorImage;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.spells.SpellHand;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.enchantments.Grim;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dagger;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Eighterstaff;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Gloves;
@@ -75,18 +79,22 @@ import com.watabou.utils.Bundle;
 
 public enum HeroClass {
 
-	APPRENTICE(  HeroSubClass.CHANNELLER, HeroSubClass.BERSERKER ),
+	APPRENTICE(  HeroSubClass.CHANNELLER, HeroSubClass.CHANNELLER ),
 	MAGE(  HeroSubClass.BATTLEMAGE, HeroSubClass.WARLOCK ),
 	ROGUE(  HeroSubClass.ASSASSIN, HeroSubClass.FREERUNNER ),
 	HUNTRESS(  HeroSubClass.SNIPER, HeroSubClass.WARDEN );
 
-	private final HeroSubClass[] subClasses;
+	private HeroSubClass[] subClasses;
 
 	HeroClass( HeroSubClass...subClasses ) {
 		this.subClasses = subClasses;
 	}
 
 	public void initHero( Hero hero ) {
+
+		new ScrollOfMirrorImage().quantity(10).collect();
+		new Grimoire().collect();
+
 
 		hero.heroClass = this;
 		Talent.initClassTalents(hero);
@@ -169,7 +177,8 @@ public enum HeroClass {
 		new KingsCrown().collect();
 		new PotionOfExperience().quantity(30).collect();
 		new PotionOfHuntress().collect();
-
+		new Amulet().collect();
+		new ScrollOfMirrorImage().quantity(20).collect();
 
 		/*new Food().quantity(10).collect();
 		new ArmorKit().collect();
@@ -321,13 +330,16 @@ public enum HeroClass {
 	}
 
 	public String unlockMsg() {
-		return "";
-	}
-
-	private static final String CLASS	= "class";
-	
-	public void storeInBundle( Bundle bundle ) {
-		bundle.put( CLASS, toString() );
+		switch (this){
+			case APPRENTICE: default:
+				return "";
+			case MAGE:
+				return Messages.get(HeroClass.class, "mage_unlock");
+			case ROGUE:
+				return Messages.get(HeroClass.class, "rogue_unlock");
+			case HUNTRESS:
+				return Messages.get(HeroClass.class, "huntress_unlock");
+		}
 	}
 
 }

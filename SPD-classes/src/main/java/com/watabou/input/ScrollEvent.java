@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,9 +29,9 @@ import java.util.ArrayList;
 public class ScrollEvent {
 	
 	public PointF pos;
-	public int amount;
+	public float amount;
 	
-	public ScrollEvent(PointF mousePos, int amount){
+	public ScrollEvent(PointF mousePos, float amount){
 		this.amount = amount;
 		this.pos = mousePos;
 	}
@@ -40,7 +40,7 @@ public class ScrollEvent {
 	// *** Static members ***
 	// **********************
 	
-	private static final Signal<ScrollEvent> scrollSignal = new Signal<>( true );
+	private static Signal<ScrollEvent> scrollSignal = new Signal<>( true );
 	
 	public static void addScrollListener( Signal.Listener<ScrollEvent> listener ){
 		scrollSignal.add(listener);
@@ -55,7 +55,7 @@ public class ScrollEvent {
 	}
 	
 	//Accumulated key events
-	private static final ArrayList<ScrollEvent> scrollEvents = new ArrayList<>();
+	private static ArrayList<ScrollEvent> scrollEvents = new ArrayList<>();
 	
 	public static synchronized void addScrollEvent( ScrollEvent event ){
 		scrollEvents.add( event );

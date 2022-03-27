@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -75,8 +75,8 @@ abstract public class Weapon extends KindOfWeapon {
 		DAMAGE  (1.5f, 1.6667f),
 		NONE	(1.0f, 1.0000f);
 
-		private final float damageFactor;
-		private final float delayFactor;
+		private float damageFactor;
+		private float delayFactor;
 
 		Augment(float dmg, float dly){
 			damageFactor = dmg;
@@ -100,7 +100,8 @@ abstract public class Weapon extends KindOfWeapon {
 	
 	public Enchantment enchantment;
 	public boolean curseInfusionBonus = false;
-	
+	public boolean masteryPotionBonus = false;
+
 	@Override
 	public int proc( Char attacker, Char defender, int damage ) {
 		
@@ -134,6 +135,7 @@ abstract public class Weapon extends KindOfWeapon {
 	private static final String AVAILABLE_USES  = "available_uses";
 	private static final String ENCHANTMENT	    = "enchantment";
 	private static final String CURSE_INFUSION_BONUS = "curse_infusion_bonus";
+	private static final String MASTERY_POTION_BONUS = "mastery_potion_bonus";
 	private static final String AUGMENT	        = "augment";
 
 	@Override
@@ -143,6 +145,7 @@ abstract public class Weapon extends KindOfWeapon {
 		bundle.put( AVAILABLE_USES, availableUsesToID );
 		bundle.put( ENCHANTMENT, enchantment );
 		bundle.put( CURSE_INFUSION_BONUS, curseInfusionBonus );
+		bundle.put( MASTERY_POTION_BONUS, masteryPotionBonus );
 		bundle.put( AUGMENT, augment );
 	}
 	
@@ -153,6 +156,7 @@ abstract public class Weapon extends KindOfWeapon {
 		availableUsesToID = bundle.getFloat( AVAILABLE_USES );
 		enchantment = (Enchantment)bundle.get( ENCHANTMENT );
 		curseInfusionBonus = bundle.getBoolean( CURSE_INFUSION_BONUS );
+		masteryPotionBonus = bundle.getBoolean( MASTERY_POTION_BONUS );
 
 		augment = bundle.getEnum(AUGMENT, Augment.class);
 	}
@@ -208,7 +212,11 @@ abstract public class Weapon extends KindOfWeapon {
 	}
 
 	public int STRReq(){
-		return STRReq(level());
+		int req = STRReq(level());
+		if (masteryPotionBonus){
+			req -= 2;
+		}
+		return req;
 	}
 
 	public abstract int STRReq(int lvl);
@@ -222,7 +230,9 @@ abstract public class Weapon extends KindOfWeapon {
 
 	@Override
 	public int level() {
-		return super.level() + (curseInfusionBonus ? 1 : 0);
+		int level = super.level();
+		if (curseInfusionBonus) level += 1 + level/6;
+		return level;
 	}
 	
 	//overrides as other things can equip these
@@ -243,7 +253,7 @@ abstract public class Weapon extends KindOfWeapon {
 	public Item upgrade(boolean enchant ) {
 
 		if (enchant){
-			if (enchantment == null || hasCurseEnchant()){
+			if (enchantment == null){
 				enchant(Enchantment.random());
 			}
 		} else {
@@ -355,11 +365,19 @@ abstract public class Weapon extends KindOfWeapon {
 			if (attacker instanceof Hero && ((Hero) attacker).hasTalent(Talent.ENRAGED_CATALYST)){
 				Berserk rage = attacker.buff(Berserk.class);
 				if (rage != null) {
-					multi += (rage.rageAmount() / 6f) * ((Hero) attacker).pointsInTalent(Talent.ENRAGED_CATALYST);
+					multi += (rage.rageAmount() * 0.15f) * ((Hero) attacker).pointsInTalent(Talent.ENRAGED_CATALYST);
 				}
 			}
 			if (attacker instanceof Hero && ((Hero) attacker).subClass== HeroSubClass.CHANNELLER){
 				multi+=0.5+0.6*((Hero) attacker).pointsInTalent(Talent.EXTERNAL_CATALYST);
+			}
+			if (attacker.buff(Talent.SpiritBladesTracker.class) != null
+					&& ((Hero)attacker).pointsInTalent(Talent.SPIRIT_BLADES) == 4){
+				multi += 0.1f;
+			}
+			if (attacker.buff(Talent.StrikingWaveTracker.class) != null
+					&& ((Hero)attacker).pointsInTalent(Talent.STRIKING_WAVE) == 4){
+				multi += 0.2f;
 			}
 			return multi;
 		}

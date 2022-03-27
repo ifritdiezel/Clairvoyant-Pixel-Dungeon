@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,9 +50,9 @@ public class WandOfLightning extends DamageWand {
 		image = ItemSpriteSheet.WAND_LIGHTNING;
 	}
 	
-	private final ArrayList<Char> affected = new ArrayList<>();
+	private ArrayList<Char> affected = new ArrayList<>();
 
-	private final ArrayList<Lightning.Arc> arcs = new ArrayList<>();
+	private ArrayList<Lightning.Arc> arcs = new ArrayList<>();
 
 	public int min(int lvl){
 		return 5+lvl;

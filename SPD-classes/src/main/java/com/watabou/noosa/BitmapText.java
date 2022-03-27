@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -219,7 +219,7 @@ public class BitmapText extends Visual {
 	public static class Font extends TextureFilm {
 
 		public static final String LATIN_FULL =
-			"!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u007F";
+			" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u007F";
 		
 		public SmartTexture texture;
 		
@@ -290,7 +290,6 @@ public class BitmapText extends Visual {
 			for (int i=0; i < length; i++) {
 				
 				char ch = chars.charAt( i );
-
 				if (ch == ' ') {
 					continue;
 				} else {

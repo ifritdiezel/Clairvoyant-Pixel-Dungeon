@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -109,9 +109,13 @@ public class SmartTexture extends Texture {
 	
 	public RectF uvRect( float left, float top, float right, float bottom ) {
 		return new RectF(
-			left		/ width,
+			left	/ width,
 			top		/ height,
 			right	/ width,
 			bottom	/ height );
+	}
+
+	public RectF uvRectBySize(float left, float top, float width, float height){
+		return uvRect(left, top, left+width, top+height);
 	}
 }

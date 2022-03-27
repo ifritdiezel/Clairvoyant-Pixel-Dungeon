@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ public class Renderbuffer {
 	public static final int DEPTH16		= Gdx.gl.GL_DEPTH_COMPONENT16;
 	public static final int STENCIL8	= Gdx.gl.GL_STENCIL_INDEX8;
 	
-	private final int id;
+	private int id;
 	
 	public Renderbuffer() {
 		id = Gdx.gl.glGenRenderbuffer();

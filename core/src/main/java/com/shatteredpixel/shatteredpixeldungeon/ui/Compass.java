@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,10 +32,10 @@ public class Compass extends Image {
 	private static final float RAD_2_G	= 180f / 3.1415926f;
 	private static final float RADIUS	= 12;
 	
-	private final int cell;
-	private final PointF cellCenter;
+	private int cell;
+	private PointF cellCenter;
 	
-	private final PointF lastScroll = new PointF();
+	private PointF lastScroll = new PointF();
 	
 	public Compass( int cell ) {
 		

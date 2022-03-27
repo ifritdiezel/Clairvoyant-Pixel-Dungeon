@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ import java.util.ArrayList;
 
 public class BadgesList extends ScrollPane {
 
-	private final ArrayList<ListItem> items = new ArrayList<>();
+	private ArrayList<ListItem> items = new ArrayList<>();
 	
 	public BadgesList( boolean global ) {
 		super( new Component() );
@@ -82,7 +82,7 @@ public class BadgesList extends ScrollPane {
 		
 		private static final float HEIGHT	= 20;
 		
-		private final Badges.Badge badge;
+		private Badges.Badge badge;
 		
 		private Image icon;
 		private RenderedTextBlock label;
@@ -92,7 +92,7 @@ public class BadgesList extends ScrollPane {
 			
 			this.badge = badge;
 			icon.copy( BadgeBanner.image( badge.image ));
-			label.text( badge.desc() );
+			label.text( badge.title() );
 		}
 		
 		@Override

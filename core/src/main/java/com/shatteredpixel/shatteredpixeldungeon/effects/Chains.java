@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,17 +33,16 @@ public class Chains extends Group {
 	private static final double A = 180 / Math.PI;
 
 	private float spent = 0f;
-	private final float duration;
+	private float duration;
 
-	private final Callback callback;
+	private Callback callback;
 
-	private final Image[] chains;
-	private final int numChains;
-	private final float distance;
+	private Image[] chains;
+	private int numChains;
+	private float distance;
 	private float rotation = 0;
 
-	private final PointF from;
-	private final PointF to;
+	private PointF from, to;
 
 	public Chains(int from, int to, Callback callback){
 		this(DungeonTilemap.tileCenterToWorld(from),

@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -86,11 +86,11 @@ public class PathFinder {
 		do {
 			int minD = distance[s];
 			int mins = s;
-
+			
 			for (int i=0; i < dir.length; i++) {
-
+				
 				int n = s + dir[i];
-
+				
 				int thisD = distance[n];
 				if (thisD < minD) {
 					minD = thisD;
@@ -137,13 +137,15 @@ public class PathFinder {
 			return -1;
 		}
 
-        // From the starting position we are making one step downwards
-		int minD = distance[cur];
-		int mins = cur;
+		int s = cur;
+		
+		// From the starting position we are making one step downwards
+		int minD = distance[s];
+		int mins = s;
 		
 		for (int i=0; i < dir.length; i++) {
 
-			int n = cur + dir[i];
+			int n = s + dir[i];
 			int thisD = distance[n];
 			
 			if (thisD < minD) {

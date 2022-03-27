@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,9 +44,11 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Plant.Seed;
 import com.shatteredpixel.shatteredpixeldungeon.plants.Sungrass;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndUseItem;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.Reflection;
 
@@ -73,14 +75,23 @@ public class Blandfruit extends Food {
 			Blandfruit other = (Blandfruit) item;
 			if (potionAttrib == null && other.potionAttrib == null) {
 					return true;
-			} else return potionAttrib != null && other.potionAttrib != null
-					&& potionAttrib.isSimilar(other.potionAttrib);
+			} else if (potionAttrib != null && other.potionAttrib != null
+					&& potionAttrib.isSimilar(other.potionAttrib)){
+					return true;
+			}
 		}
 		return false;
 	}
 
 	@Override
 	public void execute( Hero hero, String action ) {
+
+		if (action.equals( Potion.AC_CHOOSE )){
+
+			GameScene.show(new WndUseItem(null, this) );
+			return;
+
+		}
 
 		if (action.equals( AC_EAT ) && potionAttrib == null) {
 
@@ -162,6 +173,12 @@ public class Blandfruit extends Food {
 		if (potionAttrib instanceof PotionOfExperience)     potionGlow = new ItemSprite.Glowing( 0x404040 );
 		if (potionAttrib instanceof PotionOfHaste)          potionGlow = new ItemSprite.Glowing( 0xCCBB00 );
 
+		potionAttrib.setAction();
+		defaultAction = potionAttrib.defaultAction;
+		if (defaultAction.equals(Potion.AC_DRINK)){
+			defaultAction = AC_EAT;
+		}
+
 		return this;
 	}
 
@@ -189,10 +206,10 @@ public class Blandfruit extends Food {
 	
 	@Override
 	public void reset() {
-		if (potionAttrib != null)
+		super.reset();
+		if (potionAttrib != null) {
 			imbuePotion(potionAttrib);
-		else
-			super.reset();
+		}
 	}
 	
 	@Override
@@ -243,8 +260,7 @@ public class Blandfruit extends Food {
 			if (fruit.quantity() >= 1 && fruit.potionAttrib == null
 				&& seed.quantity() >= 1){
 
-				return !Dungeon.isChallenged(Challenges.NO_HEALING)
-						|| !(seed instanceof Sungrass.Seed);
+				return true;
 			}
 			
 			return false;
@@ -252,7 +268,7 @@ public class Blandfruit extends Food {
 		
 		@Override
 		public int cost(ArrayList<Item> ingredients) {
-			return 3;
+			return 2;
 		}
 		
 		@Override

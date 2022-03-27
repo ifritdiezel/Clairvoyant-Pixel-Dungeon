@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ public class Starflower extends Plant {
 	public void activate( Char ch ) {
 
 		if (ch != null) {
-			Buff.prolong(ch, Bless.class, 40);
+			Buff.prolong(ch, Bless.class, Bless.DURATION);
 			if (ch instanceof Hero && ((Hero) ch).subClass == HeroSubClass.WARDEN){
 				Buff.prolong(ch, Recharging.class, Recharging.DURATION);
 			}
@@ -59,6 +59,11 @@ public class Starflower extends Plant {
 		@Override
 		public int value() {
 			return 30 * quantity;
+		}
+
+		@Override
+		public int energyVal() {
+			return 3 * quantity;
 		}
 	}
 }

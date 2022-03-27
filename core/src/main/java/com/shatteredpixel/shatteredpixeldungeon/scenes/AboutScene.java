@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -116,14 +116,14 @@ public class AboutScene extends PixelScene {
 		}
 		content.add(alex);
 
-		CreditsBlock charlie = new CreditsBlock(false, Window.SHPX_COLOR,
-				"Sound Effects:",
-				Icons.CHARLIE.get(),
-				"Charlie",
-				"s9menine.itch.io",
-				"https://s9menine.itch.io");
-		charlie.setRect(alex.right(), alex.top(), colWidth/2f, 0);
-		content.add(charlie);
+		CreditsBlock kristjan = new CreditsBlock(false, Window.SHPX_COLOR,
+				"Music:",
+				Icons.KRISTJAN.get(),
+				"Kristjan Haaristo",
+				"youtube.com/user/...",
+				"https://www.youtube.com/channel/UCL1e7SgzSWbD_DQxB_5YcLA");
+		kristjan.setRect(alex.right() - colWidth/4f, alex.bottom() + 5, colWidth/2f, 0);
+		content.add(kristjan);
 
 		//*** Pixel Dungeon Credits ***
 
@@ -331,7 +331,7 @@ public class AboutScene extends PixelScene {
 				linkButton = new PointerArea(0, 0, 0, 0){
 					@Override
 					protected void onClick( PointerEvent event ) {
-						DeviceCompat.openURI( linkUrl );
+						ShatteredPixelDungeon.platform.openURI( linkUrl );
 					}
 				};
 				add(linkButton);

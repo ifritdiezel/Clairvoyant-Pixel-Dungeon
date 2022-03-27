@@ -24,18 +24,18 @@ package com.shatteredpixel.shatteredpixeldungeon.items.potions;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
+import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.InterlevelScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 
-public class PotionOfHuntress extends Potion {
+public class PotionOfHuntress extends Item {
 
 	{
 		icon = ItemSpriteSheet.Icons.POTION_HTR;
 
 		bones = true;
 	}
-	
-	@Override
+
 	public void apply( Hero hero ) {
 		identify();
 		hero.heroClass = HeroClass.HUNTRESS;
@@ -45,6 +45,6 @@ public class PotionOfHuntress extends Potion {
 
 	@Override
 	public int value() {
-		return isKnown() ? 50 * quantity : super.value();
+		return 9;
 	}
 }

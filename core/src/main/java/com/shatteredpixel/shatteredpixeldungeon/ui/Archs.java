@@ -104,7 +104,7 @@ public class Archs extends Component {
 
 		darkness.alpha((float) Math.sin(Game.elapsed));
 
-		arcsBg.offset( shift,  0);
+		arcsBg.offset( 0,  shift);
 		arcsFg.offset( 0, shift * 2 );
 
 		offsB = arcsBg.offsetY();

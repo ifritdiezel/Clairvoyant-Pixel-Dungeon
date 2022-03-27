@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,6 +60,7 @@ import com.shatteredpixel.shatteredpixeldungeon.levels.traps.FrostTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.WornDartTrap;
 import com.watabou.utils.Bundle;
+import com.watabou.utils.Point;
 import com.watabou.utils.Random;
 
 import java.util.ArrayList;
@@ -177,7 +178,7 @@ public abstract class RegularLevel extends Level {
 	}
 	
 	@Override
-	public int nMobs() {
+	public int mobLimit() {
 		if (Dungeon.depth <= 1) return 0;
 
 		int mobs = 3 + Dungeon.depth % 5 + Random.Int(3);
@@ -190,7 +191,7 @@ public abstract class RegularLevel extends Level {
 	@Override
 	protected void createMobs() {
 		//on floor 1, 8 pre-set mobs are created so the player can get level 2.
-		int mobsToSpawn = Dungeon.depth == 1 ? 8 : nMobs();
+		int mobsToSpawn = Dungeon.depth == 1 ? 8 : mobLimit();
 
 		ArrayList<Room> stdRooms = new ArrayList<>();
 		for (Room room : rooms) {
@@ -298,10 +299,13 @@ public abstract class RegularLevel extends Level {
 			if (room == null) {
 				continue;
 			}
-			
-			cell = pointToCell(room.random());
-			if (passable[cell] && (!Char.hasProp(ch, Char.Property.LARGE) || openSpace[cell])) {
-				return cell;
+
+			ArrayList<Point> points = room.charPlaceablePoints(this);
+			if (!points.isEmpty()){
+				cell = pointToCell(Random.element(points));
+				if (passable[cell] && (!Char.hasProp(ch, Char.Property.LARGE) || openSpace[cell])) {
+					return cell;
+				}
 			}
 			
 		}
@@ -328,31 +332,27 @@ public abstract class RegularLevel extends Level {
 				losBlocking[cell] = false;
 			}
 
-			Heap.Type type;
-			switch (Random.Int( 18 )) {
-				case 0:
-					type = Heap.Type.SKELETON;
+			Heap.Type type = null;
+			switch (Random.Int( 20 )) {
+			case 0:
+				type = Heap.Type.SKELETON;
 				break;
-				case 1:
-				case 2:
-					type = Heap.Type.CHEST;
-				case 3:
-				case 4:
-					type = Heap.Type.CHEST;
-					if (toDrop.isUpgradable() && toDrop.level() != 3 && Random.Int(3)==0){
-						toDrop.upgrade();
-					}
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+				type = Heap.Type.CHEST;
 				break;
-				case 7:
-					if (Dungeon.depth > 1 && findMob(cell) == null){
-						mobs.add(Mimic.spawnAt(cell, toDrop));
-						continue;
-					}
-					type = Heap.Type.CHEST;
-					break;
-				default:
-					type = Heap.Type.HEAP;
-					break;
+			case 5:
+				if (Dungeon.depth > 1 && findMob(cell) == null){
+					mobs.add(Mimic.spawnAt(cell, toDrop));
+					continue;
+				}
+				type = Heap.Type.CHEST;
+				break;
+			default:
+				type = Heap.Type.HEAP;
+				break;
 			}
 
 			if ((toDrop instanceof Artifact && Random.Int(2) == 0) ||
@@ -440,20 +440,19 @@ public abstract class RegularLevel extends Level {
 		}
 
 		//guide pages
-		Collection<String> allPages = Document.ADVENTURERS_GUIDE.pages();
+		Collection<String> allPages = Document.ADVENTURERS_GUIDE.pageNames();
 		ArrayList<String> missingPages = new ArrayList<>();
 		for ( String page : allPages){
-			if (!Document.ADVENTURERS_GUIDE.hasPage(page)){
+			if (!Document.ADVENTURERS_GUIDE.isPageFound(page)){
 				missingPages.add(page);
 			}
 		}
 
-		//a total of 8 pages drop randomly, 2 pages are specially dropped
-		missingPages.remove(Document.GUIDE_INTRO_PAGE);
-		missingPages.remove(Document.GUIDE_SEARCH_PAGE);
+		//a total of 6 pages drop randomly, the rest are specially dropped or are given at the start
+		missingPages.remove(Document.GUIDE_SEARCHING);
 
-		//chance to find a page scales with pages missing and depth
-		float dropChance = (missingPages.size() + Dungeon.depth - 1) / (float)(allPages.size() - 2);
+		//chance to find a page is 0/25/50/75/100% for floors 1/2/3/4/5+
+		float dropChance = 0.25f*(Dungeon.depth-1);
 		if (!missingPages.isEmpty() && Random.Float() < dropChance){
 			GuidePage p = new GuidePage();
 			p.page(missingPages.get(0));

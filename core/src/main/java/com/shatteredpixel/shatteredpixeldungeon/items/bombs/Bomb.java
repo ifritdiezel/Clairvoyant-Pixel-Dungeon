@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -123,16 +123,15 @@ public class Bomb extends Item {
 	}
 
 	@Override
-	public boolean doPickUp(Hero hero) {
+	public boolean doPickUp(Hero hero, int pos) {
 		if (fuse != null) {
 			GLog.w( Messages.get(this, "snuff_fuse") );
 			fuse = null;
 		}
-		return super.doPickUp(hero);
+		return super.doPickUp(hero, pos);
 	}
 
-	public void explode(int cell, boolean... centerUnaffected){
-		boolean flag = centerUnaffected.length >= 1 && centerUnaffected[0];
+	public void explode(int cell){
 		//We're blowing up, so no need for a fuse anymore.
 		this.fuse = null;
 
@@ -147,8 +146,7 @@ public class Bomb extends Item {
 			}
 			
 			boolean terrainAffected = false;
-			int[] centerflag = flag ? PathFinder.NEIGHBOURS8 : PathFinder.NEIGHBOURS9;
-			for (int n : centerflag) {
+			for (int n : PathFinder.NEIGHBOURS9) {
 				int c = cell + n;
 				if (c >= 0 && c < Dungeon.level.length()) {
 					if (Dungeon.level.heroFOV[c]) {
@@ -165,7 +163,7 @@ public class Bomb extends Item {
 					Heap heap = Dungeon.level.heaps.get(c);
 					if (heap != null)
 						heap.explode();
-
+					
 					Char ch = Actor.findChar(c);
 					if (ch != null) {
 						affected.add(ch);
@@ -319,10 +317,10 @@ public class Bomb extends Item {
 		}
 
 		@Override
-		public boolean doPickUp(Hero hero) {
+		public boolean doPickUp(Hero hero, int pos) {
 			Bomb bomb = new Bomb();
 			bomb.quantity(2);
-			if (bomb.doPickUp(hero)) {
+			if (bomb.doPickUp(hero, pos)) {
 				//isaaaaac.... (don't bother doing this when not in english)
 				if (SPDSettings.language() == Languages.ENGLISH)
 					hero.sprite.showStatus(CharSprite.NEUTRAL, "1+1 free!");
@@ -354,20 +352,20 @@ public class Bomb extends Item {
 		
 		private static final HashMap<Class<?extends Bomb>, Integer> bombCosts = new HashMap<>();
 		static {
-			bombCosts.put(FrostBomb.class,      2);
-			bombCosts.put(WoollyBomb.class,     2);
+			bombCosts.put(FrostBomb.class,      0);
+			bombCosts.put(WoollyBomb.class,     0);
 			
-			bombCosts.put(Firebomb.class,       4);
-			bombCosts.put(Noisemaker.class,     4);
+			bombCosts.put(Firebomb.class,       1);
+			bombCosts.put(Noisemaker.class,     1);
 			
-			bombCosts.put(Flashbang.class,      6);
-			bombCosts.put(ShockBomb.class,      6);
+			bombCosts.put(Flashbang.class,      2);
+			bombCosts.put(ShockBomb.class,      2);
 
-			bombCosts.put(RegrowthBomb.class,   8);
-			bombCosts.put(HolyBomb.class,       8);
+			bombCosts.put(RegrowthBomb.class,   3);
+			bombCosts.put(HolyBomb.class,       3);
 			
-			bombCosts.put(ArcaneBomb.class,     10);
-			bombCosts.put(ShrapnelBomb.class,   10);
+			bombCosts.put(ArcaneBomb.class,     6);
+			bombCosts.put(ShrapnelBomb.class,   6);
 		}
 		
 		@Override

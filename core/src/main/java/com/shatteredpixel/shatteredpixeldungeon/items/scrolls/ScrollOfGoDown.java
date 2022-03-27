@@ -33,7 +33,7 @@ public class ScrollOfGoDown extends Item {
 
 	{
 		defaultAction = AC_READ;
-		image = ItemSpriteSheet.SCROLL_DOWN;
+		image = ItemSpriteSheet.Icons.SCROLL_DOWN;
 		identify();
 	}
 

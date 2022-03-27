@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,15 +59,35 @@ public abstract class Elemental extends Mob {
 		
 		flying = true;
 	}
+
+	private boolean summonedALly;
 	
 	@Override
 	public int damageRoll() {
-		return Random.NormalIntRange( 20, 25 );
+		if (!summonedALly) {
+			return Random.NormalIntRange(20, 25);
+		} else {
+			int regionScale = Math.max(2, (1 + Dungeon.depth/5));
+			return Random.NormalIntRange(5*regionScale, 5 + 5*regionScale);
+		}
 	}
 	
 	@Override
 	public int attackSkill( Char target ) {
-		return 25;
+		if (!summonedALly) {
+			return 25;
+		} else {
+			int regionScale = Math.max(2, (1 + Dungeon.depth/5));
+			return 5 + 5*regionScale;
+		}
+	}
+
+	public void setSummonedALly(){
+		summonedALly = true;
+		//sewers are prison are equivalent, otherwise scales as normal (2/2/3/4/5)
+		int regionScale = Math.max(2, (1 + Dungeon.depth/5));
+		defenseSkill = 5*regionScale;
+		HT = 15*regionScale;
 	}
 	
 	@Override
@@ -75,7 +95,7 @@ public abstract class Elemental extends Mob {
 		return Random.NormalIntRange(0, 5);
 	}
 	
-	private int rangedCooldown = Random.NormalIntRange( 3, 5 );
+	protected int rangedCooldown = Random.NormalIntRange( 3, 5 );
 	
 	@Override
 	protected boolean act() {
@@ -85,7 +105,7 @@ public abstract class Elemental extends Mob {
 		
 		return super.act();
 	}
-
+	
 	@Override
 	protected boolean canAttack( Char enemy ) {
 		if (rangedCooldown <= 0) {
@@ -94,7 +114,7 @@ public abstract class Elemental extends Mob {
 			return super.canAttack( enemy );
 		}
 	}
-
+	
 	protected boolean doAttack( Char enemy ) {
 		
 		if (Dungeon.level.adjacent( pos, enemy.pos ) || rangedCooldown > 0) {
@@ -155,11 +175,13 @@ public abstract class Elemental extends Mob {
 	protected ArrayList<Class<? extends Buff>> harmfulBuffs = new ArrayList<>();
 	
 	private static final String COOLDOWN = "cooldown";
+	private static final String SUMMONED_ALLY = "summoned_ally";
 	
 	@Override
 	public void storeInBundle( Bundle bundle ) {
 		super.storeInBundle( bundle );
 		bundle.put( COOLDOWN, rangedCooldown );
+		bundle.put( SUMMONED_ALLY, summonedALly);
 	}
 	
 	@Override
@@ -167,6 +189,10 @@ public abstract class Elemental extends Mob {
 		super.restoreFromBundle( bundle );
 		if (bundle.contains( COOLDOWN )){
 			rangedCooldown = bundle.getInt( COOLDOWN );
+		}
+		summonedALly = bundle.getBoolean( SUMMONED_ALLY );
+		if (summonedALly){
+			setSummonedALly();
 		}
 	}
 	
@@ -215,12 +241,15 @@ public abstract class Elemental extends Mob {
 			EXP = 7;
 			
 			properties.add(Property.MINIBOSS);
+
+			//newborn elementals do not have ranged attacks
+			rangedCooldown = Integer.MAX_VALUE;
 		}
 
 		@Override
 		public void die(Object cause) {
 			super.die(cause);
-			Dungeon.level.drop( new Embers(), pos ).sprite.drop();
+			if (alignment == Alignment.ENEMY) Dungeon.level.drop( new Embers(), pos ).sprite.drop();
 		}
 
 		@Override
@@ -228,6 +257,21 @@ public abstract class Elemental extends Mob {
 			return true;
 		}
 		
+	}
+
+	//not a miniboss, fully HP, otherwise a newborn elemental
+	public static class AllyNewBornElemental extends NewbornFireElemental {
+
+		{
+			HP = HT;
+			properties.remove(Property.MINIBOSS);
+		}
+
+		@Override
+		public boolean reset() {
+			return false;
+		}
+
 	}
 	
 	public static class FrostElemental extends Elemental {

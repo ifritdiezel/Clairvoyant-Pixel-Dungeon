@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,19 +41,19 @@ public class KeyBindings {
 	}
 
 	//these are special keybinding that are not user-configurable
-	private static final LinkedHashMap<Integer, GameAction> hardBindings = new LinkedHashMap<>();
+	private static LinkedHashMap<Integer, GameAction> hardBindings = new LinkedHashMap<>();
 
 	public static void addHardBinding(int keyCode, GameAction action){
 		hardBindings.put(keyCode, action);
 	}
 
-	public static boolean acceptUnbound = false;
+	public static boolean bindingKey = false;
 
 	public static boolean isKeyBound(int keyCode){
 		if (keyCode <= 0 || keyCode > 255){
 			return false;
 		}
-		return acceptUnbound || bindings.containsKey( keyCode ) || hardBindings.containsKey( keyCode );
+		return bindingKey || bindings.containsKey( keyCode ) || hardBindings.containsKey( keyCode );
 	}
 	
 	public static GameAction getActionForKey(KeyEvent event){
@@ -76,12 +76,16 @@ public class KeyBindings {
 	}
 
 	public static String getKeyName( int keyCode ){
+		if (ControllerHandler.customButtonName(keyCode) != null){
+			return ControllerHandler.customButtonName(keyCode);
+		}
+
 		if (keyCode == Input.Keys.UNKNOWN){
 			return "None";
 		} else if (keyCode == Input.Keys.PLUS){
 			return "+";
 		} else if (keyCode == Input.Keys.BACKSPACE) {
-			return "Backspace";
+			return "Backspc";
 		} else if (keyCode == Input.Keys.FORWARD_DEL) {
 			return "Delete";
 		} else {

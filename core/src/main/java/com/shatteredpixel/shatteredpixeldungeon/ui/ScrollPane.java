@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -106,7 +106,7 @@ public class ScrollPane extends Component {
 
 	public class PointerController extends ScrollArea {
 
-		private final float dragThreshold;
+		private float dragThreshold;
 
 		public PointerController() {
 			super( 0, 0, 0, 0 );
@@ -137,7 +137,7 @@ public class ScrollPane extends Component {
 		}
 
 		private boolean dragging = false;
-		private final PointF lastPos = new PointF();
+		private PointF lastPos = new PointF();
 
 		@Override
 		protected void onDrag( PointerEvent event ) {

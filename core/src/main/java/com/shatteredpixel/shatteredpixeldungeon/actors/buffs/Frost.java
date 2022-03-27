@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Thief;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
-import com.shatteredpixel.shatteredpixeldungeon.items.food.ChargrilledMeat;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.FrozenCarpaccio;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MysteryMeat;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
@@ -62,9 +61,11 @@ public class Frost extends FlavourBuff {
 				Hero hero = (Hero)target;
 				ArrayList<Item> freezable = new ArrayList<>();
 				//does not reach inside of containers
-				for (Item i : hero.belongings.backpack.items){
-					if (!i.unique && (i instanceof Potion || i instanceof MysteryMeat || i instanceof ChargrilledMeat)){
-						freezable.add(i);
+				if (hero.buff(LostInventory.class) == null) {
+					for (Item i : hero.belongings.backpack.items) {
+						if (!i.unique && (i instanceof Potion || i instanceof MysteryMeat)) {
+							freezable.add(i);
+						}
 					}
 				}
 				
@@ -73,7 +74,7 @@ public class Frost extends FlavourBuff {
 					GLog.w( Messages.get(this, "freezes", toFreeze.toString()) );
 					if (toFreeze instanceof Potion){
 						((Potion) toFreeze).shatter(hero.pos);
-					} else if (toFreeze instanceof MysteryMeat || toFreeze instanceof ChargrilledMeat){
+					} else if (toFreeze instanceof MysteryMeat){
 						FrozenCarpaccio carpaccio = new FrozenCarpaccio();
 						if (!carpaccio.collect( hero.belongings.backpack )) {
 							Dungeon.level.drop( carpaccio, target.pos ).sprite.drop();

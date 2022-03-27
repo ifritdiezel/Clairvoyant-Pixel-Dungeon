@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -97,6 +97,7 @@ public class TalismanOfForesight extends Artifact {
 				partialCharge = 0;
 				GLog.p( Messages.get(TalismanOfForesight.class, "full_charge") );
 			}
+			updateQuickslot();
 		}
 	}
 
@@ -120,7 +121,7 @@ public class TalismanOfForesight extends Artifact {
 		return Math.min(5 + 2*level(), (charge-3)/1.08f);
 	}
 
-	private final CellSelector.Listener scry = new CellSelector.Listener(){
+	private CellSelector.Listener scry = new CellSelector.Listener(){
 
 		@Override
 		public void onSelect(Integer target) {

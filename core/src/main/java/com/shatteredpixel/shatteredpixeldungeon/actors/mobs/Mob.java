@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,11 +29,13 @@ import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Adrenaline;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corruption;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Preparation;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Sleep;
@@ -50,6 +52,7 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.MasterThievesArmband;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
@@ -187,7 +190,7 @@ public abstract class Mob extends Char {
 			return true;
 		}
 
-		if (buff(Terror.class) != null){
+		if (buff(Terror.class) != null || buff(Dread.class) != null ){
 			state = FLEEING;
 		}
 		
@@ -203,6 +206,14 @@ public abstract class Mob extends Char {
 	
 	protected Char chooseEnemy() {
 
+		Dread dread = buff( Dread.class );
+		if (dread != null) {
+			Char source = (Char)Actor.findById( dread.object );
+			if (source != null) {
+				return source;
+			}
+		}
+
 		Terror terror = buff( Terror.class );
 		if (terror != null) {
 			Char source = (Char)Actor.findById( terror.object );
@@ -211,13 +222,16 @@ public abstract class Mob extends Char {
 			}
 		}
 		
-		//if we are an enemy, and have no target or current target isn't affected by aggression
-		//then auto-prioritize a target that is affected by aggression, even another enemy
-		if (alignment == Alignment.ENEMY
-				&& (enemy == null || enemy.buff(StoneOfAggression.Aggression.class) == null)) {
+		//if we are an alert enemy, auto-hunt a target that is affected by aggression, even another enemy
+		if (alignment == Alignment.ENEMY && state != PASSIVE && state != SLEEPING) {
+			if (enemy != null && enemy.buff(StoneOfAggression.Aggression.class) != null){
+				state = HUNTING;
+				return enemy;
+			}
 			for (Char ch : Actor.chars()) {
 				if (ch != this && fieldOfView[ch.pos] &&
 						ch.buff(StoneOfAggression.Aggression.class) != null) {
+					state = HUNTING;
 					return ch;
 				}
 			}
@@ -228,25 +242,30 @@ public abstract class Mob extends Char {
 		//we have no enemy, or the current one is dead/missing
 		if ( enemy == null || !enemy.isAlive() || !Actor.chars().contains(enemy) || state == WANDERING) {
 			newEnemy = true;
-		//We are an ally, and current enemy is another ally.
-		} else if (alignment == Alignment.ALLY && enemy.alignment == Alignment.ALLY) {
-			newEnemy = true;
 		//We are amoked and current enemy is the hero
 		} else if (buff( Amok.class ) != null && enemy == Dungeon.hero) {
 			newEnemy = true;
 		//We are charmed and current enemy is what charmed us
 		} else if (buff(Charm.class) != null && buff(Charm.class).object == enemy.id()) {
 			newEnemy = true;
-		//we aren't amoked, current enemy is invulnerable to us, and that enemy isn't affect by aggression
-		} else if (buff( Amok.class ) == null && enemy.isInvulnerable(getClass()) && enemy.buff(StoneOfAggression.Aggression.class) == null) {
-			newEnemy = true;
+		}
+
+		//additionally, if we are an ally, find a new enemy if...
+		if (!newEnemy && alignment == Alignment.ALLY){
+			//current enemy is also an ally
+			if (enemy.alignment == Alignment.ALLY){
+				newEnemy = true;
+			//current enemy is invulnerable
+			} else if (enemy.isInvulnerable(getClass())){
+				newEnemy = true;
+			}
 		}
 
 		if ( newEnemy ) {
 
 			HashSet<Char> enemies = new HashSet<>();
 
-			//if the mob is amoked...
+			//if we are amoked...
 			if ( buff(Amok.class) != null) {
 				//try to find an enemy mob to attack first.
 				for (Mob mob : Dungeon.level.mobs)
@@ -271,7 +290,7 @@ public abstract class Mob extends Char {
 					}
 				}
 				
-			//if the mob is an ally...
+			//if we are an ally...
 			} else if ( alignment == Alignment.ALLY ) {
 				//look for hostile mobs to attack
 				for (Mob mob : Dungeon.level.mobs)
@@ -283,20 +302,21 @@ public abstract class Mob extends Char {
 							enemies.add(mob);
 						}
 				
-			//if the mob is an enemy...
+			//if we are an enemy...
 			} else if (alignment == Alignment.ENEMY) {
 				//look for ally mobs to attack
 				for (Mob mob : Dungeon.level.mobs)
-					if (mob.alignment == Alignment.ALLY && fieldOfView[mob.pos] && mob.invisible <= 0 && !mob.isInvulnerable(getClass()))
+					if (mob.alignment == Alignment.ALLY && fieldOfView[mob.pos] && mob.invisible <= 0)
 						enemies.add(mob);
 
 				//and look for the hero
-				if (fieldOfView[Dungeon.hero.pos] && Dungeon.hero.invisible <= 0 && !Dungeon.hero.isInvulnerable(getClass())) {
+				if (fieldOfView[Dungeon.hero.pos] && Dungeon.hero.invisible <= 0) {
 					enemies.add(Dungeon.hero);
 				}
 				
 			}
-			
+
+			//do not target anything that's charming us
 			Charm charm = buff( Charm.class );
 			if (charm != null){
 				Char source = (Char)Actor.findById( charm.object );
@@ -328,9 +348,9 @@ public abstract class Mob extends Char {
 	@Override
 	public void add( Buff buff ) {
 		super.add( buff );
-		if (buff instanceof Amok || buff instanceof Corruption) {
+		if (buff instanceof Amok || buff instanceof AllyBuff) {
 			state = HUNTING;
-		} else if (buff instanceof Terror) {
+		} else if (buff instanceof Terror || buff instanceof Dread) {
 			state = FLEEING;
 		} else if (buff instanceof Sleep) {
 			state = SLEEPING;
@@ -341,7 +361,8 @@ public abstract class Mob extends Char {
 	@Override
 	public void remove( Buff buff ) {
 		super.remove( buff );
-		if (buff instanceof Terror) {
+		if ((buff instanceof Terror && buff(Dread.class) == null)
+				|| (buff instanceof Dread && buff(Terror.class) == null)) {
 			if (enemySeen) {
 				sprite.showStatus(CharSprite.NEGATIVE, Messages.get(this, "rage"));
 				state = HUNTING;
@@ -528,7 +549,6 @@ public abstract class Mob extends Char {
 		
 		if (sprite != null && (sprite.visible || enemy.sprite.visible)) {
 			sprite.attack( enemy.pos );
-			spend( attackDelay() );
 			return false;
 			
 		} else {
@@ -541,6 +561,7 @@ public abstract class Mob extends Char {
 	@Override
 	public void onAttackComplete() {
 		attack( enemy );
+		spend( attackDelay() );
 		super.onAttackComplete();
 	}
 	
@@ -561,7 +582,7 @@ public abstract class Mob extends Char {
 	public int defenseProc( Char enemy, int damage ) {
 		
 		if (enemy instanceof Hero
-				&& ((Hero) enemy).belongings.weapon instanceof MissileWeapon
+				&& ((Hero) enemy).belongings.weapon() instanceof MissileWeapon
 				&& !hitWithRanged){
 			hitWithRanged = true;
 			Statistics.thrownAssists++;
@@ -573,8 +594,8 @@ public abstract class Mob extends Char {
 			Badges.validateRogueUnlock();
 			//TODO this is somewhat messy, it would be nicer to not have to manually handle delays here
 			// playing the strong hit sound might work best as another property of weapon?
-			if (Dungeon.hero.belongings.weapon instanceof SpiritBow.SpiritArrow
-				|| Dungeon.hero.belongings.weapon instanceof Dart){
+			if (Dungeon.hero.belongings.weapon() instanceof SpiritBow.SpiritArrow
+				|| Dungeon.hero.belongings.weapon() instanceof Dart){
 				Sample.INSTANCE.playDelayed(Assets.Sounds.HIT_STRONG, 0.125f);
 			} else {
 				Sample.INSTANCE.play(Assets.Sounds.HIT_STRONG);
@@ -594,7 +615,7 @@ public abstract class Mob extends Char {
 		}
 
 		if (buff(SoulMark.class) != null) {
-			int restoration = Math.min(damage, HP);
+			int restoration = Math.min(damage, HP+shielding());
 			
 			//physical damage that doesn't come from the hero is less effective
 			if (enemy != Dungeon.hero){
@@ -610,10 +631,14 @@ public abstract class Mob extends Char {
 		return damage;
 	}
 
-	public boolean surprisedBy( Char enemy ){
+	public final boolean surprisedBy( Char enemy ){
+		return surprisedBy( enemy, true);
+	}
+
+	public boolean surprisedBy( Char enemy, boolean attacking ){
 		return enemy == Dungeon.hero
 				&& (enemy.invisible > 0 || !enemySeen)
-				&& ((Hero)enemy).canSurpriseAttack();
+				&& (!attacking || ((Hero)enemy).canSurpriseAttack());
 	}
 
 	public void aggro( Char ch ) {
@@ -675,7 +700,6 @@ public abstract class Mob extends Char {
 
 		if (alignment == Alignment.ENEMY){
 			rollToDropLoot();
-
 		}
 
 		if (Dungeon.hero.isAlive() && !Dungeon.level.heroFOV[pos]) {
@@ -699,17 +723,25 @@ public abstract class Mob extends Char {
 			}
 		}
 	}
+
+	public float lootChance(){
+		float lootChance = this.lootChance;
+
+		lootChance *= RingOfWealth.dropChanceMultiplier( Dungeon.hero );
+
+		return lootChance;
+	}
 	
 	public void rollToDropLoot(){
 		if (Dungeon.hero.lvl > maxLvl + 2) return;
-		
-		float lootChance = this.lootChance;
-		lootChance *= RingOfWealth.dropChanceMultiplier( Dungeon.hero );
-		
-		if (Random.Float() < lootChance) {
-			Item loot = createLoot();
-			if (loot != null) {
-				Dungeon.level.drop(loot, pos).sprite.drop();
+
+		MasterThievesArmband.StolenTracker stolen = buff(MasterThievesArmband.StolenTracker.class);
+		if (stolen == null || !stolen.itemWasStolen()) {
+			if (Random.Float() < lootChance()) {
+				Item loot = createLoot();
+				if (loot != null) {
+					Dungeon.level.drop(loot, pos).sprite.drop();
+				}
 			}
 		}
 		
@@ -726,7 +758,7 @@ public abstract class Mob extends Char {
 		}
 		
 		//lucky enchant logic
-		if (Dungeon.hero.lvl <= maxLvl && buff(Lucky.LuckProc.class) != null){
+		if (buff(Lucky.LuckProc.class) != null){
 			Dungeon.level.drop(Lucky.genLoot(), pos).sprite.drop();
 			Lucky.showFlare(sprite);
 		}
@@ -751,7 +783,7 @@ public abstract class Mob extends Char {
 	protected float lootChance = 0;
 	
 	@SuppressWarnings("unchecked")
-	protected Item createLoot() {
+	public Item createLoot() {
 		Item item;
 		if (loot instanceof Generator.Category) {
 
@@ -1048,7 +1080,7 @@ public abstract class Mob extends Char {
 	}
 	
 	
-	private static final ArrayList<Mob> heldAllies = new ArrayList<>();
+	private static ArrayList<Mob> heldAllies = new ArrayList<>();
 
 	public static void holdAllies( Level level ){
 		holdAllies(level, Dungeon.hero.pos);
@@ -1111,6 +1143,11 @@ public abstract class Mob extends Char {
 				}
 				if (ally.sprite != null) ally.sprite.place(ally.pos);
 
+				if (ally.fieldOfView == null || ally.fieldOfView.length != level.length()){
+					ally.fieldOfView = new boolean[level.length()];
+				}
+				Dungeon.level.updateFieldOfView( ally, ally.fieldOfView );
+				
 			}
 		}
 		heldAllies.clear();

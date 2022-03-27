@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@ public class BitmapCache {
 
 	private static final String DEFAULT	= "__default";
 	
-	private static final HashMap<String,Layer> layers = new HashMap<>();
+	private static HashMap<String,Layer> layers = new HashMap<>();
 	
 	public static Pixmap get( String assetName ) {
 		return get( DEFAULT, assetName );

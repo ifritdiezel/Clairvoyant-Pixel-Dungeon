@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -37,8 +37,8 @@ public class TerrainFeaturesTilemap extends DungeonTilemap {
 
 	private static TerrainFeaturesTilemap instance;
 
-	private final SparseArray<Plant> plants;
-	private final SparseArray<Trap> traps;
+	private SparseArray<Plant> plants;
+	private SparseArray<Trap> traps;
 
 	public TerrainFeaturesTilemap(SparseArray<Plant> plants, SparseArray<Trap> traps) {
 		super(Assets.Environment.TERRAIN_FEATURES);

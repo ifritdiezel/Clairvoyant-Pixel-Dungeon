@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
+import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.CharSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
@@ -88,6 +89,11 @@ public class Swiftthistle extends Plant {
 		public float iconFadePercent() {
 			return Math.max(0, (6f - left) / 6f);
 		}
+
+		@Override
+		public String iconTextDisplay() {
+			return Integer.toString((int)left);
+		}
 		
 		public void reset(){
 			left = 7f;
@@ -114,14 +120,25 @@ public class Swiftthistle extends Plant {
 		}
 		
 		public void setDelayedPress(int cell){
-			if (!presses.contains(cell))
+			if (!presses.contains(cell)) {
 				presses.add(cell);
+			}
 		}
-		
-		private void triggerPresses(){
-			for (int cell : presses)
+
+		public void triggerPresses() {
+			for (int cell : presses) {
 				Dungeon.level.pressCell(cell);
+			}
 			
+			presses = new ArrayList<>();
+		}
+
+		public void disarmPressedTraps(){
+			for (int cell : presses){
+				Trap t = Dungeon.level.traps.get(cell);
+				if (t != null && t.disarmedByActivation) t.disarm();
+			}
+
 			presses = new ArrayList<>();
 		}
 		

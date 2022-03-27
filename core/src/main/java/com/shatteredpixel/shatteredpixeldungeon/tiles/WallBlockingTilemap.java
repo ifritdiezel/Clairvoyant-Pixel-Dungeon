@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -186,9 +186,12 @@ public class WallBlockingTilemap extends Tilemap {
 	private boolean fogHidden(int cell){
 		if (!Dungeon.level.visited[cell] && !Dungeon.level.mapped[cell]) {
 			return true;
-		} else return wall(cell) && cell + mapWidth < size && !wall(cell + mapWidth) &&
-                !Dungeon.level.visited[cell + mapWidth] && !Dungeon.level.mapped[cell + mapWidth];
-    }
+		} else if (wall(cell) && cell + mapWidth < size && !wall(cell + mapWidth) &&
+				!Dungeon.level.visited[cell + mapWidth] && !Dungeon.level.mapped[cell + mapWidth]) {
+			return true;
+		}
+		return false;
+	}
 
 	private boolean wall(int cell) {
 		return DungeonTileSheet.wallStitcheable(Dungeon.level.map[cell]);

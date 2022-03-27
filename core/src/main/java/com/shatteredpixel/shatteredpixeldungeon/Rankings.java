@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.Scroll;
 import com.shatteredpixel.shatteredpixeldungeon.journal.Notes;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
+import com.watabou.noosa.Game;
 import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.FileUtils;
@@ -105,12 +106,7 @@ public enum Rankings {
 	}
 
 	private int score( boolean win ) {
-		return (Statistics.goldCollected + Statistics.enemiesSlain - Statistics.upgradesUsed * 5 - Statistics.ankhsUsed * 10 + Dungeon.hero.lvl * (win ? 26 : Statistics.deepestFloor ) * 100)
-
-				//final score multipliers
-				* (win ? 2 : 1)
-				* (Statistics.completedWithNoKilling ? 2 : 1)
-				;
+		return (Statistics.goldCollected + Dungeon.hero.lvl * (win ? 26 : Dungeon.depth ) * 100) * (win ? 2 : 1);
 	}
 
 	public static final String HERO = "hero";
@@ -132,9 +128,10 @@ public enum Rankings {
 				for (Item bagItem : ((Bag) item).items.toArray( new Item[0])){
 					if (Dungeon.quickslot.contains(bagItem)) belongings.backpack.items.add(bagItem);
 				}
+			}
+			if (!Dungeon.quickslot.contains(item)) {
 				belongings.backpack.items.remove(item);
-			} else if (!Dungeon.quickslot.contains(item))
-				belongings.backpack.items.remove(item);
+			}
 		}
 
 		//remove all buffs (ones tied to equipment will be re-applied)
@@ -247,7 +244,7 @@ public enum Rankings {
 				}
 			}
 
-		} catch (IOException ignored) {
+		} catch (IOException e) {
 		}
 	}
 	

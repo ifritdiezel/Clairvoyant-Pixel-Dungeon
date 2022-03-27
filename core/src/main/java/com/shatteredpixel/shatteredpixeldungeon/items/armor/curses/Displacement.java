@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,13 +30,13 @@ import com.watabou.utils.Random;
 
 public class Displacement extends Armor.Glyph {
 
-	private static final ItemSprite.Glowing BLACK = new ItemSprite.Glowing( 0x000000 );
+	private static ItemSprite.Glowing BLACK = new ItemSprite.Glowing( 0x000000 );
 
 	@Override
 	public int proc(Armor armor, Char attacker, Char defender, int damage ) {
 
 		if (defender == Dungeon.hero && Random.Int(20) == 0){
-			ScrollOfTeleportation.teleportHero(Dungeon.hero);
+			ScrollOfTeleportation.teleportChar(Dungeon.hero);
 			return 0;
 		}
 

@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,10 +33,11 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.ArmorAbility;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
-import com.shatteredpixel.shatteredpixeldungeon.items.Item;
+import com.shatteredpixel.shatteredpixeldungeon.effects.SpellSprite;
 import com.shatteredpixel.shatteredpixeldungeon.items.armor.ClassArmor;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.ui.BuffIndicator;
+import com.shatteredpixel.shatteredpixeldungeon.ui.HeroIcon;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Bundle;
 
@@ -58,7 +59,7 @@ public class Endure extends ArmorAbility {
 		hero.sprite.operate(hero.pos);
 
 		armor.charge -= chargeUse(hero);
-		Item.updateQuickslot();
+		armor.updateQuickslot();
 		Invisibility.dispel();
 		hero.spendAndNext(3f);
 	}
@@ -93,14 +94,14 @@ public class Endure extends ArmorAbility {
 
 		public void setup(Hero hero){
 			enduring = true;
-			maxDmgTaken = (int) (hero.HT * Math.pow(0.707f, hero.pointsInTalent(Talent.SHRUG_IT_OFF)));
+			maxDmgTaken = (int) (hero.HT * Math.pow(0.67f, hero.pointsInTalent(Talent.SHRUG_IT_OFF)));
 			damageBonus = 0;
 			hitsLeft = 0;
 		}
 
 		public int adjustDamageTaken(int damage){
 			if (enduring) {
-				damageBonus += damage/4;
+				damageBonus += damage/3;
 				return damage/2;
 			}
 			return damage;
@@ -179,6 +180,11 @@ public class Endure extends ArmorAbility {
 			maxDmgTaken = bundle.getInt(ENDURING);
 			hitsLeft = bundle.getInt(HITS_LEFT);
 		}
+	};
+
+	@Override
+	public int icon() {
+		return HeroIcon.ENDURE;
 	}
 
 	@Override

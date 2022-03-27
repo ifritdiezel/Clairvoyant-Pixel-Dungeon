@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,13 +47,13 @@ public class CircleArc extends Visual {
 	
 	private boolean lightMode = true;
 	
-	private final SmartTexture texture;
+	private SmartTexture texture;
 	
-	private final FloatBuffer vertices;
-	private final ShortBuffer indices;
+	private FloatBuffer vertices;
+	private ShortBuffer indices;
 	
-	private final int nTris;
-	private final float rad;
+	private int nTris;
+	private float rad;
 	
 	//more triangles means a more precise visual
 	public CircleArc( int triangles, float radius ) {
@@ -112,7 +112,7 @@ public class CircleArc extends Visual {
 	private void updateTriangles(){
 		
 		dirty = false;
-		float[] v = new float[4];
+		float v[] = new float[4];
 		
 		((Buffer)indices).position( 0 );
 		((Buffer)vertices).position( 0 );

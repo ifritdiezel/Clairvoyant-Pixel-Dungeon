@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.scenes;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Chrome;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
@@ -40,6 +42,7 @@ import com.shatteredpixel.shatteredpixeldungeon.ui.StyledButton;
 import com.shatteredpixel.shatteredpixeldungeon.ui.Window;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndChallenges;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndHeroInfo;
+import com.shatteredpixel.shatteredpixeldungeon.windows.WndKeyBindings;
 import com.shatteredpixel.shatteredpixeldungeon.windows.WndMessage;
 import com.watabou.gltextures.TextureCache;
 import com.watabou.input.PointerEvent;
@@ -57,7 +60,8 @@ public class HeroSelectScene extends PixelScene {
 	private Image background;
 	private RenderedTextBlock prompt;
 
-	private final ArrayList<StyledButton> heroBtns = new ArrayList<>();
+	//fading UI elements
+	private ArrayList<StyledButton> heroBtns = new ArrayList<>();
 	private StyledButton startBtn;
 	private IconButton infoButton;
 	private IconButton challengeButton;
@@ -165,6 +169,11 @@ public class HeroSelectScene extends PixelScene {
 				super.onClick();
 				ShatteredPixelDungeon.scene().addToFront(new WndHeroInfo(GamesInProgress.selectedClass));
 			}
+
+			@Override
+			protected String hoverText() {
+				return Messages.titleCase(Messages.get(WndKeyBindings.class, "hero_info"));
+			}
 		};
 		infoButton.visible = false;
 		infoButton.setSize(21, 21);
@@ -188,6 +197,11 @@ public class HeroSelectScene extends PixelScene {
 				}
 				super.update();
 			}
+
+			@Override
+			protected String hoverText() {
+				return Messages.titleCase(Messages.get(WndChallenges.class, "title"));
+			}
 		};
 		challengeButton.setRect(heroBtnleft + 16, Camera.main.height-HeroBtn.HEIGHT-16, 21, 21);
 		challengeButton.visible = false;
@@ -203,6 +217,12 @@ public class HeroSelectScene extends PixelScene {
 		btnExit.setPos( Camera.main.width - btnExit.width(), 0 );
 		add( btnExit );
 		btnExit.visible = !SPDSettings.intro() || Rankings.INSTANCE.totalNumber > 0;
+
+		prompt = PixelScene.renderTextBlock(Messages.get(this, "title"), 12);
+		prompt.hardlight(Window.TITLE_COLOR);
+		prompt.setPos( (Camera.main.width - prompt.width())/2f, (Camera.main.height - HeroBtn.HEIGHT - prompt.height() - 4));
+		PixelScene.align(prompt);
+		add(prompt);
 
 		PointerArea fadeResetter = new PointerArea(0, 0, Camera.main.width, Camera.main.height){
 			@Override

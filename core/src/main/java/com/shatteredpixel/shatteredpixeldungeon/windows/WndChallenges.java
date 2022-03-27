@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,8 +41,8 @@ public class WndChallenges extends Window {
 	private static final int BTN_HEIGHT = 16;
 	private static final int GAP        = 1;
 
-	private final boolean editable;
-	private final ArrayList<CheckBox> boxes;
+	private boolean editable;
+	private ArrayList<CheckBox> boxes;
 
 	public WndChallenges( int checked, boolean editable ) {
 

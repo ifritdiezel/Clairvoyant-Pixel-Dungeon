@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -94,10 +94,6 @@ public class ItemSprite extends MovieClip {
 		super( Assets.Sprites.ITEMS );
 		
 		view(image, glowing);
-	}
-	
-	public void originToCenter() {
-		origin.set(width / 2, height / 2);
 	}
 	
 	public void link() {
@@ -257,7 +253,7 @@ public class ItemSprite extends MovieClip {
 		emitter = null;
 	}
 
-	private final float[] shadowMatrix = new float[16];
+	private float[] shadowMatrix = new float[16];
 
 	@Override
 	protected void updateMatrix() {

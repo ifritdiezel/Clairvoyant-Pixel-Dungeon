@@ -3,7 +3,7 @@
  * Copyright (C) 2012-2015 Oleg Dolya
  *
  * Shattered Pixel Dungeon
- * Copyright (C) 2014-2021 Evan Debenham
+ * Copyright (C) 2014-2022 Evan Debenham
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ public class GamesInProgress {
 	public static final int MAX_SLOTS = 4;
 	
 	//null means we have loaded info and it is empty, no entry means unknown.
-	private static final HashMap<Integer, Info> slotStates = new HashMap<>();
+	private static HashMap<Integer, Info> slotStates = new HashMap<>();
 	public static int curSlot;
 	
 	public static HeroClass selectedClass;
@@ -49,7 +49,8 @@ public class GamesInProgress {
 	private static final String DEPTH_FILE	= "depth%d.dat";
 	
 	public static boolean gameExists( int slot ){
-		return FileUtils.dirExists(Messages.format(GAME_FOLDER, slot));
+		return FileUtils.dirExists(gameFolder(slot))
+				&& FileUtils.fileLength(gameFile(slot)) > 1;
 	}
 	
 	public static String gameFolder( int slot ){
@@ -73,7 +74,7 @@ public class GamesInProgress {
 	
 	public static ArrayList<Info> checkAll(){
 		ArrayList<Info> result = new ArrayList<>();
-		for (int i = 0; i <= MAX_SLOTS; i++){
+		for (int i = 1; i <= MAX_SLOTS; i++){
 			Info curr = check(i);
 			if (curr != null) result.add(curr);
 		}
@@ -127,6 +128,7 @@ public class GamesInProgress {
 		
 		info.level = hero.lvl;
 		info.str = hero.STR;
+		info.strBonus = hero.STR() - hero.STR;
 		info.exp = hero.exp;
 		info.hp = hero.HP;
 		info.ht = hero.HT;
@@ -158,6 +160,7 @@ public class GamesInProgress {
 		
 		public int level;
 		public int str;
+		public int strBonus;
 		public int exp;
 		public int hp;
 		public int ht;
